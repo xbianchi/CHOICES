@@ -1,21 +1,22 @@
 // Definir las categorías con los elementos
 const categories = {
-    pokemon: ['Pikachu', 'Charizard', 'Eevee', 'Bulbasaur'],
+    pokemon: ['Pikachu', 'Charizard', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew', 'Pidgey', 'Ditto'],
     comidas: ['Pizza', 'Hamburguesa', 'Pasta', 'Tacos'],
-    // Agregar nuevas categorías aquí
-    equipos: ['Real Madrid', 'Barcelona', 'Manchester United', 'Chelsea'],
-    rupaulUSA: ['Bianca Del Rio', 'Alaska', 'Trixie Mattel', 'Bob The Drag Queen'],
-    rupaulUK: ['The Vivienne', 'Bimini Bon-Boulash', 'Tayce', 'Lawrence Chaney'],
-    rupaulDownUnder: ['Anita Wigl’it', 'Art Simone', 'Etcetera Etcetera', 'Karen From Finance'],
-    rupaulHolland: ['Envy Peru', 'Janey Jacké', 'Mama Queen', 'Miss Abby OMG'],
-    rupaulEspana: ['Carmen Farala', 'Sagittaria', 'Pupi Poisson', 'Killer Queen'],
-    rupaulAll: ['Shangela', 'Jinkx Monsoon', 'Monet X Change', 'Shea Couleé', 'Raja']
+    equipos: ['Barcelona', 'Real Madrid', 'Manchester United', 'Liverpool'],
+    rupaulUSA: ['Queen1 USA', 'Queen2 USA', 'Queen3 USA', 'Queen4 USA'],
+    rupaulUK: ['Queen1 UK', 'Queen2 UK', 'Queen3 UK', 'Queen4 UK'],
+    rupaulDownUnder: ['Queen1 Down Under', 'Queen2 Down Under', 'Queen3 Down Under', 'Queen4 Down Under'],
+    rupaulHolland: ['Queen1 Holland', 'Queen2 Holland', 'Queen3 Holland', 'Queen4 Holland'],
+    rupaulEspana: ['Queen1 España', 'Queen2 España', 'Queen3 España', 'Queen4 España'],
+    rupaulAll: ['Queen1', 'Queen2', 'Queen3', 'Queen4', 'Queen5', 'Queen6'] // Todas las Queens
 };
 
-// Variables globales para manejar el estado del juego
+// Variables globales
 let currentCategory = [];
 let round = [];
-let selections = {};
+let selectedItems = [];
+let scoreMap = {};
+let roundWinners = [];
 
 // Función para iniciar el juego con la categoría seleccionada
 function startGame() {
@@ -24,9 +25,11 @@ function startGame() {
 
     // Cargar la categoría seleccionada
     currentCategory = [...categories[selectedCategory]];
+    selectedItems = [];
 
-    // Inicializar contador de selecciones
-    selections = {};
+    // Inicializar el mapa de puntuaciones
+    scoreMap = {};
+    currentCategory.forEach(item => scoreMap[item] = 0);
 
     // Ocultar el selector de categoría y mostrar el área de juego
     document.getElementById('category-selector').style.display = 'none';
@@ -36,14 +39,14 @@ function startGame() {
     showNextRound();
 }
 
-// Función para mostrar dos opciones al azar
+// Función para mostrar dos opciones al azar, asegurando que no se repitan inmediatamente
 function showNextRound() {
     if (currentCategory.length < 2) {
-        endGame();
+        finishGame();
         return;
     }
 
-    // Seleccionar dos elementos al azar asegurando que no sean el mismo
+    // Seleccionar dos elementos al azar asegurando que no se repitan en la ronda
     let index1 = Math.floor(Math.random() * currentCategory.length);
     let index2;
     do {
@@ -64,45 +67,46 @@ function showNextRound() {
 
 // Función para manejar la elección
 function chooseOption(choice) {
-    const selectedItem = round[choice];
+    const chosenItem = round[choice];
+    const eliminatedItem = round[choice === 0 ? 1 : 0];
 
-    // Aumentar el contador de selecciones
-    if (!selections[selectedItem]) {
-        selections[selectedItem] = 0;
+    // Incrementar la puntuación del elemento elegido
+    scoreMap[chosenItem] += 1;
+    selectedItems.push(chosenItem);
+
+    // Eliminar el elemento no seleccionado y pasarlo al final para permitir competencia
+    currentCategory = currentCategory.filter(item => item !== eliminatedItem);
+    if (currentCategory.length < 3) {
+        roundWinners = [...selectedItems];
     }
-    selections[selectedItem]++;
 
-    // Eliminar el elemento no seleccionado
-    currentCategory = currentCategory.filter(item => item !== round[choice === 0 ? 1 : 0]);
-
-    // Mostrar la siguiente ronda
+    // Mostrar la siguiente ronda o terminar el juego si ya no hay suficientes elementos
     showNextRound();
 }
 
-// Función para finalizar el juego y mostrar el Top 3
-function endGame() {
-    // Ocultar el área de juego
-    document.getElementById('game-area').style.display = 'none';
+// Función para finalizar el juego y mostrar el top 3
+function finishGame() {
+    // Ordenar los elementos seleccionados por su cantidad de elecciones
+    const sortedItems = Object.keys(scoreMap).sort((a, b) => scoreMap[b] - scoreMap[a]);
 
-    // Ordenar las selecciones por más elegidas
-    const sortedSelections = Object.keys(selections).sort((a, b) => selections[b] - selections[a]);
-
-    // Mostrar el Top 3
-    const top3 = sortedSelections.slice(0, 3);
-    document.getElementById('top3').innerHTML = `
+    // Mostrar los tres primeros como el "Top 3"
+    const top3Div = document.getElementById('top3');
+    top3Div.innerHTML = `
         <h2>Este es tu Top 3:</h2>
-        <p>1. ${top3[0] || 'N/A'}</p>
-        <p>2. ${top3[1] || 'N/A'}</p>
-        <p>3. ${top3[2] || 'N/A'}</p>
+        <p>1. ${sortedItems[0]}</p>
+        <p>2. ${sortedItems[1]}</p>
+        <p>3. ${sortedItems[2]}</p>
         <button onclick="restartGame()">Reiniciar Juego</button>
     `;
+    top3Div.style.display = 'block';
 
-    document.getElementById('top3').style.display = 'block';
+    // Ocultar el área de juego
+    document.getElementById('game-area').style.display = 'none';
 }
 
 // Función para reiniciar el juego
 function restartGame() {
-    document.getElementById('top3').style.display = 'none';
     document.getElementById('category-selector').style.display = 'block';
+    document.getElementById('game-area').style.display = 'none';
+    document.getElementById('top3').style.display = 'none';
 }
-
