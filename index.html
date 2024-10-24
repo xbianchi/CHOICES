@@ -75,7 +75,7 @@
         </div>
     </div>
 
-    <script>
+      <script>
         // Definir las categorías con los elementos
         const categories = {
             pokemonprimera: ['Pikachu', 'Charizard', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew', 'Pidgey', 'Ditto', 'Ivysaur', 'Venusaur', 'Charmander', 'Charmeleon', 'Wartortle', 'Blastoise', 'Caterpie', 'Metapod', 'Butterfree', 'Weedle', 'Kakuna', 'Beedrill', 'Pidgeotto', 'Pidgeot', 'Rattata', 'Raticate', 'Spearow', 'Fearow', 'Ekans', 'Arbok', 'Raichu', 'Sandshrew', 'Sandslash', 'Nidoran♀', 'Nidorina', 'Nidoqueen', 'Nidoran♂', 'Nidorino', 'Nidoking', 'Clefairy', 'Clefable', 'Vulpix', 'Ninetales', 'Jigglypuff', 'Wigglytuff', 'Zubat', 'Golbat', 'Oddish', 'Gloom', 'Vileplume', 'Paras', 'Parasect', 'Venonat', 'Venomoth', 'Diglett', 'Dugtrio', 'Meowth', 'Persian', 'Psyduck', 'Golduck', 'Mankey', 'Primeape', 'Growlithe', 'Arcanine', 'Poliwag', 'Poliwhirl', 'Poliwrath', 'Abra', 'Kadabra', 'Alakazam', 'Machop', 'Machoke', 'Machamp', 'Bellsprout', 'Weepinbell', 'Victreebel', 'Tentacool', 'Tentacruel', 'Geodude', 'Graveler', 'Golem', 'Ponyta', 'Rapidash', 'Slowpoke', 'Slowbro', 'Magnemite', 'Magneton', 'Farfetch’d', 'Doduo', 'Dodrio', 'Seel', 'Dewgong', 'Grimer', 'Muk', 'Shellder', 'Cloyster', 'Gastly', 'Haunter', 'Gengar', 'Onix', 'Drowzee', 'Hypno', 'Krabby', 'Kingler', 'Voltorb', 'Electrode', 'Exeggcute', 'Exeggutor', 'Cubone', 'Marowak', 'Hitmonlee', 'Hitmonchan', 'Lickitung', 'Koffing', 'Weezing', 'Rhyhorn', 'Rhydon', 'Chansey', 'Tangela', 'Kangaskhan', 'Horsea', 'Seadra', 'Goldeen', 'Seaking', 'Staryu', 'Starmie', 'Mr. Mime', 'Scyther', 'Jynx', 'Electabuzz', 'Magmar', 'Pinsir', 'Tauros', 'Magikarp', 'Gyarados', 'Lapras', 'Snorlax', 'Articuno', 'Zapdos', 'Moltres', 'Dratini', 'Dragonair', 'Dragonite', 'Mewtwo'],
@@ -89,16 +89,19 @@
             rupaulAll: []
         };
 
+        // Lógica de eliminación
         let currentRound = [];
         let nextRound = [];
         let eliminated = [];
         let top3 = [];
         let isGameOver = false;
 
+        // Lógica para deshabilitar botón si no hay categoría seleccionada
         document.getElementById('categories').addEventListener('change', function () {
             document.getElementById('start-btn').disabled = !this.value;
         });
 
+        // Función para mezclar un array
         function shuffleArray(array) {
             for (let i = array.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
@@ -107,6 +110,7 @@
             return array;
         }
 
+        // Función que inicia el juego
         function startGame() {
             const selectedCategory = document.getElementById('categories').value;
             if (!selectedCategory) {
@@ -114,97 +118,118 @@
                 return;
             }
 
-            currentRound = shuffleArray([...categories[selectedCategory]]);
+            console.log('Categoría seleccionada:', selectedCategory);
+            console.log('Opciones de la categoría:', categories[selectedCategory]);
+
+            // Inicializamos las opciones de la categoría seleccionada
+            currentRound = shuffleArray([...categories[selectedCategory]]); // Mezclamos la lista
             nextRound = [];
             eliminated = [];
             top3 = [];
             isGameOver = false;
 
+            // Verificamos si hay opciones en la categoría
             if (currentRound.length === 0) {
                 alert('No hay opciones en esta categoría.');
                 resetGame();
                 return;
             }
 
+            // Mostrar el área del juego
             document.getElementById('game-area').style.display = 'flex';
-            document.getElementById('category-selector').style.display = 'none';
+            document.getElementById('category-selector').style.display = 'none'; // Ocultar selector de categoría
 
+            // Empezar la primera ronda
             startNextMatch();
         }
 
+        // Función para mostrar el mensaje de nueva ronda
         function showRoundMessage() {
             const message = document.getElementById('round-message');
             message.style.display = 'block';
             message.classList.add('fade-in');
             setTimeout(() => {
                 message.style.display = 'none';
-            }, 3000);
+            }, 3000); // Mostrar el mensaje durante 3 segundos
         }
 
+        // Función para mostrar las próximas dos opciones
         function startNextMatch() {
             if (currentRound.length === 0 && nextRound.length === 1) {
+                // Si llegamos a los últimos 3 finalistas
                 if (nextRound.length === 3) {
                     showTop3(nextRound);
                     return;
                 }
 
-                showWinner(nextRound[0]);
+                // Si hay un único ganador, el juego ha terminado
+                alert('¡El ganador definitivo es: ' + nextRound[0] + '!');
+                resetGame();
                 return;
-            }
-
-            if (currentRound.length === 1) {
-                nextRound.push(currentRound[0]);
-                currentRound = shuffleArray([...nextRound]);
+            } else if (currentRound.length === 0) {
+                // Pasamos a la siguiente ronda si no hay más enfrentamientos en la ronda actual
+                currentRound = shuffleArray([...nextRound]); // Mezclamos la nueva ronda
                 nextRound = [];
-
-                showRoundMessage();
+                showRoundMessage(); // Mostramos el mensaje de nueva ronda
             }
 
-            const [option1, option2] = currentRound.splice(0, 2);
-            document.getElementById('option1').textContent = option1;
-            document.getElementById('option2').textContent = option2;
-        }
-
-        function selectOption(option) {
-            const selected = document.getElementById(option).textContent;
-            nextRound.push(selected);
-            eliminated.push(option === 'option1' ? document.getElementById('option2').textContent : selected);
-
-            if (currentRound.length === 0) {
-                startNextMatch();
+            if (currentRound.length >= 2) {
+                // Seleccionamos dos opciones para enfrentar
+                const option1 = currentRound.shift();
+                const option2 = currentRound.shift();
+                displayOptions(option1, option2);
             } else {
+                // Si hay un número impar de opciones, uno pasa automáticamente a la siguiente ronda
+                nextRound.push(currentRound.shift());
                 startNextMatch();
             }
         }
 
+        // Función para mostrar las opciones en pantalla
+        function displayOptions(option1, option2) {
+            document.getElementById('option1').innerHTML = option1;
+            document.getElementById('option2').innerHTML = option2;
+        }
+
+        // Función cuando se selecciona una opción
+        function selectOption(selectedOption) {
+            const selectedText = document.getElementById(selectedOption).innerHTML;
+            const otherOption = selectedOption === 'option1' ? document.getElementById('option2').innerHTML : document.getElementById('option1').innerHTML;
+
+            // La opción seleccionada pasa a la siguiente ronda
+            nextRound.push(selectedText);
+            // La opción no seleccionada se elimina
+            eliminated.push(otherOption);
+
+            // Continuamos con el siguiente enfrentamiento
+            startNextMatch();
+        }
+
+        // Función para mostrar el top 3
         function showTop3(finalists) {
+            top3 = finalists;
+            document.getElementById('game-area').style.display = 'none';
             document.getElementById('top3').style.display = 'block';
+
             const finalistsList = document.getElementById('finalists-list');
             finalistsList.innerHTML = '';
-            finalists.forEach(finalist => {
+            top3.forEach(finalist => {
                 const li = document.createElement('li');
                 li.textContent = finalist;
                 finalistsList.appendChild(li);
             });
         }
 
-        function showWinner(winner) {
-            alert('¡El ganador es ' + winner + '!');
-            resetGame();
-        }
-
+        // Función para reiniciar el juego
         function resetGame() {
-            document.getElementById('game-area').style.display = 'none';
             document.getElementById('category-selector').style.display = 'block';
+            document.getElementById('game-area').style.display = 'none';
             document.getElementById('top3').style.display = 'none';
-            currentRound = [];
-            nextRound = [];
-            eliminated = [];
-            top3 = [];
         }
     </script>
 </body>
 </html>
+
 
 
 
