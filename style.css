@@ -30,17 +30,11 @@ h1 {
     margin-bottom: 30px;
 }
 
-/* Resaltado de la categoría seleccionada */
-select:focus, select:active {
-    outline: none;
-    border: 2px solid #77c79f;
-}
-
 /* Estilos de las tarjetas */
 .card {
-    display: flex;
-    align-items: center;
+    display: inline-flex;
     justify-content: center;
+    align-items: center;
     width: 250px;
     height: 250px;
     background-color: #ffb3c1; /* Pastel rosado */
@@ -57,6 +51,12 @@ select:focus, select:active {
     background-color: #ff9aa2; /* Pastel rosado más oscuro */
     transform: translateY(-10px);
     box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+}
+
+.selected-card {
+    background-color: #6b5b95; /* Cambia de color al seleccionar */
+    transform: scale(1.05);
+    transition: transform 0.3s ease;
 }
 
 /* Estilos para el top 3 */
@@ -78,6 +78,7 @@ select:focus, select:active {
     padding: 10px;
     border-radius: 8px;
     font-size: 20px;
+    border: 2px solid #ff9aa2; /* Borde más visible */
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
 }
 
@@ -91,7 +92,7 @@ button {
     border-radius: 8px;
     cursor: pointer;
     font-size: 18px;
-    transition: background-color 0.3s, transform 0.3s;
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
 }
 
 button:disabled {
@@ -101,6 +102,7 @@ button:disabled {
 button:hover {
     background-color: #77c79f;
     transform: translateY(-3px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
 }
 
 /* Transición de mensajes */
