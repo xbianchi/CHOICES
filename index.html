@@ -80,12 +80,12 @@
             pokemon: ['Pikachu', 'Charizard', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew', 'Pidgey', 'Ditto'],
             comidas: ['Pizza', 'Hamburguesa', 'Pasta', 'Tacos'],
             equipos: ['Barcelona', 'Real Madrid', 'Manchester United', 'Liverpool'],
-            rupaulUSA: [...], // Lista completa de queens
-            rupaulUK: [...],
-            rupaulDownUnder: [...],
-            rupaulHolland: [...],
-            rupaulEspana: [...],
-            rupaulAll: []
+            rupaulUSA: ['Bianca Del Rio', 'Sasha Velour', 'Jinkx Monsoon', 'Trixie Mattel'],
+            rupaulUK: ['The Vivienne', 'Lawrence Chaney', 'Bimini Bon-Boulash', 'Tayce'],
+            rupaulDownUnder: ['Kita Mean', 'Anita Wigl\'it', 'Art Simone', 'Etcetera Etcetera'],
+            rupaulHolland: ['Envy Peru', 'Janey Jacké', 'Miss Abby OMG'],
+            rupaulEspana: ['Carmen Farala', 'Killer Queen', 'Sagittaria'],
+            rupaulAll: ['Raja', 'Jujubee', 'Shea Couleé', 'Monet X Change', 'Trinity The Tuck']
         };
 
         // Lógica de eliminación
@@ -117,12 +117,22 @@
                 return;
             }
 
+            console.log('Categoría seleccionada:', selectedCategory);
+            console.log('Opciones de la categoría:', categories[selectedCategory]);
+
             // Inicializamos las opciones de la categoría seleccionada
             currentRound = shuffleArray([...categories[selectedCategory]]); // Mezclamos la lista
             nextRound = [];
             eliminated = [];
             top3 = [];
             isGameOver = false;
+
+            // Verificamos si hay opciones en la categoría
+            if (currentRound.length === 0) {
+                alert('No hay opciones en esta categoría.');
+                resetGame();
+                return;
+            }
 
             // Mostrar el área del juego
             document.getElementById('game-area').style.display = 'flex';
@@ -201,36 +211,23 @@
             document.getElementById('top3').style.display = 'block';
 
             const finalistsList = document.getElementById('finalists-list');
-            finalistsList.innerHTML = ''; // Limpiamos la lista anterior
-
+            finalistsList.innerHTML = '';
             top3.forEach(finalist => {
                 const li = document.createElement('li');
                 li.textContent = finalist;
                 finalistsList.appendChild(li);
             });
-
-            // El top 3 se enfrentará al final, es decir, cuando seleccionen al ganador
-            setTimeout(() => {
-                displayFinalistsMatch(top3);
-            }, 3000); // Mostrar el top 3 durante 3 segundos antes de la batalla final
-        }
-
-        // Función para mostrar el enfrentamiento final con los 3 finalistas
-        function displayFinalistsMatch(finalists) {
-            document.getElementById('top3').style.display = 'none';
-            currentRound = shuffleArray([...finalists]);
-            nextRound = [];
-            startNextMatch();
         }
 
         // Función para reiniciar el juego
         function resetGame() {
-            document.getElementById('game-area').style.display = 'none';
             document.getElementById('category-selector').style.display = 'block';
+            document.getElementById('game-area').style.display = 'none';
             document.getElementById('top3').style.display = 'none';
         }
     </script>
 </body>
 </html>
+
 
 
