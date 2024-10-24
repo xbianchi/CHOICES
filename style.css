@@ -1,3 +1,4 @@
+/* Fondo del cuerpo */
 body {
     font-family: Arial, sans-serif;
     text-align: center;
@@ -6,51 +7,65 @@ body {
     padding: 0;
 }
 
+/* Estilo del contenedor del juego */
 .game-container {
     max-width: 600px;
     margin: 50px auto;
-    background-color: white;
+    background-color: #ffffff;
     padding: 20px;
+    border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
 
+/* Colores de los títulos */
 h1 {
-    color: #333;
+    color: #4CAF50;
 }
 
+/* Selector de categoría */
 #category-selector {
     margin-bottom: 20px;
 }
 
+/* Estilos de las tarjetas */
 .card {
     display: inline-block;
     width: 200px;
     height: 200px;
-    background-color: #eee;
+    background-color: #FFD700;
     margin: 20px;
     line-height: 200px;
     font-size: 20px;
+    color: #333;
+    border-radius: 10px;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
 .card:hover {
-    background-color: #ddd;
+    background-color: #FF6347;
 }
 
-#results {
-    margin-top: 20px;
+/* Estilos para el top 3 */
+#top3 {
+    margin-top: 30px;
+    font-size: 18px;
+    color: #333;
 }
 
-#results button {
+/* Estilos para los botones */
+button {
     background-color: #4CAF50;
     color: white;
-    border: none;
     padding: 10px 20px;
-    font-size: 16px;
+    margin-top: 20px;
+    border: none;
+    border-radius: 5px;
     cursor: pointer;
+    font-size: 16px;
 }
 
-#results button:hover {
+button:hover {
     background-color: #45a049;
 }
 
