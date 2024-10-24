@@ -38,104 +38,58 @@
         <div id="top3" style="display: none;"></div>
     </div>
 
-    <!-- Incluimos aquí el script para evitar errores de carga -->
+    <!-- Firebase y tus scripts -->
     <script>
+        // Definir las categorías con los elementos
         const categories = {
             pokemon: ['Pikachu', 'Charizard', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew', 'Pidgey', 'Ditto'],
             comidas: ['Pizza', 'Hamburguesa', 'Pasta', 'Tacos'],
             equipos: ['Barcelona', 'Real Madrid', 'Manchester United', 'Liverpool'],
-            rupaulUSA: ['Akashia', 'BeBe Zahara Benet', 'Jade Sotomayor', 'Nina Flowers', 'Ongina', /* más queens */],
-            rupaulUK: ['Baga Chipz', 'Blu Hydrangea', 'Cheryl Hole', 'Crystal', 'Divina De Campo', /* más queens */],
-            rupaulDownUnder: ['Anita Wigl\'it', 'Art Simone', 'Coco Jumbo', 'Electra Shock', 'Etcetera Etcetera'],
-            rupaulHolland: ['ChelseaBoy', 'Envy Peru', 'Janey Jacké', 'Madame Madness', 'Ma\'Ma Queen'],
-            rupaulEspana: ['Arantxa Castilla-La Mancha', 'Carmen Farala', 'Dovima Nurmi', 'Drag Vulcano'],
-            rupaulAll: ['Akashia', 'BeBe Zahara Benet', 'Jade Sotomayor', 'Nina Flowers', 'Ongina', /* más queens */]
+            rupaulUSA: ['Akashia', 'BeBe Zahara Benet', 'Jade Sotomayor', 'Nina Flowers', 'Ongina', 'Rebecca Glasscock', 'Shannel', 'Tammie Brown', 'Victoria "Porkchop" Parker', 'Jujubee', 'Pandora Boxx', 'Raven', 'Sahara Davenport', 'Sonique', 'Tatianna', 'Tyra Sanchez', 'Morgan McMichaels', 'Jessica Wild', 'Mystique Summers Madison', 'Nicole Paige Brooks', 'Shangela', 'Alexis Mateo', 'Carmen Carrera', 'Delta Work', 'India Ferrah', 'Manila Luzon', 'Mariah', 'Mimi Imfurst', 'Phoenix', 'Raja', 'Stacy Layne Matthews', 'Venus D-Lite', 'Yara Sofia', 'Chad Michaels', 'Dida Ritz', 'Jiggly Caliente', 'Kenya Michaels', 'Latrice Royale', 'Madame LaQueer', 'Milan', 'Phi Phi O\'Hara', 'Sharon Needles', 'The Princess', 'Willam', 'Alisa Summers', 'Lashauwn Beyond', 'Alaska', 'Alyssa Edwards', 'Coco Montrese', 'Detox', 'Honey Mahogany', 'Ivy Winters', 'Jade Jolie', 'Jinkx Monsoon', 'Lineysha Sparx', 'Monica Beverly Hillz', 'Penny Tration', 'Roxxxy Andrews', 'Serena ChaCha', 'Vivienne Pinay', 'Adore Delano', 'April Carrión', 'BenDeLaCreme', 'Bianca Del Rio', 'Courtney Act', 'Darienne Lake', 'Gia Gunn', 'Joslyn Fox', 'Kelly Mantle', 'Laganja Estranja', 'Magnolia Crawford', 'Milk', 'Trinity K. Bonet', 'Vivacious', 'Ginger Minj', 'Jasmine Masters', 'Jaidynn Diore Fierce', 'Kandy Ho', 'Katya', 'Kennedy Davenport', 'Max', 'Miss Fame', 'Mrs. Kasha Davis', 'Pearl', 'Sasha Belle', 'Tempest DuJour', 'Trixie Mattel', 'Violet Chachki', 'Bob the Drag Queen', 'Chi Chi DeVayne', 'Cynthia Lee Fontaine', 'Derrick Barry', 'Kim Chi', 'Laila McQueen', 'Naomi Smalls', 'Naysha Lopez', 'Robbie Turner', 'Thorgy Thor', 'Acid Betty', 'Dax ExclamationPoint', 'Aja', 'Alexis Michelle', 'Charlie Hides', 'Farrah Moan', 'Jaymes Mansfield', 'Nina Bo\'nina Brown', 'Peppermint', 'Sasha Velour', 'Shea Couleé', 'Trinity The Tuck', 'Kimora Blac', 'Valentina', 'Aquaria', 'Asia O\'Hara', 'Blair St. Clair', 'Dusty Ray Bottoms', 'Eureka O\'Hara', 'Kalorie Karbdashian-Williams', 'Kameron Michaels', 'Mayhem Miller', 'Miz Cracker', 'Monét X Change', 'Monique Heart', 'The Vixen', 'Vanessa Vanjie Mateo', 'Yuhua Hamasaki', 'A\'keria C. Davenport', 'Ariel Versace', 'Brooke Lynn Hytes', 'Honey Davenport', 'Kahanna Montrese', 'Mercedes Iman Diamond', 'Nina West', 'Plastique Tiara', 'Ra\'Jah O\'Hara', 'Scarlet Envy', 'Shuga Cain', 'Silky Nutmeg Ganache', 'Soju', 'Vanessa Vanjie Mateo', 'Yvie Oddly', 'Aiden Zhane', 'Brita', 'Crystal Methyd', 'Dahlia Sin', 'Gigi Goode', 'Heidi N Closet', 'Jackie Cox', 'Jaida Essence Hall', 'Jan', 'Nicky Doll', 'Rock M. Sakura', 'Sherry Pie (Descalificada)', 'Widow Von\'Du', 'Denali', 'Elliott with 2 Ts', 'Gottmik', 'Joey Jay', 'Kahmora Hall', 'Kandy Muse', 'LaLa Ri', 'Olivia Lux', 'Rosé', 'Symone', 'Tamisha Iman', 'Tina Burner', 'Utica Queen', 'Alyssa Hunter', 'Angeria Paris VanMichaels', 'Bosco', 'Daya Betty', 'DeJa Skye', 'Jasmine Kennedie', 'Jorgeous', 'June Jambalaya', 'Kerri Colby', 'Kornbread Jeté (Abandona)', 'Lady Camden', 'Maddie Morphosis', 'Orion Story', 'Willow Pill', 'Amethyst', 'Anetra', 'Aura Mayari', 'Irene Dubois', 'Jax', 'Loosey LaDuca', 'Luxx Noir London', 'Malaysia Babydoll Foxx', 'Marcia Marcia Marcia', 'Mistress Isabelle Brooks', 'Princess Poppy', 'Robin Fierce', 'Salina EsTitties', 'Sasha Colby', 'Spice', 'Sugar'],
+            rupaulUK: ['Baga Chipz', 'Blu Hydrangea', 'Cheryl Hole', 'Crystal', 'Divina De Campo', 'Gothy Kendoll', 'Scaredy Kat', 'Sum Ting Wong', 'Vinegar Strokes', 'The Vivienne', 'A\'Whora', 'Asttina Mandella', 'Bimini Bon-Boulash', 'Cherry Valentine', 'Ellie Diamond', 'Ginny Lemon', 'Joe Black', 'Lawrence Chaney', 'Sister Sister', 'Tayce', 'Tia Kofi', 'Anubis', 'Charity Kase', 'Choriza May', 'Elektra Fence', 'Ella Vaday', 'Krystal Versace', 'Kitty Scott-Claus', 'River Medway', 'Scarlett Harlett', 'Vanity Milan', 'Victoria Scone', 'Baby', 'Black Peppa', 'Cheddar Gorgeous', 'Copper Topp', 'Dakota Schiffer', 'Danny Beard', 'Jonbers Blonde', 'Just May', 'Le Fil', 'Pixie Polite', 'Sminty Drop', 'Starlet'],
+            rupaulDownUnder: ['Anita Wigl\'it', 'Art Simone', 'Coco Jumbo', 'Electra Shock', 'Etcetera Etcetera', 'Jojo Zaho', 'Karen From Finance', 'Kita Mean', 'Maxi Shield', 'Scarlet Adams'],
+            rupaulHolland: ['ChelseaBoy', 'Envy Peru', 'Janey Jacké', 'Madame Madness', 'Ma\'Ma Queen', 'Megan Schoonbrood', 'Patty Pam-Pam', 'Roem', 'Sederginne', 'Abby OMG', 'Countess', 'Ivy-Elyse', 'Juicy Kutoure', 'Keta Minaj', 'Love Masisi', 'My Little Puny', 'Reggy B', 'Tabitha', 'Vanessa van Cartier', 'Vivaldi'],
+            rupaulEspana: ['Arantxa Castilla-La Mancha', 'Carmen Farala', 'Dovima Nurmi', 'Drag Vulcano', 'Hugáceo Crujiente', 'Inti', 'Killer Queen', 'Pupi Poisson', 'Sagittaria', 'The Macarena', 'Juriji Der Klee', 'Marina', 'Estrella Xtravaganza', 'Diamante Merybrown', 'Jota Carajota', 'Onyx', 'Samantha Ballentines', 'Setlas', 'Sharonne', 'Venedita Von Däsh', 'Clover Bish', 'Drag Chuchi', 'Hornella Góngora', 'Kelly Roller', 'Maria Edilia', 'Pakita', 'Pitita', 'Pink Chadora', 'Vania Vainilla', 'Visa'],
+            rupaulAll: []
         };
 
-        let currentCategory = [];
-        let round = [];
-        let selectedItems = [];
-        let scoreMap = {};
-        let roundWinners = [];
+        // Agregar todas las queens de diferentes categorías a rupaulAll
+        categories.rupaulAll = [
+            ...categories.rupaulUSA,
+            ...categories.rupaulUK,
+            ...categories.rupaulDownUnder,
+            ...categories.rupaulHolland,
+            ...categories.rupaulEspana
+        ];
 
+        // Función para iniciar el juego
         function startGame() {
-            const categorySelect = document.getElementById('categories');
-            const selectedCategory = categorySelect.value;
-
-            if (!selectedCategory) {
-                alert('Por favor, selecciona una categoría antes de comenzar el juego.');
+            const category = document.getElementById("categories").value;
+            if (!category) {
+                alert("Por favor, selecciona una categoría");
                 return;
             }
 
-            currentCategory = [...categories[selectedCategory]];
-            selectedItems = [];
-            scoreMap = {};
-            currentCategory.forEach(item => scoreMap[item] = 0);
-
-            document.getElementById('category-selector').style.display = 'none';
-            document.getElementById('game-area').style.display = 'block';
-
-            showNextRound();
-        }
-
-        function showNextRound() {
-            if (currentCategory.length < 2) {
-                finishGame();
+            const options = categories[category];
+            if (options.length < 2) {
+                alert("No hay suficientes elementos en esta categoría para jugar");
                 return;
             }
 
-            let index1 = Math.floor(Math.random() * currentCategory.length);
-            let index2;
+            document.getElementById("game-area").style.display = "block";
+            document.getElementById("category-selector").style.display = "none";
+
+            // Seleccionar dos elementos aleatorios
+            const randomOption1 = options[Math.floor(Math.random() * options.length)];
+            let randomOption2;
             do {
-                index2 = Math.floor(Math.random() * currentCategory.length);
-            } while (index1 === index2);
+                randomOption2 = options[Math.floor(Math.random() * options.length)];
+            } while (randomOption2 === randomOption1);
 
-            round = [currentCategory[index1], currentCategory[index2]];
-
-            document.getElementById('option1').innerText = round[0];
-            document.getElementById('option2').innerText = round[1];
-
-            document.getElementById('option1').onclick = () => chooseOption(0);
-            document.getElementById('option2').onclick = () => chooseOption(1);
-        }
-
-        function chooseOption(choice) {
-            const chosenItem = round[choice];
-            const eliminatedItem = round[choice === 0 ? 1 : 0];
-
-            scoreMap[chosenItem] += 1;
-            selectedItems.push(chosenItem);
-
-            currentCategory = currentCategory.filter(item => item !== eliminatedItem);
-            if (currentCategory.length < 3) {
-                roundWinners = [...selectedItems];
-            }
-
-            showNextRound();
-        }
-
-        function finishGame() {
-            const sortedItems = Object.keys(scoreMap).sort((a, b) => scoreMap[b] - scoreMap[a]);
-
-            const top3Div = document.getElementById('top3');
-            top3Div.innerHTML = `
-                <h2>Este es tu Top 3:</h2>
-                <p>1. ${sortedItems[0]}</p>
-                <p>2. ${sortedItems[1]}</p>
-                <p>3. ${sortedItems[2]}</p>
-                <button onclick="restartGame()">Reiniciar Juego</button>
-            `;
-            top3Div.style.display = 'block';
-
-            document.getElementById('game-area').style.display = 'none';
-        }
-
-        function restartGame() {
-            document.getElementById('category-selector').style.display = 'block';
-            document.getElementById('game-area').style.display = 'none';
-            document.getElementById('top3').style.display = 'none';
+            // Mostrar las opciones en el juego
+            document.getElementById("option1").innerText = randomOption1;
+            document.getElementById("option2").innerText = randomOption2;
         }
     </script>
 </body>
 </html>
-
