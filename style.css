@@ -1,72 +1,114 @@
-/* Fondo del cuerpo */
+/* Estilos generales */
 body {
-    font-family: Arial, sans-serif;
-    text-align: center;
-    background-color: #f0f0f0;
+    font-family: 'Arial', sans-serif;
+    background-color: #f7f3f9; /* Fondo general de la página */
+    color: #333;
     margin: 0;
     padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
 }
 
-/* Estilo del contenedor del juego */
-.game-container {
-    max-width: 600px;
-    margin: 50px auto;
-    background-color: #ffffff;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-/* Colores de los títulos */
 h1 {
-    color: #4CAF50;
+    color: #ff99c8; /* Rosa pastel */
+    text-align: center;
 }
 
-/* Selector de categoría */
+/* Contenedor del juego */
+.game-container {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    text-align: center;
+}
+
+/* Selector de categorías */
 #category-selector {
     margin-bottom: 20px;
 }
 
-/* Estilos de las tarjetas */
-.card {
-    display: inline-block;
-    width: 200px;
-    height: 200px;
-    background-color: #FFD700;
-    margin: 20px;
-    line-height: 200px;
-    font-size: 20px;
-    color: #333;
-    border-radius: 10px;
+select, button {
+    padding: 10px 20px;
+    margin: 10px 0;
+    font-size: 16px;
+    border-radius: 5px;
+    border: none;
+}
+
+button {
+    background-color: #ffc4e1; /* Rosa pastel */
+    color: #ffffff;
     cursor: pointer;
     transition: background-color 0.3s;
 }
 
-.card:hover {
-    background-color: #FF6347;
+button:hover {
+    background-color: #ff99c8;
 }
 
-/* Estilos para el top 3 */
-#top3 {
-    margin-top: 30px;
-    font-size: 18px;
+select {
+    background-color: #ccefff; /* Celeste pastel */
     color: #333;
 }
 
-/* Estilos para los botones */
-button {
-    background-color: #4CAF50;
-    color: white;
-    padding: 10px 20px;
+/* Área de juego */
+#game-area {
+    display: flex;
+    justify-content: space-around;
     margin-top: 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
 }
 
-button:hover {
-    background-color: #45a049;
+.card {
+    background-color: #d9e6ff; /* Azul pastel */
+    color: #333;
+    border-radius: 10px;
+    padding: 20px;
+    width: 45%;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s, background-color 0.3s;
 }
+
+.card:hover {
+    transform: scale(1.05);
+    background-color: #b3d7ff; /* Un tono más oscuro al pasar el mouse */
+}
+
+/* Top 3 final */
+#top3 {
+    background-color: #d4f7dc; /* Verde menta pastel */
+    border-radius: 10px;
+    padding: 20px;
+    margin-top: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#top3 h2 {
+    color: #a4cbb4; /* Verde pastel */
+}
+
+#top3 p {
+    font-size: 18px;
+    color: #6b8e5e; /* Verde más oscuro */
+}
+
+#top3 button {
+    background-color: #ff99c8; /* Rosa pastel */
+    color: #ffffff;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+#top3 button:hover {
+    background-color: #ff6f9c; /* Rosa más fuerte al pasar el mouse */
+}
+
 
 
