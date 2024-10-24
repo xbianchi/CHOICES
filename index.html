@@ -38,12 +38,104 @@
         <div id="top3" style="display: none;"></div>
     </div>
 
-    <!-- Firebase y tus scripts -->
-    <script src="https://www.gstatic.com/firebasejs/8.6.2/firebase-app.js"></script>
-    <script src="script.js"></script>
+    <!-- Incluimos aquí el script para evitar errores de carga -->
+    <script>
+        const categories = {
+            pokemon: ['Pikachu', 'Charizard', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew', 'Pidgey', 'Ditto'],
+            comidas: ['Pizza', 'Hamburguesa', 'Pasta', 'Tacos'],
+            equipos: ['Barcelona', 'Real Madrid', 'Manchester United', 'Liverpool'],
+            rupaulUSA: ['Akashia', 'BeBe Zahara Benet', 'Jade Sotomayor', 'Nina Flowers', 'Ongina', /* más queens */],
+            rupaulUK: ['Baga Chipz', 'Blu Hydrangea', 'Cheryl Hole', 'Crystal', 'Divina De Campo', /* más queens */],
+            rupaulDownUnder: ['Anita Wigl\'it', 'Art Simone', 'Coco Jumbo', 'Electra Shock', 'Etcetera Etcetera'],
+            rupaulHolland: ['ChelseaBoy', 'Envy Peru', 'Janey Jacké', 'Madame Madness', 'Ma\'Ma Queen'],
+            rupaulEspana: ['Arantxa Castilla-La Mancha', 'Carmen Farala', 'Dovima Nurmi', 'Drag Vulcano'],
+            rupaulAll: ['Akashia', 'BeBe Zahara Benet', 'Jade Sotomayor', 'Nina Flowers', 'Ongina', /* más queens */]
+        };
+
+        let currentCategory = [];
+        let round = [];
+        let selectedItems = [];
+        let scoreMap = {};
+        let roundWinners = [];
+
+        function startGame() {
+            const categorySelect = document.getElementById('categories');
+            const selectedCategory = categorySelect.value;
+
+            if (!selectedCategory) {
+                alert('Por favor, selecciona una categoría antes de comenzar el juego.');
+                return;
+            }
+
+            currentCategory = [...categories[selectedCategory]];
+            selectedItems = [];
+            scoreMap = {};
+            currentCategory.forEach(item => scoreMap[item] = 0);
+
+            document.getElementById('category-selector').style.display = 'none';
+            document.getElementById('game-area').style.display = 'block';
+
+            showNextRound();
+        }
+
+        function showNextRound() {
+            if (currentCategory.length < 2) {
+                finishGame();
+                return;
+            }
+
+            let index1 = Math.floor(Math.random() * currentCategory.length);
+            let index2;
+            do {
+                index2 = Math.floor(Math.random() * currentCategory.length);
+            } while (index1 === index2);
+
+            round = [currentCategory[index1], currentCategory[index2]];
+
+            document.getElementById('option1').innerText = round[0];
+            document.getElementById('option2').innerText = round[1];
+
+            document.getElementById('option1').onclick = () => chooseOption(0);
+            document.getElementById('option2').onclick = () => chooseOption(1);
+        }
+
+        function chooseOption(choice) {
+            const chosenItem = round[choice];
+            const eliminatedItem = round[choice === 0 ? 1 : 0];
+
+            scoreMap[chosenItem] += 1;
+            selectedItems.push(chosenItem);
+
+            currentCategory = currentCategory.filter(item => item !== eliminatedItem);
+            if (currentCategory.length < 3) {
+                roundWinners = [...selectedItems];
+            }
+
+            showNextRound();
+        }
+
+        function finishGame() {
+            const sortedItems = Object.keys(scoreMap).sort((a, b) => scoreMap[b] - scoreMap[a]);
+
+            const top3Div = document.getElementById('top3');
+            top3Div.innerHTML = `
+                <h2>Este es tu Top 3:</h2>
+                <p>1. ${sortedItems[0]}</p>
+                <p>2. ${sortedItems[1]}</p>
+                <p>3. ${sortedItems[2]}</p>
+                <button onclick="restartGame()">Reiniciar Juego</button>
+            `;
+            top3Div.style.display = 'block';
+
+            document.getElementById('game-area').style.display = 'none';
+        }
+
+        function restartGame() {
+            document.getElementById('category-selector').style.display = 'block';
+            document.getElementById('game-area').style.display = 'none';
+            document.getElementById('top3').style.display = 'none';
+        }
+    </script>
 </body>
 </html>
-
-
-
 
