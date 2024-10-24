@@ -3,12 +3,36 @@ const categories = {
     pokemon: ['Pikachu', 'Charizard', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew', 'Pidgey', 'Ditto'],
     comidas: ['Pizza', 'Hamburguesa', 'Pasta', 'Tacos'],
     equipos: ['Barcelona', 'Real Madrid', 'Manchester United', 'Liverpool'],
-    rupaulUSA: ['Akashia', 'BeBe Zahara Benet', 'Jade Sotomayor', 'Nina Flowers', 'Ongina', /*... más queens */],
-    rupaulUK: ['Baga Chipz', 'Blu Hydrangea', 'Cheryl Hole', 'Crystal', 'Divina De Campo', /*... más queens */],
-    rupaulDownUnder: ['Queen1 Down Under', 'Queen2 Down Under', 'Queen3 Down Under', 'Queen4 Down Under'],
-    rupaulHolland: ['Queen1 Holland', 'Queen2 Holland', 'Queen3 Holland', 'Queen4 Holland'],
-    rupaulEspana: ['Queen1 España', 'Queen2 España', 'Queen3 España', 'Queen4 España'],
-    rupaulAll: ['Queen1', 'Queen2', 'Queen3', 'Queen4', 'Queen5', 'Queen6'] // Todas las Queens
+    rupaulUSA: ['Akashia', 'BeBe Zahara Benet', 'Jade Sotomayor', 'Nina Flowers', 'Ongina', 'Rebecca Glasscock', 'Shannel', 'Tammie Brown', 'Victoria "Porkchop" Parker', 'Jujubee', 'Pandora Boxx', 'Raven', 'Sahara Davenport', 'Sonique', 'Tatianna', 'Tyra Sanchez', 'Morgan McMichaels', 'Jessica Wild', 'Mystique Summers Madison', 'Nicole Paige Brooks', 'Shangela', 'Alexis Mateo', 'Carmen Carrera', 'Delta Work', 'India Ferrah', 'Manila Luzon', 'Mariah', 'Mimi Imfurst', 'Phoenix', 'Raja', 'Stacy Layne Matthews', 'Venus D-Lite', 'Yara Sofia', 'Chad Michaels', 'Dida Ritz', 'Jiggly Caliente', 'Kenya Michaels', 'Latrice Royale', 'Madame LaQueer', 'Milan', 'Phi Phi O'Hara', 'Sharon Needles', 'The Princess', 'Willam', 'Alisa Summers', 'Lashauwn Beyond', 'Alaska', 'Alyssa Edwards', 'Coco Montrese', 'Detox', 'Honey Mahogany', 'Ivy Winters', 'Jade Jolie', 'Jinkx Monsoon', 'Lineysha Sparx', 'Monica Beverly Hillz', 'Penny Tration', 'Roxxxy Andrews', 'Serena ChaCha', 'Vivienne Pinay', 'Adore Delano', 'April Carrión', 'BenDeLaCreme', 'Bianca Del Rio', 'Courtney Act', 'Darienne Lake', 'Gia Gunn', 'Joslyn Fox', 'Kelly Mantle', 'Laganja Estranja', 'Magnolia Crawford', 'Milk', 'Trinity K. Bonet', 'Vivacious', 'Ginger Minj', 'Jasmine Masters', 'Jaidynn Diore Fierce', 'Kandy Ho', 'Katya', 'Kennedy Davenport', 'Max', 'Miss Fame', 'Mrs. Kasha Davis', 'Pearl', 'Sasha Belle', 'Tempest DuJour', 'Trixie Mattel', 'Violet Chachki', 'Bob the Drag Queen', 'Chi Chi DeVayne', 'Cynthia Lee Fontaine', 'Derrick Barry', 'Kim Chi', 'Laila McQueen', 'Naomi Smalls', 'Naysha Lopez', 'Robbie Turner', 'Thorgy Thor', 'Acid Betty', 'Dax ExclamationPoint', 'Aja', 'Alexis Michelle', 'Charlie Hides', 'Farrah Moan', 'Jaymes Mansfield', 'Nina Bo\'nina Brown', 'Peppermint', 'Sasha Velour', 'Shea Couleé', 'Trinity The Tuck', 'Kimora Blac', 'Valentina', 'Aquaria', 'Asia O\'Hara', 'Blair St. Clair', 'Dusty Ray Bottoms', 'Eureka O\'Hara', 'Kalorie Karbdashian-Williams', 'Kameron Michaels', 'Mayhem Miller', 'Miz Cracker', 'Monét X Change', 'Monique Heart', 'The Vixen', 'Vanessa Vanjie Mateo', 'Yuhua Hamasaki', 'A\'keria C. Davenport', 'Ariel Versace', 'Brooke Lynn Hytes', 'Honey Davenport', 'Kahanna Montrese', 'Mercedes Iman Diamond', 'Nina West', 'Plastique Tiara', 'Ra\'Jah O\'Hara', 'Scarlet Envy', 'Shuga Cain', 'Silky Nutmeg Ganache', 'Soju', 'Vanessa Vanjie Mateo', 'Yvie Oddly', 'Aiden Zhane', 'Brita', 'Crystal Methyd', 'Dahlia Sin', 'Gigi Goode', 'Heidi N Closet', 'Jackie Cox', 'Jaida Essence Hall', 'Jan', 'Nicky Doll', 'Rock M. Sakura', 'Sherry Pie (Descalificada)', 'Widow Von\'Du', 'Denali', 'Elliott with 2 Ts', 'Gottmik', 'Joey Jay', 'Kahmora Hall', 'Kandy Muse', 'LaLa Ri', 'Olivia Lux', 'Rosé', 'Symone', 'Tamisha Iman', 'Tina Burner', 'Utica Queen', 'Alyssa Hunter', 'Angeria Paris VanMichaels', 'Bosco', 'Daya Betty', 'DeJa Skye', 'Jasmine Kennedie', 'Jorgeous', 'June Jambalaya', 'Kerri Colby', 'Kornbread Jeté (Abandona)', 'Lady Camden', 'Maddie Morphosis', 'Orion Story', 'Willow Pill', 'Amethyst', 'Anetra', 'Aura Mayari', 'Irene Dubois', 'Jax', 'Loosey LaDuca', 'Luxx Noir London', 'Malaysia Babydoll Foxx', 'Marcia Marcia Marcia', 'Mistress Isabelle Brooks', 'Princess Poppy', 'Robin Fierce', 'Salina EsTitties', 'Sasha Colby', 'Spice', 'Sugar', 'Amanda Tori Meating', 'Geneva Karr', 'Hershii LiqCour-Jeté', 'Megami', 'Mirage', 'Mhi\'ya Iman Le\'Paige', 'Morphine Love Dion', 'Plane Jane', 'Plasma', 'Sapphira Cristál', 'Xunami Muse', 'Q', 'Dawn', 'Nymphia Wind'],
+    rupaulUK: ['Baga Chipz', 'Blu Hydrangea', 'Cheryl Hole', 'Crystal', 'Divina De Campo',
+  'Gothy Kendoll', 'Scaredy Kat', 'Sum Ting Wong', 'Vinegar Strokes', 'The Vivienne',
+  'A\'Whora', 'Asttina Mandella', 'Bimini Bon-Boulash', 'Cherry Valentine',
+  'Ellie Diamond', 'Ginny Lemon', 'Joe Black', 'Lawrence Chaney (Ganadora)',
+  'Sister Sister', 'Tayce', 'Tia Kofi', 'Anubis', 'Charity Kase', 'Choriza May',
+  'Elektra Fence', 'Ella Vaday', 'Krystal Versace (Ganadora)', 'Kitty Scott-Claus',
+  'River Medway', 'Scarlett Harlett', 'Vanity Milan', 'Victoria Scone', 'Baby',
+  'Black Peppa', 'Cheddar Gorgeous', 'Copper Topp', 'Dakota Schiffer',
+  'Danny Beard (Ganadora)', 'Jonbers Blonde', 'Just May', 'Le Fil', 'Pixie Polite',
+  'Sminty Drop', 'Starlet', 'Alexis Saint-Pete', 'Banksie', 'Cara Melle',
+  'DeDeLicious', 'Ginger Johnson', 'Kate Butch', 'Michael Marouli',
+  'Miss Naomi Carter', 'Tomara Thomas', 'Vicki Vivacious', 'Rileasa Slaves',
+  'Kiki Snatch', 'Kyran Thrax', 'Actavia', 'Charra Tea', 'Chanel O\'Conor',
+  'La Voix', 'Marmalade', 'Lill', 'Zahirah Zapanta', 'Dita Garbo', 'Saki Yew'],
+rupaulDownUnder: ['Anita Wigl\'it', 'Art Simone', 'Coco Jumbo', 'Electra Shock', 'Etcetera Etcetera', 'Jojo Zaho', 'Karen From Finance', 'Kita Mean', 'Maxi Shield', 'Scarlet Adams'],
+    rupaulHolland: ['ChelseaBoy', 'Envy Peru', 'Janey Jacké', 'Madame Madness', 'Ma\'Ma Queen', 'Megan Schoonbrood', 'Patty Pam-Pam', 'Roem', 'Sederginne', 'Abby OMG'],
+    rupaulEspana: ['Arantxa Castilla-La Mancha', 'Carmen Farala', 'Dovima Nurmi', 'Drag Vulcano', 'Hugáceo Crujiente', 'Inti', 'Killer Queen', 'Pupi Poisson', 'Sagittaria',
+    rupaulAll: ['Akashia', 'BeBe Zahara Benet', 'Jade Sotomayor', 'Nina Flowers', 'Ongina',
+        'Victoria Porkchop Parker', 'Shannel', 'Tammie Brown', 'Rebecca Glasscock',
+        'Tyra Sanchez', 'Raven', 'Jujubee', 'Pandora Boxx', 'Jessica Wild',
+        'Tatianna', 'Morgan McMichaels', 'Mystique Summers Madison', 'Sahara Davenport',
+        'Baga Chipz', 'Blu Hydrangea', 'Cheryl Hole', 'Crystal', 'Divina De Campo',
+        'Gothy Kendoll', 'Scaredy Kat', 'Sum Ting Wong', 'The Vivienne', 'Vinegar Strokes',
+        'Anita Wigl\'it', 'Art Simone', 'Coco Jumbo', 'Electra Shock', 'Etcetera Etcetera',
+        'Jojo Zaho', 'Karen From Finance', 'Kita Mean', 'Maxi Shield', 'Scarlet Adams',
+        'ChelseaBoy', 'Envy Peru', 'Janey Jacké', 'Madame Madness', 'Ma\'Ma Queen',
+        'Megan Schoonbrood', 'Patty Pam-Pam', 'Roem', 'Sederginne', 'Abby OMG',
+        'Arantxa Castilla-La Mancha', 'Carmen Farala', 'Dovima Nurmi', 'Drag Vulcano', 
+        'Hugáceo Crujiente', 'Inti', 'Killer Queen', 'Pupi Poisson', 'Sagittaria'] // Todas las Queens
 };
 
 // Variables globales
@@ -116,4 +140,5 @@ function restartGame() {
     document.getElementById('game-area').style.display = 'none';
     document.getElementById('top3').style.display = 'none';
 }
+
 
