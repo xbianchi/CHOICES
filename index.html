@@ -35,10 +35,12 @@
         </div>
 
         <!-- Top 3 -->
-        <div id="top3" style="display: none;"></div>
+        <div id="top3" style="display: none;">
+            <h2>Top 3 Finalistas</h2>
+            <ul id="finalists-list"></ul>
+        </div>
     </div>
 
-    <!-- Firebase y tus scripts -->
     <script>
         // Definir las categorías con los elementos
         const categories = {
@@ -54,6 +56,7 @@
         let currentRound = [];
         let nextRound = [];
         let eliminated = [];
+        let top3 = [];
         let isGameOver = false;
 
         // Lógica para deshabilitar botón si no hay categoría seleccionada
@@ -73,6 +76,7 @@
             currentRound = [...categories[selectedCategory]];
             nextRound = [];
             eliminated = [];
+            top3 = [];
             isGameOver = false;
 
             // Mostrar el área del juego
@@ -86,6 +90,12 @@
         // Función para mostrar las próximas dos opciones
         function startNextMatch() {
             if (currentRound.length === 0 && nextRound.length === 1) {
+                // Si llegamos a los últimos 3 finalistas
+                if (nextRound.length === 3) {
+                    showTop3(nextRound);
+                    return;
+                }
+
                 // Si hay un único ganador, el juego ha terminado
                 alert('¡El ganador definitivo es: ' + nextRound[0] + '!');
                 resetGame();
@@ -129,15 +139,52 @@
             startNextMatch();
         }
 
+        // Función para mostrar el top 3
+        function showTop3(finalists) {
+            top3 = finalists;
+            document.getElementById('game-area').style.display = 'none';
+            document.getElementById('top3').style.display = 'block';
+
+            const finalistsList = document.getElementById('finalists-list');
+            finalistsList.innerHTML = ''; // Limpiamos la lista anterior
+
+            top3.forEach(finalist => {
+                const li = document.createElement('li');
+                li.textContent = finalist;
+                finalistsList.appendChild(li);
+            });
+
+            // El top 3 se enfrentará al final, es decir, cuando seleccionen al ganador
+            setTimeout(() => {
+                displayFinalistsMatch(top3);
+            }, 3000); // Mostrar el top 3 durante 3 segundos antes de la batalla final
+        }
+
+        // Función para mostrar el enfrentamiento final con los 3 finalistas
+        function displayFinalistsMatch(finalists) {
+            document.getElementById('top3').style.display = 'none';
+            document.getElementById('game-area').style.display = 'flex';
+
+            // Se eligen dos de los tres para enfrentarse, luego el ganador enfrentará al tercero
+            const option1 = finalists.shift();
+            const option2 = finalists.shift();
+
+            displayOptions(option1, option2);
+
+            nextRound = [...finalists]; // El que no fue elegido para el primer enfrentamiento pasa automáticamente al siguiente
+        }
+
         // Función para reiniciar el juego
         function resetGame() {
             document.getElementById('game-area').style.display = 'none';
+            document.getElementById('top3').style.display = 'none';
             document.getElementById('category-selector').style.display = 'block';
             document.getElementById('categories').value = '';
             document.getElementById('start-btn').disabled = true;
             currentRound = [];
             nextRound = [];
             eliminated = [];
+            top3 = [];
         }
     </script>
 </body>
