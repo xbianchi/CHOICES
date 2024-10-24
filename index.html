@@ -21,6 +21,7 @@
                 <option value="equipos">Equipos de fútbol</option>
                 <option value="rupaulUSA">Queens de RuPaul USA</option>
                 <option value="rupaulUK">Queens de RuPaul UK</option>
+                <!-- Puedes agregar más categorías -->
             </select>
             <button id="start-btn" onclick="startGame()" disabled>Comenzar Juego</button>
         </div>
@@ -28,7 +29,6 @@
         <!-- Área del juego donde aparecerán las opciones -->
         <div id="game-area" style="display: none;">
             <div id="option1" class="card" onclick="selectOption('option1')"></div>
-            <div class="vs">VS</div>
             <div id="option2" class="card" onclick="selectOption('option2')"></div>
         </div>
 
@@ -145,7 +145,6 @@
             nextRound.push(selectedText);
             eliminated.push(otherOption);
 
-            // Feedback visual y sonoro
             playSelectSound();
             animateSelection(selectedOption);
 
