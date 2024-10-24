@@ -1,81 +1,47 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>¿Qué prefieres?</title>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
-    <style>
-        /* Estilos adicionales */
-        .round-message {
-            font-size: 3rem;
-            text-align: center;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background-color: rgba(0, 0, 0, 0.8);
-            color: #fff;
-            padding: 1rem 2rem;
-            border-radius: 10px;
-            z-index: 9999;
-            display: none;
-        }
-
-        .fade-in {
-            animation: fadeIn 2s ease-in-out;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-    </style>
+    <title>¿Qué prefieres? - RuPaul Edition</title>
 </head>
 <body>
-    <div class="game-container">
-        <h1>¿Qué prefieres?</h1>
+    <h1>¿Qué prefieres? - RuPaul Edition</h1>
 
-        <!-- Selector de categorías -->
-        <div id="category-selector">
-            <label for="categories">Elige una categoría:</label>
-            <select id="categories">
-                <option value="" disabled selected>Selecciona una categoría</option>
-                <option value="pokemonprimera">Pokémon Primera Generación</option>
-                <option value="comidas">Comidas</option>
-                <option value="equipos">Equipos de fútbol</option>
-                <option value="rupaulUSA">Queens de RuPaul USA</option>
-                <option value="rupaulUK">Queens de RuPaul UK</option>
-                <option value="rupaulDownUnder">Queens de RuPaul Down Under</option>
-                <option value="rupaulHolland">Queens de RuPaul Holanda</option>
-                <option value="rupaulEspana">Queens de RuPaul España</option>
-                <option value="rupaulAll">Todas las Queens de RuPaul</option>
-            </select>
-            <button id="start-btn" onclick="startGame()" disabled>Comenzar Juego</button>
-        </div>
-
-        <!-- Área del juego donde aparecerán las opciones -->
-        <div id="game-area" style="display: none;">
-            <div id="option1" class="card" onclick="selectOption('option1')"></div>
-            <div id="option2" class="card" onclick="selectOption('option2')"></div>
-        </div>
-
-        <!-- Mensaje de nueva ronda -->
-        <div id="round-message" class="round-message">¡Comienza la nueva ronda de ganadores!</div>
-
-        <!-- Top 3 -->
-        <div id="top3" style="display: none;">
-            <h2>Top 3 Finalistas</h2>
-            <ul id="finalists-list"></ul>
-        </div>
+    <div id="categorySelect">
+        <label for="categories">Selecciona una categoría:</label>
+        <select id="categories">
+            <option value="" disabled selected>Selecciona una categoría</option>
+            <option value="pokemonprimera">Pokémon Primera Generación</option>
+            <option value="comidas">Comidas</option>
+            <option value="equipos">Equipos de fútbol</option>
+            <option value="rupaulUSA">Queens de RuPaul USA</option>
+            <option value="rupaulUK">Queens de RuPaul UK</option>
+            <option value="rupaulDownUnder">Queens de RuPaul Down Under</option>
+            <option value="rupaulHolland">Queens de RuPaul Holanda</option>
+            <option value="rupaulEspana">Queens de RuPaul España</option>
+            <option value="rupaulAll">Todas las Queens de RuPaul</option>
+        </select>
+        <button id="startButton">Empezar Juego</button>
     </div>
 
-      <script>
+    <div id="game" style="display:none;">
+        <p id="question"></p>
+        <button id="option1"></button>
+        <button id="option2"></button>
+    </div>
+
+    <div id="finalists" style="display:none;">
+        <h2>Finalistas</h2>
+        <ul id="finalistsList"></ul>
+    </div>
+
+    <div id="winner" style="display:none;">
+        <h2>¡Ganador!</h2>
+        <p id="winnerName"></p>
+    </div>
+
+     <script>
         // Definir las categorías con los elementos
         const categories = {
             pokemonprimera: ['Pikachu', 'Charizard', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew', 'Pidgey', 'Ditto', 'Ivysaur', 'Venusaur', 'Charmander', 'Charmeleon', 'Wartortle', 'Blastoise', 'Caterpie', 'Metapod', 'Butterfree', 'Weedle', 'Kakuna', 'Beedrill', 'Pidgeotto', 'Pidgeot', 'Rattata', 'Raticate', 'Spearow', 'Fearow', 'Ekans', 'Arbok', 'Raichu', 'Sandshrew', 'Sandslash', 'Nidoran♀', 'Nidorina', 'Nidoqueen', 'Nidoran♂', 'Nidorino', 'Nidoking', 'Clefairy', 'Clefable', 'Vulpix', 'Ninetales', 'Jigglypuff', 'Wigglytuff', 'Zubat', 'Golbat', 'Oddish', 'Gloom', 'Vileplume', 'Paras', 'Parasect', 'Venonat', 'Venomoth', 'Diglett', 'Dugtrio', 'Meowth', 'Persian', 'Psyduck', 'Golduck', 'Mankey', 'Primeape', 'Growlithe', 'Arcanine', 'Poliwag', 'Poliwhirl', 'Poliwrath', 'Abra', 'Kadabra', 'Alakazam', 'Machop', 'Machoke', 'Machamp', 'Bellsprout', 'Weepinbell', 'Victreebel', 'Tentacool', 'Tentacruel', 'Geodude', 'Graveler', 'Golem', 'Ponyta', 'Rapidash', 'Slowpoke', 'Slowbro', 'Magnemite', 'Magneton', 'Farfetch’d', 'Doduo', 'Dodrio', 'Seel', 'Dewgong', 'Grimer', 'Muk', 'Shellder', 'Cloyster', 'Gastly', 'Haunter', 'Gengar', 'Onix', 'Drowzee', 'Hypno', 'Krabby', 'Kingler', 'Voltorb', 'Electrode', 'Exeggcute', 'Exeggutor', 'Cubone', 'Marowak', 'Hitmonlee', 'Hitmonchan', 'Lickitung', 'Koffing', 'Weezing', 'Rhyhorn', 'Rhydon', 'Chansey', 'Tangela', 'Kangaskhan', 'Horsea', 'Seadra', 'Goldeen', 'Seaking', 'Staryu', 'Starmie', 'Mr. Mime', 'Scyther', 'Jynx', 'Electabuzz', 'Magmar', 'Pinsir', 'Tauros', 'Magikarp', 'Gyarados', 'Lapras', 'Snorlax', 'Articuno', 'Zapdos', 'Moltres', 'Dratini', 'Dragonair', 'Dragonite', 'Mewtwo'],
@@ -86,149 +52,117 @@
             rupaulDownUnder: ['Anita Wigl\'it', 'Art Simone', 'Coco Jumbo', 'Electra Shock', 'Etcetera Etcetera', 'Jojo Zaho', 'Karen From Finance', 'Kita Mean', 'Maxi Shield', 'Scarlet Adams', 'Yvonne Lamay', 'Aubrey Haive', 'Beverly Kills', 'Hannah Conda', 'Kween Kong', 'Minnie Cooper', 'Molly Poppinz', 'Pomara Fifth', 'Spankie Jackzon'],
             rupaulHolland: ['ChelseaBoy', 'Envy Peru', 'Janey Jacké', 'Madame Madness', 'Ma\'MaQueen', 'Megan Schoonbrood', 'Patty Pam-Pam', 'Roem', 'Sederginne', 'Abby OMG', 'Juicy Kutoure', 'Ivy-Elyse', 'Love Masisi', 'My Little Puny', 'Reggy B', 'Tabitha', 'The Countess', 'Vanessa van Cartier', 'Vivaldi'],
             rupaulEspana: ['Arantxa Castilla-La Mancha', 'Carmen Farala', 'Dovima Nurmi', 'Drag Vulcano', 'Hugáceo Crujiente', 'Inti', 'Killer Queen', 'Pupi Poisson', 'Sagittaria', 'The Macarena', 'Ariel Rec', 'Estrella Xtravaganza', 'Jota Carajota', 'Marina', 'Onyx', 'Samantha Ballentines', 'Sharonne', 'Venedita Von Däsh', 'Vulcano', 'Chanel Anorex', 'Clover Bish', 'Drag Chuchi', 'Hornella Góngora', 'Kelly Roller', 'María Edilia', 'Paquita', 'Pitita', 'Pink Chadora', 'Vania Vainilla'],
-            rupaulAll: []
+            "rupaulAll": [] // Este array se llenará con todas las queens de las categorías RuPaul.
         };
 
-        // Lógica de eliminación
-        let currentRound = [];
-        let nextRound = [];
-        let eliminated = [];
-        let top3 = [];
-        let isGameOver = false;
-
-        // Lógica para deshabilitar botón si no hay categoría seleccionada
-        document.getElementById('categories').addEventListener('change', function () {
-            document.getElementById('start-btn').disabled = !this.value;
-        });
-
-        // Función para mezclar un array
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
+        // Combinar todas las queens de RuPaul en una sola categoría "rupaulAll".
+        for (let key in categoriesData) {
+            if (key.startsWith("rupaul") && key !== "rupaulAll") {
+                categoriesData["rupaulAll"] = categoriesData["rupaulAll"].concat(categoriesData[key]);
             }
-            return array;
         }
 
-        // Función que inicia el juego
-        function startGame() {
-            const selectedCategory = document.getElementById('categories').value;
-            if (!selectedCategory) {
-                alert('Por favor, selecciona una categoría.');
-                return;
-            }
+        let currentOptions = [];
+        let finalists = [];
 
-            console.log('Categoría seleccionada:', selectedCategory);
-            console.log('Opciones de la categoría:', categories[selectedCategory]);
+        document.getElementById("startButton").onclick = function() {
+            const selectedCategory = document.getElementById("categories").value;
 
-            // Inicializamos las opciones de la categoría seleccionada
-            currentRound = shuffleArray([...categories[selectedCategory]]); // Mezclamos la lista
-            nextRound = [];
-            eliminated = [];
-            top3 = [];
-            isGameOver = false;
-
-            // Verificamos si hay opciones en la categoría
-            if (currentRound.length === 0) {
-                alert('No hay opciones en esta categoría.');
-                resetGame();
-                return;
-            }
-
-            // Mostrar el área del juego
-            document.getElementById('game-area').style.display = 'flex';
-            document.getElementById('category-selector').style.display = 'none'; // Ocultar selector de categoría
-
-            // Empezar la primera ronda
-            startNextMatch();
-        }
-
-        // Función para mostrar el mensaje de nueva ronda
-        function showRoundMessage() {
-            const message = document.getElementById('round-message');
-            message.style.display = 'block';
-            message.classList.add('fade-in');
-            setTimeout(() => {
-                message.style.display = 'none';
-            }, 3000); // Mostrar el mensaje durante 3 segundos
-        }
-
-        // Función para mostrar las próximas dos opciones
-        function startNextMatch() {
-            if (currentRound.length === 0 && nextRound.length === 1) {
-                // Si llegamos a los últimos 3 finalistas
-                if (nextRound.length === 3) {
-                    showTop3(nextRound);
-                    return;
-                }
-
-                // Si hay un único ganador, el juego ha terminado
-                alert('¡El ganador definitivo es: ' + nextRound[0] + '!');
-                resetGame();
-                return;
-            } else if (currentRound.length === 0) {
-                // Pasamos a la siguiente ronda si no hay más enfrentamientos en la ronda actual
-                currentRound = shuffleArray([...nextRound]); // Mezclamos la nueva ronda
-                nextRound = [];
-                showRoundMessage(); // Mostramos el mensaje de nueva ronda
-            }
-
-            if (currentRound.length >= 2) {
-                // Seleccionamos dos opciones para enfrentar
-                const option1 = currentRound.shift();
-                const option2 = currentRound.shift();
-                displayOptions(option1, option2);
+            if (selectedCategory) {
+                currentOptions = [...categoriesData[selectedCategory]]; // Clonar la lista de la categoría seleccionada.
+                finalists = [];
+                document.getElementById("categorySelect").style.display = "none"; // Ocultar selección de categoría.
+                document.getElementById("game").style.display = "block"; // Mostrar el juego.
+                document.getElementById("finalists").style.display = "none"; // Ocultar finalistas.
+                document.getElementById("winner").style.display = "none"; // Ocultar ganador.
+                showOptions();
             } else {
-                // Si hay un número impar de opciones, uno pasa automáticamente a la siguiente ronda
-                nextRound.push(currentRound.shift());
-                startNextMatch();
+                alert("Por favor, selecciona una categoría para comenzar.");
             }
+        };
+
+        function showOptions() {
+            if (currentOptions.length === 3) {
+                // Si solo quedan tres opciones, agregarlas a los finalistas.
+                finalists = [...currentOptions];
+                showFinalists();
+                return;
+            }
+
+            let index1 = Math.floor(Math.random() * currentOptions.length);
+            let index2;
+            do {
+                index2 = Math.floor(Math.random() * currentOptions.length);
+            } while (index1 === index2);
+
+            let option1 = currentOptions[index1];
+            let option2 = currentOptions[index2];
+
+            document.getElementById("question").textContent = "¿Qué prefieres?";
+            document.getElementById("option1").textContent = option1;
+            document.getElementById("option2").textContent = option2;
+
+            document.getElementById("option1").onclick = function() {
+                currentOptions.splice(index2, 1);
+                showOptions();
+            };
+
+            document.getElementById("option2").onclick = function() {
+                currentOptions.splice(index1, 1);
+                showOptions();
+            };
         }
 
-        // Función para mostrar las opciones en pantalla
-        function displayOptions(option1, option2) {
-            document.getElementById('option1').innerHTML = option1;
-            document.getElementById('option2').innerHTML = option2;
-        }
+        function showFinalists() {
+            document.getElementById("finalists").style.display = "block";
+            let finalistsList = document.getElementById("finalistsList");
+            finalistsList.innerHTML = ""; 
 
-        // Función cuando se selecciona una opción
-        function selectOption(selectedOption) {
-            const selectedText = document.getElementById(selectedOption).innerHTML;
-            const otherOption = selectedOption === 'option1' ? document.getElementById('option2').innerHTML : document.getElementById('option1').innerHTML;
-
-            // La opción seleccionada pasa a la siguiente ronda
-            nextRound.push(selectedText);
-            // La opción no seleccionada se elimina
-            eliminated.push(otherOption);
-
-            // Continuamos con el siguiente enfrentamiento
-            startNextMatch();
-        }
-
-        // Función para mostrar el top 3
-        function showTop3(finalists) {
-            top3 = finalists;
-            document.getElementById('game-area').style.display = 'none';
-            document.getElementById('top3').style.display = 'block';
-
-            const finalistsList = document.getElementById('finalists-list');
-            finalistsList.innerHTML = '';
-            top3.forEach(finalist => {
-                const li = document.createElement('li');
-                li.textContent = finalist;
-                finalistsList.appendChild(li);
+            finalists.forEach(finalist => {
+                let listItem = document.createElement("li");
+                listItem.textContent = finalist;
+                finalistsList.appendChild(listItem);
             });
+
+            selectWinner();
         }
 
-        // Función para reiniciar el juego
-        function resetGame() {
-            document.getElementById('category-selector').style.display = 'block';
-            document.getElementById('game-area').style.display = 'none';
-            document.getElementById('top3').style.display = 'none';
+        function selectWinner() {
+            document.getElementById("question").textContent = "¿Quién es el ganador?";
+            let [option1, option2, option3] = finalists;
+
+            document.getElementById("option1").textContent = option1;
+            document.getElementById("option2").textContent = option2;
+
+            let option3Button = document.createElement("button");
+            option3Button.textContent = option3;
+            document.getElementById("game").appendChild(option3Button);
+
+            document.getElementById("option1").onclick = function() {
+                showWinner(option1);
+            };
+
+            document.getElementById("option2").onclick = function() {
+                showWinner(option2);
+            };
+
+            option3Button.onclick = function() {
+                showWinner(option3);
+            };
+        }
+
+        function showWinner(winner) {
+            document.getElementById("winner").style.display = "block";
+            document.getElementById("winnerName").textContent = winner;
+
+            document.getElementById("game").style.display = "none";
+            document.getElementById("finalists").style.display = "none";
         }
     </script>
 </body>
 </html>
+
+
 
 
 
