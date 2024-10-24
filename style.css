@@ -30,15 +30,6 @@ h1 {
     margin-bottom: 30px;
 }
 
-/* Nueva etiqueta VS */
-#vs-label {
-    font-size: 3rem;
-    color: #6b5b95;
-    margin: 0 20px;
-    display: inline-block;
-    font-weight: bold;
-}
-
 /* Estilos de las tarjetas */
 .card {
     display: inline-flex;
@@ -63,29 +54,80 @@ h1 {
 }
 
 .selected-card {
-    background-color: #f4a7b9; /* Rosa clarito */
+    background-color: #6b5b95; /* Cambia de color al seleccionar */
     transform: scale(1.05);
     transition: transform 0.3s ease;
 }
 
-.eliminated-card {
-    background-color: #f6a7a1; /* Rojo pastel */
+/* Estilos para el top 3 */
+#top3 {
+    margin-top: 40px;
+    font-size: 20px;
+    color: #333;
 }
 
-/* Estilos para el cuadro final */
-#final-results {
-    background-color: #e7e6ff; /* Fondo pastel */
-    border-radius: 15px;
-    padding: 20px;
+/* Lista de finalistas */
+#finalists-list {
+    list-style-type: none;
+    padding: 0;
+}
+
+#finalists-list li {
+    background-color: #ffdac1; /* Pastel naranja claro */
+    margin: 10px 0;
+    padding: 10px;
+    border-radius: 8px;
+    font-size: 20px;
+    border: 2px solid #ff9aa2; /* Borde más visible */
     box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
 }
 
-#final-positions li {
-    background-color: #ffe5e9;
-    border: 2px solid #ff9aa2;
-    margin: 10px;
-    padding: 10px;
-    border-radius: 10px;
+/* Botón de iniciar juego */
+button {
+    background-color: #88d8b0; /* Pastel verde menta */
+    color: white;
+    padding: 12px 25px;
+    margin-top: 30px;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
     font-size: 18px;
-    color: #333;
+    transition: background-color 0.3s, transform 0.3s, box-shadow 0.3s;
+}
+
+button:disabled {
+    background-color: #ccc;
+}
+
+button:hover {
+    background-color: #77c79f;
+    transform: translateY(-3px);
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.2);
+}
+
+/* Transición de mensajes */
+.round-message {
+    display: none;
+    margin-top: 20px;
+    font-size: 1.5rem;
+    color: #ff9aa2;
+    animation: fadeIn 2s;
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+.vs {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #6b5b95;
+    margin-top: 100px;
 }
