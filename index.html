@@ -21,10 +21,7 @@
                 <option value="equipos">Equipos de fútbol</option>
                 <option value="rupaulUSA">Queens de RuPaul USA</option>
                 <option value="rupaulUK">Queens de RuPaul UK</option>
-                <option value="rupaulDownUnder">Queens de RuPaul Down Under</option>
-                <option value="rupaulHolland">Queens de RuPaul Holanda</option>
-                <option value="rupaulEspana">Queens de RuPaul España</option>
-                <option value="rupaulAll">Todas las Queens de RuPaul</option>
+                <!-- Puedes agregar más categorías -->
             </select>
             <button id="start-btn" onclick="startGame()" disabled>Comenzar Juego</button>
         </div>
@@ -38,6 +35,13 @@
         <!-- Mensaje de nueva ronda -->
         <div id="round-message" class="round-message">¡Comienza la nueva ronda de ganadores!</div>
 
+        <!-- Pantalla de ganador -->
+        <div id="winner-screen" style="display: none;">
+            <h2 id="winner-text">¡El ganador es!</h2>
+            <div id="winner-name"></div>
+            <button onclick="resetGame()">Jugar de nuevo</button>
+        </div>
+
         <!-- Top 3 -->
         <div id="top3" style="display: none;">
             <h2>Top 3 Finalistas</h2>
@@ -45,18 +49,17 @@
         </div>
     </div>
 
+    <!-- Efectos de sonido -->
+    <audio id="select-sound" src="select.mp3"></audio>
+
     <script>
-        // Definir las categorías con los elementos
         const categories = {
             pokemonprimera: ['Pikachu', 'Charizard', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew'],
             comidas: ['Pizza', 'Hamburguesa', 'Pasta', 'Tacos', 'Sushi', 'Pollo asado', 'Sopa'],
             equipos: ['Barcelona', 'Real Madrid', 'Manchester United', 'Liverpool', 'Bayern'],
             rupaulUSA: ['Akashia', 'BeBe Zahara Benet', 'Jade Sotomayor', 'Nina Flowers', 'Ongina', 'Rebecca Glasscock', 'Shannel', 'Tammie Brown'],
             rupaulUK: ['Baga Chipz', 'Blu Hydrangea', 'Cheryl Hole', 'Crystal', 'Divina De Campo', 'Gothy Kendoll', 'Scaredy Kat', 'Sum Ting Wong', 'Vinegar Strokes', 'The Vivienne'],
-            rupaulDownUnder: ['Anita Wigl\'it', 'Art Simone', 'Coco Jumbo', 'Electra Shock'],
-            rupaulHolland: ['ChelseaBoy', 'Envy Peru', 'Janey Jacké', 'Madame Madness'],
-            rupaulEspana: ['Arantxa Castilla-La Mancha', 'Carmen Farala', 'Dovima Nurmi', 'Drag'],
-            rupaulAll: []
+            // Agrega más categorías si lo necesitas
         };
 
         let currentRound = [];
@@ -97,7 +100,7 @@
             }
 
             document.getElementById('game-area').style.display = 'flex';
-            document.getElementById('category-selector').style.display = 'none'; 
+            document.getElementById('category-selector').style.display = 'none';
 
             startNextMatch();
         }
@@ -113,13 +116,7 @@
 
         function startNextMatch() {
             if (currentRound.length === 0 && nextRound.length === 1) {
-                if (nextRound.length === 3) {
-                    showTop3(nextRound);
-                    return;
-                }
-
-                alert('¡El ganador definitivo es: ' + nextRound[0] + '!');
-                resetGame();
+                showWinner(nextRound[0]);
                 return;
             } else if (currentRound.length === 0) {
                 currentRound = shuffleArray([...nextRound]);
@@ -149,26 +146,36 @@
             nextRound.push(selectedText);
             eliminated.push(otherOption);
 
+            // Feedback visual y sonoro
+            playSelectSound();
+            animateSelection(selectedOption);
+
             startNextMatch();
         }
 
-        function showTop3(finalists) {
-            top3 = finalists;
-            document.getElementById('game-area').style.display = 'none';
-            document.getElementById('top3').style.display = 'block';
+        function playSelectSound() {
+            const sound = document.getElementById('select-sound');
+            sound.play();
+        }
 
-            const finalistsList = document.getElementById('finalists-list');
-            finalistsList.innerHTML = '';
-            top3.forEach(finalist => {
-                const li = document.createElement('li');
-                li.textContent = finalist;
-                finalistsList.appendChild(li);
-            });
+        function animateSelection(selectedOption) {
+            const card = document.getElementById(selectedOption);
+            card.classList.add('selected-card');
+            setTimeout(() => {
+                card.classList.remove('selected-card');
+            }, 1000);
+        }
+
+        function showWinner(winner) {
+            document.getElementById('game-area').style.display = 'none';
+            document.getElementById('winner-screen').style.display = 'block';
+            document.getElementById('winner-name').innerHTML = winner;
         }
 
         function resetGame() {
             document.getElementById('category-selector').style.display = 'block';
             document.getElementById('game-area').style.display = 'none';
+            document.getElementById('winner-screen').style.display = 'none';
             document.getElementById('top3').style.display = 'none';
         }
     </script>
