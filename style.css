@@ -113,10 +113,17 @@ h2 {
 
 #game-area {
     display: flex;
-    justify-content: center;
+    flex-direction: column;
     align-items: center;
     gap: 1.5em;
     margin-top: 1em;
+}
+
+.card-container {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
 }
 
 .card {
@@ -125,19 +132,17 @@ h2 {
     border: 2px solid #ff758f;
     border-radius: 0.5em;
     cursor: pointer;
-    width: 100px;
-    height: 6em;
-    transition: background-color 0.3s;
+    min-width: 40%;
+    max-width: 90%;
     font-weight: bold;
-    font-size: 1.1em;
+    font-size: 1.2em;
     color: #4a4e69;
+    text-align: center;
     display: flex;
     justify-content: center;
     align-items: center;
-    text-align: center;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    line-height: 1.2;
+    word-wrap: break-word;
 }
 
 .card:hover {
@@ -149,13 +154,10 @@ h2 {
     color: white;
 }
 
-.card span {
-    font-size: calc(0.8em + 0.5vw);
-}
-
 #vs-text {
     font-size: 1.5em;
     color: #333;
+    margin: 0.5em 0;
 }
 
 #round-message {
