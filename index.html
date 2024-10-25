@@ -10,17 +10,29 @@
 <body>
     <div class="game-container">
         <h1>¿Qué prefieres?</h1>
+        <p>Selecciona una categoría para iniciar. En cada ronda, elige tu favorito hasta que quede solo uno. ¡Vamos a jugar!</p>
+
         <div id="category-selector">
-            <label for="category-input">Elige una categoría:</label>
-            <input type="text" id="category-input" placeholder="Busca una categoría" oninput="filterCategories()">
-            <div id="category-list"></div>
+            <label for="categories">Elige una categoría:</label>
+            <select id="categories" aria-label="Selecciona una categoría" onchange="enableStartButton()">
+                <option value="" disabled selected>Selecciona una categoría</option>
+                <option value="pokemonprimera">Pokémon Primera Generación</option>
+                <option value="comidas">Comidas</option>
+                <option value="equipos">Equipos de fútbol</option>
+                <option value="rupaulUSA">Queens de RuPaul USA</option>
+                <option value="rupaulUK">Queens de RuPaul UK</option>
+                <option value="rupaulDownUnder">Queens de RuPaul Down Under</option>
+                <option value="rupaulHolland">Queens de RuPaul Holanda</option>
+                <option value="rupaulEspana">Queens de RuPaul España</option>
+                <option value="rupaulAll">Todas las Queens de RuPaul</option>
+            </select>
             <button id="start-btn" onclick="startGame()" disabled>Comenzar</button>
         </div>
 
         <div id="game-area" style="display: none;">
-            <div id="option1" class="card" onclick="selectOption('option1')"></div>
-            <div id="vs-text">VS</div>
-            <div id="option2" class="card" onclick="selectOption('option2')"></div>
+            <div id="option1" class="card" aria-label="Opción 1" onclick="selectOption('option1')"></div>
+            <div id="vs-text" aria-hidden="true">VS</div>
+            <div id="option2" class="card" aria-label="Opción 2" onclick="selectOption('option2')"></div>
         </div>
 
         <div id="round-message" class="round-message">¡Comienza la nueva ronda de ganadores!</div>
@@ -34,6 +46,9 @@
             <h2>Tu Top 10:</h2>
             <div id="rankings"></div>
         </div>
+
+        <div id="round-counter" aria-live="polite"></div>
+
     </div>
 
     <script src="script.js"></script>
