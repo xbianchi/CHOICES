@@ -47,97 +47,75 @@ function toggleAllCategories() {
     searchResults.style.display = searchResults.style.display === "block" ? "none" : "block";
 }
 
-function selectCategory(category) {
-    selectedCategory = category;
-    document.getElementById("search-bar").value = categoryNames[category];
-    document.getElementById("search-results").style.display = "none";
+function selectCategory(key) {
+    selectedCategory = key;
+    currentRound = [...categories[key]];
+    nextRound = [];
     document.getElementById("start-btn").disabled = false;
+    document.getElementById("search-bar").value = categoryNames[key];
+    document.getElementById("search-results").style.display = "none";
 }
 
 function startGame() {
-    if (!selectedCategory) return;
-
-    currentRound = [...categories[selectedCategory]];
-    voteCounts = {};
-    currentRound.forEach(option => {
-        voteCounts[option] = 0;
-    });
-
     document.getElementById("category-selector").style.display = "none";
+    document.getElementById("round-indicator").style.display = "block";
     document.getElementById("game-area").style.display = "flex";
-    document.getElementById("top10").style.display = "none";
-    document.getElementById("intro").style.display = "none";
+    voteCounts = {};
     roundNumber = 1;
-    startRound();
+    document.getElementById("round-indicator").textContent = `Ronda ${roundNumber}`;
+    displayNextPair();
 }
 
-function startRound() {
-    document.getElementById("round-indicator").innerText = `Ronda ${roundNumber}`;
-    document.getElementById("round-indicator").style.display = "block";
-
-    if (currentRound.length >= 2) {
-        const [option1, option2] = currentRound.splice(0, 2);
-        document.getElementById("option1").innerHTML = option1;
-        document.getElementById("option2").innerHTML = option2;
-    } else if (nextRound.length === 1) {
-        showWinner();
-    } else {
+function displayNextPair() {
+    if (currentRound.length < 2) {
+        if (nextRound.length === 1) {
+            declareWinner(nextRound[0]);
+            return;
+        }
         currentRound = nextRound;
         nextRound = [];
-        document.getElementById("round-message").style.display = "block";
         roundNumber++;
-        setTimeout(() => {
-            document.getElementById("round-message").style.display = "none";
-            startRound();
-        }, 800);
+        document.getElementById("round-indicator").textContent = `Ronda ${roundNumber}`;
     }
+
+    const [option1, option2] = [currentRound.pop(), currentRound.pop()];
+    document.getElementById("option1").textContent = option1;
+    document.getElementById("option2").textContent = option2;
+    document.getElementById("option1").classList.remove("selected");
+    document.getElementById("option2").classList.remove("selected");
+    document.getElementById("round-message").style.display = "none";
 }
 
-function selectOption(option) {
-    const chosenElement = document.getElementById(option);
-    chosenElement.classList.add('selected');
-    setTimeout(() => chosenElement.classList.remove('selected'), 150);
-
-    const chosen = chosenElement.innerText;
-    voteCounts[chosen]++;
-    nextRound.push(chosen);
-
-    startRound();
+function selectOption(optionId) {
+    const selectedOption = document.getElementById(optionId).textContent;
+    voteCounts[selectedOption] = (voteCounts[selectedOption] || 0) + 1;
+    nextRound.push(selectedOption);
+    document.getElementById(optionId).classList.add("selected");
+    setTimeout(displayNextPair, 500);
 }
 
-function showWinner() {
-    const sortedOptions = Object.entries(voteCounts).sort((a, b) => b[1] - a[1]);
-    const top10Container = document.getElementById("rankings");
-    top10Container.innerHTML = "";
-
-    sortedOptions.slice(0, 10).forEach(([option, votes], index) => {
-        const div = document.createElement("div");
-        div.textContent = `${index + 1}. ${option} (${votes} votos)`;
-        if (index === 0) {
-            div.style.fontWeight = "bold";
-            div.style.color = "#FFD700"; 
-        } else if (index === 1) {
-            div.style.backgroundColor = "silver";
-        } else if (index === 2) {
-            div.style.backgroundColor = "#cd7f32"; 
-        }
-        top10Container.appendChild(div);
-    });
-
-    document.getElementById("winner-text").style.display = "block";
+function declareWinner(winner) {
     document.getElementById("game-area").style.display = "none";
     document.getElementById("top10").style.display = "block";
+    document.getElementById("winner-text").textContent = `¡Tu Top N°1: ${winner}!`;
+
+    const rankings = Object.entries(voteCounts).sort((a, b) => b[1] - a[1]);
+    const rankingsContainer = document.getElementById("rankings");
+    rankingsContainer.innerHTML = "";
+    rankings.slice(0, 10).forEach(([option], index) => {
+        const div = document.createElement("div");
+        div.textContent = `${index + 1}. ${option}`;
+        rankingsContainer.appendChild(div);
+    });
 }
 
 function resetGame() {
-    selectedCategory = null;
-    document.getElementById("search-bar").value = "";
-    document.getElementById("category-selector").style.display = "block";
-    document.getElementById("start-btn").disabled = true;
-    document.getElementById("game-area").style.display = "none";
     document.getElementById("top10").style.display = "none";
-    document.getElementById("intro").style.display = "block";
+    document.getElementById("category-selector").style.display = "block";
+    document.getElementById("round-indicator").style.display = "none";
+    document.getElementById("start-btn").disabled = true;
+    document.getElementById("search-bar").value = "";
     initializeCategories();
 }
 
-window.onload = initializeCategories;
+initializeCategories();
