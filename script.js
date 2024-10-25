@@ -4,6 +4,12 @@ const categories = {
     rupaulDownUnder: ['Anita Wigl\'it', 'Art Simone', 'Coco Jumbo', 'Electra Shock', 'Etcetera Etcetera', 'Jojo Zaho', 'Karen From Finance', 'Kita Mean', 'Maxi Shield', 'Scarlet Adams', 'Yvonne Lamay', 'Aubrey Haive', 'Beverly Kills', 'Hannah Conda', 'Kween Kong', 'Minnie Cooper', 'Molly Poppinz', 'Pomara Fifth', 'Spankie Jackzon']
 };
 
+const categoryNames = {
+    pokemonprimera: 'Pokemon Primera Generación',
+    comidas: 'Comidas',
+    rupaulDownUnder: 'RuPaul Drag Race Down Under'
+};
+
 let currentRound = [];
 let nextRound = [];
 let eliminated = [];
@@ -19,11 +25,10 @@ function filterCategories() {
     searchResultsContainer.innerHTML = '';
     searchResultsContainer.style.display = 'none';
 
-    for (let key in categories) {
-        const categoryName = key.toLowerCase();
-        if (categoryName.includes(searchValue)) {
+    for (let key in categoryNames) {
+        if (categoryNames[key].toLowerCase().includes(searchValue)) {
             const categoryDiv = document.createElement('div');
-            categoryDiv.innerText = key;
+            categoryDiv.innerText = categoryNames[key];
             categoryDiv.onclick = () => selectCategory(key);
             searchResultsContainer.appendChild(categoryDiv);
             searchResultsContainer.style.display = 'block';
@@ -33,45 +38,49 @@ function filterCategories() {
 
 function selectCategory(category) {
     selectedCategory = category;
-    searchBar.value = category;
+    searchBar.value = categoryNames[category];
     startBtn.disabled = false;
     searchResultsContainer.style.display = 'none';
 }
 
-function startGame() {
-    document.getElementById('category-selector').style.display = 'none';
-    document.getElementById('game-area').style.display = 'flex';
-    currentRound = categories[selectedCategory].slice();
-    voteCounts = {};
-    nextRound = [];
-    eliminated = [];
-    shuffleArray(currentRound);
-    startNextMatch();
-}
-
-function shuffleArray(array) {
-    array.sort(() => Math.random() - 0.5);
-}
-
-function selectOption(selected) {
-    const selectedText = document.getElementById(selected).innerHTML;
-    const otherOption = selected === 'option1' ? 'option2' : 'option1';
-    const otherText = document.getElementById(otherOption).innerHTML;
-
-    if (!voteCounts[selectedText]) voteCounts[selectedText] = 0;
-    voteCounts[selectedText]++;
-    nextRound.push(selectedText);
-    eliminated.push(otherText);
-    setTimeout(() => startNextMatch(), 500);
-}
-
-function startNextMatch() {
-    if (currentRound.length < 2 && nextRound.length > 1) {
-        currentRound = [...nextRound];
-        nextRound = [];
-        document.getElementById('round-message').style.display = 'block';
-        setTimeout(() => document.getElementById('round-message').style.display = 'none', 1000);
+function toggleAllCategories() {
+    if (searchResultsContainer.style.display === 'block') {
+        searchResultsContainer.style.display = 'none';
+    } else {
+        searchResultsContainer.innerHTML = '';
+        for (let key in categoryNames) {
+            const categoryDiv = document.createElement('div');
+            categoryDiv.innerText = categoryNames[key];
+            categoryDiv.onclick = () => selectCategory(key);
+            searchResultsContainer.appendChild(categoryDiv);
+        }
+        searchResultsContainer.style.display = 'block';
     }
+}
+
+function startGame() {
+    if (selectedCategory) {
+        const items = categories[selectedCategory];
+        currentRound = [...items];
+        nextRound = [];
+        eliminated = [];
+        voteCounts = items.reduce((acc, item) => ({ ...acc, [item]: 0 }), {});
+
+        document.getElementById('category-selector').style.display = 'none';
+        document.getElementById('game-area').style.display = 'flex';
+
+        startRound();
+    }
+}
+
+function selectOption(option) {
+    const chosenElement = document.getElementById(option);
+    chosenElement.classList.add('selected');
+    setTimeout(() => chosenElement.classList.remove('selected'), 150);
+
+    const chosen = document.getElementById(option).innerText;
+    voteCounts[chosen]++;
+    nextRound.push(chosen);
 
     if (currentRound.length >= 2) {
         const [option1, option2] = currentRound.splice(0, 2);
@@ -79,6 +88,12 @@ function startNextMatch() {
         document.getElementById('option2').innerHTML = option2;
     } else if (nextRound.length === 1) {
         showWinner();
+    } else {
+        currentRound = nextRound;
+        nextRound = [];
+        document.getElementById('round-message').style.display = 'block';
+        setTimeout(() => document.getElementById('round-message').style.display = 'none', 800);
+        startRound();
     }
 }
 
