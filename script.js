@@ -67,18 +67,19 @@ function showWinner(winner) {
 function displayTop10() {
     const top10Container = document.getElementById('top10');
     const rankings = document.getElementById('rankings');
-    const players = document.getElementById('players');
     rankings.innerHTML = '';
-    players.innerHTML = '';
-    const top10 = Object.entries(voteCounts).sort((a, b) => b[1] - a[1]).slice(0, 10);
-    top10.forEach((entry, index) => {
-        const rank = document.createElement('div');
-        const player = document.createElement('div');
-        rank.textContent = `#${index + 1} - ${entry[1]} votos`;
-        player.textContent = entry[0];
-        rankings.appendChild(rank);
-        players.appendChild(player);
+
+    const top10 = Object.entries(voteCounts)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 10)
+        .map(entry => entry[0]);
+
+    top10.forEach((name, index) => {
+        const div = document.createElement('div');
+        div.innerHTML = `${index + 1}. ${name}`;
+        rankings.appendChild(div);
     });
+
     top10Container.style.display = 'block';
 }
 
