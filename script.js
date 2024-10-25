@@ -1,5 +1,5 @@
 const categories = {
-    pokemonprimera: ['Pikachu', 'Charizard', 'Ninetales', 'Jigglypuff', 'Wigglytuff', 'Zubat', 'Golbat', 'Oddish', 'Gloom', 'Vileplume', 'Paras', 'Parasect', 'Venonat', 'Venomoth', 'Diglett', 'Dugtrio', 'Meowth', 'Persian', 'Psyduck', 'Golduck', 'Mankey', 'Primeape', 'Growlithe', 'Arcanine', 'Poliwag', 'Poliwhirl', 'Poliwrath', 'Abra', 'Kadabra', 'Alakazam', 'Machop', 'Machoke', 'Machamp', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew', 'Pidgey'],
+    pokemonprimera: ['Pikachu', 'Charizard', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew', 'Pidgey'],
     comidas: ['Pizza', 'Hamburguesa', 'Pasta', 'Tacos', 'Sushi', 'Pollo asado', 'Sopa'],
     equipos: ['Barcelona', 'Real Madrid', 'Manchester United', 'Liverpool', 'Bayern'],
     rupaulUSA: ['Akashia', 'BeBe Zahara Benet', 'Jade Sotomayor', 'Nina Flowers'],
@@ -23,7 +23,7 @@ let nextRound = [];
 let voteCounts = {};
 let selectedCategory = null;
 let roundNumber = 1;
-let top10Mode = false;
+let quickMode = false;
 
 function initializeCategories() {
     const searchResults = document.getElementById("search-results");
@@ -31,6 +31,7 @@ function initializeCategories() {
     for (let key in categoryNames) {
         const div = document.createElement("div");
         div.textContent = categoryNames[key];
+        div.classList.add("category-option");
         div.onclick = () => selectCategory(key);
         searchResults.appendChild(div);
     }
@@ -58,7 +59,7 @@ function toggleAllCategories() {
 
 function selectCategory(key) {
     selectedCategory = key;
-    currentRound = shuffleArray([...categories[key]]);
+    currentRound = [...categories[key]];
     nextRound = [];
     document.getElementById("start-btn").disabled = false;
     document.getElementById("search-bar").value = categoryNames[key];
@@ -77,36 +78,30 @@ function startGame() {
 
 function displayNextPair() {
     if (currentRound.length < 2) {
-        if (nextRound.length <= 10 && nextRound.length > 0) {
-            startTop10Ranking(nextRound);
-            return;
-        } else if (nextRound.length > 0) {
-            currentRound = shuffleArray(nextRound);
-            nextRound = [];
-            roundNumber++;
-            document.getElementById("round-indicator").textContent = `Ronda ${roundNumber}`;
-        } else {
-            declareWinner();
+        if (nextRound.length === 1) {
+            declareWinner(nextRound[0]);
             return;
         }
+        startNextRound();
+    } else {
+        const [option1, option2] = [currentRound.pop(), currentRound.pop()];
+        document.getElementById("option1").textContent = option1;
+        document.getElementById("option2").textContent = option2;
+        resetOptionStyles();
     }
+}
 
-    let option1, option2;
-    do {
-        option1 = currentRound.pop();
-        option2 = currentRound.pop();
-    } while (option1 === option2 && currentRound.length > 0);
+function startNextRound() {
+    currentRound = [...nextRound];
+    nextRound = [];
+    roundNumber++;
+    document.getElementById("round-indicator").textContent = `Ronda ${roundNumber}`;
+    displayNextPair();
+}
 
-    if (!option1 || !option2) {
-        declareWinner();
-        return;
-    }
-
-    document.getElementById("option1").textContent = option1;
-    document.getElementById("option2").textContent = option2;
+function resetOptionStyles() {
     document.getElementById("option1").classList.remove("selected");
     document.getElementById("option2").classList.remove("selected");
-    document.getElementById("round-message").style.display = "none";
 }
 
 function selectOption(optionId) {
@@ -114,25 +109,15 @@ function selectOption(optionId) {
     voteCounts[selectedOption] = (voteCounts[selectedOption] || 0) + 1;
     nextRound.push(selectedOption);
     document.getElementById(optionId).classList.add("selected");
-    setTimeout(displayNextPair, 500);
+    setTimeout(displayNextPair, quickMode ? 200 : 500);
 }
 
-function startTop10Ranking(finalists) {
-    top10Mode = true;
-    currentRound = [];
-    nextRound = finalists;
-    roundNumber++;
-    document.getElementById("round-indicator").textContent = `Ronda Final: Top 10`;
-    displayNextPair();
-}
-
-function declareWinner() {
+function declareWinner(winner) {
     document.getElementById("game-area").style.display = "none";
     document.getElementById("top10").style.display = "block";
+    document.getElementById("top-winner").innerHTML = `¡Tu Top N°1: <span class="highlight">${winner}</span>!`;
 
     const rankings = Object.entries(voteCounts).sort((a, b) => b[1] - a[1]);
-    document.getElementById("top-winner").innerHTML = `¡Tu Top N°1: <span class="highlight">${rankings[0][0]}</span>!`;
-
     const rankingsContainer = document.getElementById("rankings");
     rankingsContainer.innerHTML = "";
     rankings.slice(0, 10).forEach(([option], index) => {
@@ -140,6 +125,7 @@ function declareWinner() {
         div.textContent = `${index + 1}. ${option}`;
         rankingsContainer.appendChild(div);
     });
+    localStorage.setItem("gameHistory", JSON.stringify(rankings));
 }
 
 function resetGame() {
@@ -150,13 +136,4 @@ function resetGame() {
     document.getElementById("search-bar").value = "";
     initializeCategories();
 }
-
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-}
-
 initializeCategories();
