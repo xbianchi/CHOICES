@@ -12,12 +12,12 @@ const categories = {
 const categoryNames = {
     pokemonprimera: 'Pokemon Primera Generación',
     comidas: 'Comidas',
-    rupaulDownUnder: 'RuPaul’s Drag Race Down Under'
-    equipos: ‘Equipos’
-    rupaulUSA: ‘RuPaul’s Drag Race: USA’
-    rupaulUK: ‘RuPaul’s Drag Race: UK’
-    rupaulHolland: ‘RuPaul’s Drag Race: Holland’
-    rupaulEspana: ‘RuPaul’s Drag Race: España’
+    rupaulDownUnder: 'RuPaul\'s Drag Race Down Under',
+    equipos: 'Equipos',
+    rupaulUSA: 'RuPaul\'s Drag Race: USA', 
+    rupaulUK: 'RuPaul\'s Drag Race: UK', 
+    rupaulHolland: 'RuPaul\'s Drag Race: Holland', 
+    rupaulEspana: 'RuPaul\'s Drag Race: España'
 };
 
 let currentRound = [];
