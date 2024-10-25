@@ -10,26 +10,31 @@
 <body>
     <div class="game-container">
         <h1>¿Qué prefieres?</h1>
+        
         <div id="intro">
             <p>Selecciona una categoría y elige entre dos alternativas. ¡Vamos a descubrir tus favoritos!</p>
         </div>
+
         <div id="category-selector">
             <label for="search-bar">Buscar categoría:</label>
             <div class="search-container">
                 <input type="text" id="search-bar" placeholder="Escribe para buscar..." oninput="filterCategories()" autocomplete="off">
-                <button id="toggle-btn" onclick="toggleAllCategories()">🔍</button>
+                <button id="toggle-btn" onclick="toggleAllCategories()">▼</button>
             </div>
             <div id="search-results" class="results-container" style="display: none;"></div>
             <button id="start-btn" onclick="startGame()" disabled>Comenzar</button>
         </div>
 
         <h2 id="round-indicator" style="display:none;"></h2>
+        
         <div id="game-area" style="display: none;">
             <div id="option1" class="card" onclick="selectOption('option1')"></div>
             <div id="vs-text">VS</div>
             <div id="option2" class="card" onclick="selectOption('option2')"></div>
         </div>
+
         <div id="round-message" class="round-message">¡Comienza la nueva ronda de ganadores!</div>
+
         <div id="top10" style="display: none;">
             <div id="top-winner" class="highlighted-winner"></div>
             <h2>Tu Top 10:</h2>
@@ -37,6 +42,9 @@
             <button onclick="resetGame()">Jugar de nuevo</button>
         </div>
     </div>
+
     <script src="script.js"></script>
 </body>
 </html>
+
+
