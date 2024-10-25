@@ -9,36 +9,20 @@ let nextRound = [];
 let eliminated = [];
 let voteCounts = {};
 let selectedCategory = null;
-let originalCategoryList = [];
 
 function enableStartButton() {
     const category = document.getElementById('categories').value;
     const startBtn = document.getElementById('start-btn');
-    selectedCategory = normalizeCategory(category);
-    startBtn.disabled = !categories[selectedCategory];
-}
-
-function normalizeCategory(category) {
-    return category.toLowerCase().replace(/\s+/g, '');
-}
-
-function filterCategories() {
-    const input = document.getElementById('categories').value.toLowerCase();
-    const options = document.querySelectorAll("#category-list option");
-    options.forEach(option => {
-        option.style.display = option.value.toLowerCase().includes(input) ? "" : "none";
-    });
+    startBtn.disabled = !category;
+    selectedCategory = category;
 }
 
 function startGame() {
     if (selectedCategory && categories[selectedCategory]) {
-        originalCategoryList = [...categories[selectedCategory]];
-        currentRound = [...originalCategoryList];
+        currentRound = [...categories[selectedCategory]];
         document.getElementById('game-area').style.display = 'flex';
         document.getElementById('category-selector').style.display = 'none';
         startNextMatch();
-    } else {
-        console.error("Categoría no seleccionada o no válida");
     }
 }
 
@@ -48,16 +32,7 @@ function selectOption(selectedOption) {
     nextRound.push(selectedText);
     eliminated.push(otherOption);
     voteCounts[selectedText] = (voteCounts[selectedText] || 0) + 1;
-
-    // Deshabilitar temporalmente las cartas
-    document.getElementById('option1').style.pointerEvents = 'none';
-    document.getElementById('option2').style.pointerEvents = 'none';
-
-    setTimeout(() => {
-        document.getElementById('option1').style.pointerEvents = 'auto';
-        document.getElementById('option2').style.pointerEvents = 'auto';
-        startNextMatch();
-    }, 300);
+    startNextMatch();
 }
 
 function startNextMatch() {
@@ -78,13 +53,8 @@ function startNextMatch() {
     }
     const option1 = document.getElementById('option1');
     const option2 = document.getElementById('option2');
-    option1.classList.add('card-enter');
-    option2.classList.add('card-enter');
     option1.innerHTML = currentRound.pop();
     option2.innerHTML = currentRound.pop();
-
-    // Contador de rondas
-    document.getElementById('round-counter').innerText = `Rondas restantes: ${Math.ceil(currentRound.length / 2)}`;
 }
 
 function showWinner(winner) {
