@@ -12,20 +12,21 @@
         <h1>¿Qué prefieres?</h1>
         <div id="category-selector">
             <label for="search-bar">Buscar categoría:</label>
-            <input type="text" id="search-bar" placeholder="Escribe para buscar...">
-            <label for="categories">Elige una categoría:</label>
-            <select id="categories" onchange="enableStartButton()">
-                <option value="" disabled selected>Selecciona una categoría</option>
-                <option value="pokemonprimera">Pokémon Primera Generación</option>
-                <option value="comidas">Comidas</option>
-                <option value="equipos">Equipos de fútbol</option>
-                <option value="rupaulUSA">Queens de RuPaul USA</option>
-                <option value="rupaulUK">Queens de RuPaul UK</option>
-                <option value="rupaulDownUnder">Queens de RuPaul Down Under</option>
-                <option value="rupaulHolland">Queens de RuPaul Holanda</option>
-                <option value="rupaulEspana">Queens de RuPaul España</option>
-                <option value="rupaulAll">Todas las Queens de RuPaul</option>
-            </select>
+            <div class="input-group">
+                <input type="text" id="search-bar" placeholder="Escribe para buscar...">
+                <select id="categories" onchange="enableStartButton()">
+                    <option value="" disabled selected>Selecciona una categoría</option>
+                    <option value="pokemonprimera">Pokémon Primera Generación</option>
+                    <option value="comidas">Comidas</option>
+                    <option value="equipos">Equipos de fútbol</option>
+                    <option value="rupaulUSA">Queens de RuPaul USA</option>
+                    <option value="rupaulUK">Queens de RuPaul UK</option>
+                    <option value="rupaulDownUnder">Queens de RuPaul Down Under</option>
+                    <option value="rupaulHolland">Queens de RuPaul Holanda</option>
+                    <option value="rupaulEspana">Queens de RuPaul España</option>
+                    <option value="rupaulAll">Todas las Queens de RuPaul</option>
+                </select>
+            </div>
             <button id="start-btn" onclick="startGame()" disabled>Comenzar</button>
         </div>
 
