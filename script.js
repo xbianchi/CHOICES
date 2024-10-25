@@ -12,7 +12,6 @@ const categoryNames = {
 
 let currentRound = [];
 let nextRound = [];
-let eliminated = [];
 let voteCounts = {};
 let selectedCategory = null;
 
@@ -63,7 +62,6 @@ function startGame() {
         const items = categories[selectedCategory];
         currentRound = [...items];
         nextRound = [];
-        eliminated = [];
         voteCounts = items.reduce((acc, item) => ({ ...acc, [item]: 0 }), {});
 
         document.getElementById('category-selector').style.display = 'none';
@@ -73,15 +71,7 @@ function startGame() {
     }
 }
 
-function selectOption(option) {
-    const chosenElement = document.getElementById(option);
-    chosenElement.classList.add('selected');
-    setTimeout(() => chosenElement.classList.remove('selected'), 150);
-
-    const chosen = document.getElementById(option).innerText;
-    voteCounts[chosen]++;
-    nextRound.push(chosen);
-
+function startRound() {
     if (currentRound.length >= 2) {
         const [option1, option2] = currentRound.splice(0, 2);
         document.getElementById('option1').innerHTML = option1;
@@ -95,6 +85,18 @@ function selectOption(option) {
         setTimeout(() => document.getElementById('round-message').style.display = 'none', 800);
         startRound();
     }
+}
+
+function selectOption(option) {
+    const chosenElement = document.getElementById(option);
+    chosenElement.classList.add('selected');
+    setTimeout(() => chosenElement.classList.remove('selected'), 150);
+
+    const chosen = chosenElement.innerText;
+    voteCounts[chosen]++;
+    nextRound.push(chosen);
+
+    startRound();
 }
 
 function showWinner() {
