@@ -10,6 +10,16 @@ let eliminated = [];
 let voteCounts = {};
 let selectedCategory = null;
 
+document.getElementById('search-bar').addEventListener('input', filterCategories);
+
+function filterCategories() {
+    const searchValue = document.getElementById('search-bar').value.toLowerCase();
+    const categoriesDropdown = document.getElementById('categories');
+    Array.from(categoriesDropdown.options).forEach(option => {
+        option.style.display = option.value && option.textContent.toLowerCase().includes(searchValue) ? 'block' : 'none';
+    });
+}
+
 function enableStartButton() {
     const category = document.getElementById('categories').value;
     const startBtn = document.getElementById('start-btn');
@@ -22,7 +32,7 @@ function startGame() {
         currentRound = [...categories[selectedCategory]];
         document.getElementById('game-area').style.display = 'flex';
         document.getElementById('category-selector').style.display = 'none';
-        startNextMatch();
+        setTimeout(startNextMatch, 500);
     }
 }
 
@@ -31,67 +41,36 @@ function selectOption(selectedOption) {
     const otherOption = selectedOption === 'option1' ? document.getElementById('option2').innerHTML : document.getElementById('option1').innerHTML;
     nextRound.push(selectedText);
     eliminated.push(otherOption);
-    voteCounts[selectedText] = (voteCounts[selectedText] || 0) + 1;
     startNextMatch();
 }
 
 function startNextMatch() {
-    if (currentRound.length < 2) {
-        if (nextRound.length === 1) {
-            showWinner(nextRound[0]);
-            return;
-        } else if (nextRound.length > 1) {
-            currentRound = [...nextRound];
-            nextRound = [];
-            document.getElementById('round-message').style.display = 'block';
-            setTimeout(() => {
-                document.getElementById('round-message').style.display = 'none';
-                startNextMatch();
-            }, 1000);
-            return;
-        }
+    if (currentRound.length < 2 && nextRound.length > 1) {
+        currentRound = [...nextRound];
+        nextRound = [];
+        document.getElementById('round-message').style.display = 'block';
+        setTimeout(() => document.getElementById('round-message').style.display = 'none', 1000);
     }
-    const option1 = document.getElementById('option1');
-    const option2 = document.getElementById('option2');
-    option1.innerHTML = currentRound.pop();
-    option2.innerHTML = currentRound.pop();
+
+    if (currentRound.length >= 2) {
+        const [option1, option2] = currentRound.splice(0, 2);
+        document.getElementById('option1').innerHTML = option1;
+        document.getElementById('option2').innerHTML = option2;
+    } else if (nextRound.length === 1) {
+        showWinner();
+    }
 }
 
-function showWinner(winner) {
+function showWinner() {
+    const winner = nextRound[0];
     document.getElementById('game-area').style.display = 'none';
     document.getElementById('winner-screen').style.display = 'block';
-    document.getElementById('winner-name').innerHTML = winner;
-    displayTop10();
-}
-
-function displayTop10() {
-    const top10Container = document.getElementById('top10');
-    const rankings = document.getElementById('rankings');
-    rankings.innerHTML = '';
-
-    const top10 = Object.entries(voteCounts)
-        .sort((a, b) => b[1] - a[1])
-        .slice(0, 10)
-        .map(entry => entry[0]);
-
-    top10.forEach((name, index) => {
-        const div = document.createElement('div');
-        div.innerHTML = `${index + 1}. ${name}`;
-        rankings.appendChild(div);
-    });
-
-    top10Container.style.display = 'block';
+    document.getElementById('winner-name').innerText = winner;
+    nextRound = [];
+    currentRound = [];
 }
 
 function resetGame() {
-    currentRound = [];
-    nextRound = [];
-    eliminated = [];
-    voteCounts = {};
-    selectedCategory = null;
-    document.getElementById('categories').value = '';
-    document.getElementById('category-selector').style.display = 'block';
-    document.getElementById('game-area').style.display = 'none';
     document.getElementById('winner-screen').style.display = 'none';
-    document.getElementById('top10').style.display = 'none';
+    document.getElementById('category-selector').style.display = 'block';
 }
