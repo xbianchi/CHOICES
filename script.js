@@ -9,13 +9,12 @@ let nextRound = [];
 let eliminated = [];
 let voteCounts = {};
 let selectedCategory = null;
-let roundCount = 0;
 
 function enableStartButton() {
     const category = document.getElementById('categories').value;
     const startBtn = document.getElementById('start-btn');
-    startBtn.disabled = !category;
     selectedCategory = category;
+    startBtn.disabled = !category;
 }
 
 function startGame() {
@@ -23,29 +22,19 @@ function startGame() {
         currentRound = [...categories[selectedCategory]];
         document.getElementById('game-area').style.display = 'flex';
         document.getElementById('category-selector').style.display = 'none';
-        roundCount = 1;
-        updateRoundCounter();
         startNextMatch();
+    } else {
+        console.error("Categoría no seleccionada o no válida");
     }
 }
 
 function selectOption(selectedOption) {
     const selectedText = document.getElementById(selectedOption).innerHTML;
     const otherOption = selectedOption === 'option1' ? document.getElementById('option2').innerHTML : document.getElementById('option1').innerHTML;
-    
-    // Disable further selection until the next match loads
-    document.getElementById('option1').onclick = null;
-    document.getElementById('option2').onclick = null;
-    
     nextRound.push(selectedText);
     eliminated.push(otherOption);
     voteCounts[selectedText] = (voteCounts[selectedText] || 0) + 1;
-    
-    setTimeout(() => {
-        startNextMatch();
-        document.getElementById('option1').onclick = () => selectOption('option1');
-        document.getElementById('option2').onclick = () => selectOption('option2');
-    }, 500);
+    startNextMatch();
 }
 
 function startNextMatch() {
@@ -56,8 +45,6 @@ function startNextMatch() {
         } else if (nextRound.length > 1) {
             currentRound = [...nextRound];
             nextRound = [];
-            roundCount++;
-            updateRoundCounter();
             document.getElementById('round-message').style.display = 'block';
             setTimeout(() => {
                 document.getElementById('round-message').style.display = 'none';
@@ -66,10 +53,8 @@ function startNextMatch() {
             return;
         }
     }
-    const option1 = document.getElementById('option1');
-    const option2 = document.getElementById('option2');
-    option1.innerHTML = currentRound.pop();
-    option2.innerHTML = currentRound.pop();
+    document.getElementById('option1').innerHTML = currentRound.pop();
+    document.getElementById('option2').innerHTML = currentRound.pop();
 }
 
 function showWinner(winner) {
@@ -104,15 +89,9 @@ function resetGame() {
     eliminated = [];
     voteCounts = {};
     selectedCategory = null;
-    roundCount = 0;
     document.getElementById('categories').value = '';
     document.getElementById('category-selector').style.display = 'block';
     document.getElementById('game-area').style.display = 'none';
     document.getElementById('winner-screen').style.display = 'none';
     document.getElementById('top10').style.display = 'none';
-    updateRoundCounter();
-}
-
-function updateRoundCounter() {
-    document.getElementById('round-counter').innerHTML = `Ronda: ${roundCount}`;
 }
