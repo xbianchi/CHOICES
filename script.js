@@ -1,5 +1,5 @@
 const categories = {
-    pokemonprimera: ['Pikachu', 'Charizard','Ninetales', 'Jigglypuff', 'Wigglytuff', 'Zubat', 'Golbat', 'Oddish', 'Gloom', 'Vileplume', 'Paras', 'Parasect', 'Venonat', 'Venomoth', 'Diglett', 'Dugtrio', 'Meowth', 'Persian', 'Psyduck', 'Golduck', 'Mankey', 'Primeape', 'Growlithe', 'Arcanine', 'Poliwag', 'Poliwhirl', 'Poliwrath', 'Abra', 'Kadabra', 'Alakazam', 'Machop', 'Machoke', 'Machamp', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew', 'Pidgey'],
+    pokemonprimera: ['Pikachu', 'Charizard', 'Ninetales', 'Jigglypuff', 'Wigglytuff', 'Zubat', 'Golbat', 'Oddish', 'Gloom', 'Vileplume', 'Paras', 'Parasect', 'Venonat', 'Venomoth', 'Diglett', 'Dugtrio', 'Meowth', 'Persian', 'Psyduck', 'Golduck', 'Mankey', 'Primeape', 'Growlithe', 'Arcanine', 'Poliwag', 'Poliwhirl', 'Poliwrath', 'Abra', 'Kadabra', 'Alakazam', 'Machop', 'Machoke', 'Machamp', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew', 'Pidgey'],
     comidas: ['Pizza', 'Hamburguesa', 'Pasta', 'Tacos', 'Sushi', 'Pollo asado', 'Sopa'],
     equipos: ['Barcelona', 'Real Madrid', 'Manchester United', 'Liverpool', 'Bayern'],
     rupaulUSA: ['Akashia', 'BeBe Zahara Benet', 'Jade Sotomayor', 'Nina Flowers'],
@@ -77,22 +77,31 @@ function startGame() {
 
 function displayNextPair() {
     if (currentRound.length < 2) {
-        if (nextRound.length === 1) {
-            if (nextRound.length <= 10) {
-                startTop10Ranking(nextRound);
-                return;
-            }
+        if (nextRound.length <= 10 && nextRound.length > 0) {
+            startTop10Ranking(nextRound);
+            return;
+        } else if (nextRound.length > 0) {
             currentRound = shuffleArray(nextRound);
             nextRound = [];
             roundNumber++;
             document.getElementById("round-indicator").textContent = `Ronda ${roundNumber}`;
         } else {
-            currentRound = shuffleArray(nextRound);
-            nextRound = [];
+            declareWinner();
+            return;
         }
     }
 
-    const [option1, option2] = [currentRound.pop(), currentRound.pop()];
+    let option1, option2;
+    do {
+        option1 = currentRound.pop();
+        option2 = currentRound.pop();
+    } while (option1 === option2 && currentRound.length > 0);
+
+    if (!option1 || !option2) {
+        declareWinner();
+        return;
+    }
+
     document.getElementById("option1").textContent = option1;
     document.getElementById("option2").textContent = option2;
     document.getElementById("option1").classList.remove("selected");
@@ -117,7 +126,7 @@ function startTop10Ranking(finalists) {
     displayNextPair();
 }
 
-function declareWinner(finalists) {
+function declareWinner() {
     document.getElementById("game-area").style.display = "none";
     document.getElementById("top10").style.display = "block";
 
