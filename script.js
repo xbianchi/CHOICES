@@ -1,92 +1,92 @@
-const categories = {
-    pokemonprimera: ['Pikachu', 'Charizard', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew'],
-    comidas: ['Pizza', 'Hamburguesa', 'Pasta', 'Tacos', 'Sushi', 'Pollo asado', 'Sopa'],
-    rupaulDownUnder: ['Anita Wigl\'it', 'Art Simone', 'Coco Jumbo', 'Electra Shock', 'Etcetera Etcetera', 'Jojo Zaho', 'Karen From Finance', 'Kita Mean', 'Maxi Shield', 'Scarlet Adams', 'Yvonne Lamay', 'Aubrey Haive', 'Beverly Kills', 'Hannah Conda', 'Kween Kong', 'Minnie Cooper', 'Molly Poppinz', 'Pomara Fifth', 'Spankie Jackzon']
-};
-
-const categoryNames = {
-    pokemonprimera: 'Pokemon Primera Generación',
-    comidas: 'Comidas',
-    rupaulDownUnder: 'RuPaul Drag Race Down Under'
-};
-
+let categories = ["Películas", "Series", "Libros", "Música", "Videojuegos"];
 let currentRound = [];
 let nextRound = [];
 let voteCounts = {};
 let selectedCategory = null;
+let roundNumber = 1;
 
-const searchResultsContainer = document.getElementById('search-results');
-const startBtn = document.getElementById('start-btn');
-const searchBar = document.getElementById('search-bar');
+// Inicializa el juego con las categorías disponibles
+function initializeCategories() {
+    const searchResults = document.getElementById("search-results");
+    searchResults.innerHTML = "";
+    categories.forEach(category => {
+        const div = document.createElement("div");
+        div.textContent = category;
+        div.onclick = () => selectCategory(category);
+        searchResults.appendChild(div);
+    });
+}
 
 function filterCategories() {
-    const searchValue = searchBar.value.toLowerCase();
-    searchResultsContainer.innerHTML = '';
-    searchResultsContainer.style.display = 'none';
-
-    for (let key in categoryNames) {
-        if (categoryNames[key].toLowerCase().includes(searchValue)) {
-            const categoryDiv = document.createElement('div');
-            categoryDiv.innerText = categoryNames[key];
-            categoryDiv.onclick = () => selectCategory(key);
-            searchResultsContainer.appendChild(categoryDiv);
-            searchResultsContainer.style.display = 'block';
-        }
-    }
+    const query = document.getElementById("search-bar").value.toLowerCase();
+    const searchResults = document.getElementById("search-results");
+    searchResults.innerHTML = "";
+    categories
+        .filter(category => category.toLowerCase().includes(query))
+        .forEach(category => {
+            const div = document.createElement("div");
+            div.textContent = category;
+            div.onclick = () => selectCategory(category);
+            searchResults.appendChild(div);
+        });
+    searchResults.style.display = query ? "block" : "none";
 }
 
+// Alterna la visibilidad de todas las categorías
+function toggleAllCategories() {
+    const searchResults = document.getElementById("search-results");
+    searchResults.style.display = searchResults.style.display === "block" ? "none" : "block";
+}
+
+// Selecciona una categoría y permite comenzar el juego
 function selectCategory(category) {
     selectedCategory = category;
-    searchBar.value = categoryNames[category];
-    startBtn.disabled = false;
-    searchResultsContainer.style.display = 'none';
+    document.getElementById("search-bar").value = category;
+    document.getElementById("search-results").style.display = "none";
+    document.getElementById("start-btn").disabled = false;
 }
 
-function toggleAllCategories() {
-    if (searchResultsContainer.style.display === 'block') {
-        searchResultsContainer.style.display = 'none';
-    } else {
-        searchResultsContainer.innerHTML = '';
-        for (let key in categoryNames) {
-            const categoryDiv = document.createElement('div');
-            categoryDiv.innerText = categoryNames[key];
-            categoryDiv.onclick = () => selectCategory(key);
-            searchResultsContainer.appendChild(categoryDiv);
-        }
-        searchResultsContainer.style.display = 'block';
-    }
-}
-
+// Comienza el juego con la categoría seleccionada
 function startGame() {
-    if (selectedCategory) {
-        const items = categories[selectedCategory];
-        currentRound = [...items];
-        nextRound = [];
-        voteCounts = items.reduce((acc, item) => ({ ...acc, [item]: 0 }), {});
+    if (!selectedCategory) return;
 
-        document.getElementById('category-selector').style.display = 'none';
-        document.getElementById('game-area').style.display = 'flex';
+    // Genera ejemplos para la ronda (esto se puede cambiar por datos reales)
+    currentRound = ["Opción 1", "Opción 2", "Opción 3", "Opción 4"];
+    voteCounts = {};
+    currentRound.forEach(option => {
+        voteCounts[option] = 0;
+    });
 
-        startRound();
-    }
+    document.getElementById("category-selector").style.display = "none";
+    document.getElementById("game-area").style.display = "flex";
+    document.getElementById("top10").style.display = "none";
+    roundNumber = 1;
+    startRound();
 }
 
+// Muestra el indicador de ronda actual y asigna opciones
 function startRound() {
+    document.getElementById("round-indicator").innerText = `Ronda ${roundNumber}`;
+
     if (currentRound.length >= 2) {
         const [option1, option2] = currentRound.splice(0, 2);
-        document.getElementById('option1').innerHTML = option1;
-        document.getElementById('option2').innerHTML = option2;
+        document.getElementById("option1").innerHTML = option1;
+        document.getElementById("option2").innerHTML = option2;
     } else if (nextRound.length === 1) {
         showWinner();
     } else {
         currentRound = nextRound;
         nextRound = [];
-        document.getElementById('round-message').style.display = 'block';
-        setTimeout(() => document.getElementById('round-message').style.display = 'none', 800);
-        startRound();
+        document.getElementById("round-message").style.display = "block";
+        roundNumber++;
+        setTimeout(() => {
+            document.getElementById("round-message").style.display = "none";
+            startRound();
+        }, 800);
     }
 }
 
+// Registra la opción seleccionada y continúa la ronda
 function selectOption(option) {
     const chosenElement = document.getElementById(option);
     chosenElement.classList.add('selected');
@@ -99,30 +99,40 @@ function selectOption(option) {
     startRound();
 }
 
+// Muestra el ganador al final del juego
 function showWinner() {
-    const winner = nextRound[0];
-    document.getElementById('game-area').style.display = 'none';
-    document.getElementById('winner-screen').style.display = 'block';
-    document.getElementById('winner-name').innerText = winner;
+    const sortedOptions = Object.entries(voteCounts).sort((a, b) => b[1] - a[1]);
+    const top10Container = document.getElementById("rankings");
+    top10Container.innerHTML = "";
 
-    showTop10();
-}
-
-function showTop10() {
-    const sortedVotes = Object.keys(voteCounts).sort((a, b) => voteCounts[b] - voteCounts[a]);
-    const rankings = sortedVotes.slice(0, 10);
-    const rankingsContainer = document.getElementById('rankings');
-    rankingsContainer.innerHTML = '';
-    rankings.forEach((name, i) => {
-        const rankDiv = document.createElement('div');
-        rankDiv.innerText = `${i + 1}. ${name}`;
-        rankingsContainer.appendChild(rankDiv);
+    sortedOptions.slice(0, 10).forEach(([option, votes], index) => {
+        const div = document.createElement("div");
+        div.textContent = `${index + 1}. ${option} (${votes} votos)`;
+        if (index === 0) {
+            div.style.fontWeight = "bold";
+            div.style.color = "#FFD700"; // Oro
+        } else if (index === 1) {
+            div.style.backgroundColor = "silver"; // Plata
+        } else if (index === 2) {
+            div.style.backgroundColor = "#cd7f32"; // Bronce
+        }
+        top10Container.appendChild(div);
     });
-    document.getElementById('top10').style.display = 'block';
+
+    document.getElementById("game-area").style.display = "none";
+    document.getElementById("top10").style.display = "block";
 }
 
+// Reinicia el juego para volver a la selección de categoría
 function resetGame() {
-    document.getElementById('winner-screen').style.display = 'none';
-    document.getElementById('category-selector').style.display = 'block';
-    document.getElementById('top10').style.display = 'none';
+    selectedCategory = null;
+    document.getElementById("search-bar").value = "";
+    document.getElementById("category-selector").style.display = "block";
+    document.getElementById("start-btn").disabled = true;
+    document.getElementById("game-area").style.display = "none";
+    document.getElementById("top10").style.display = "none";
+    initializeCategories();
 }
+
+// Llama a la inicialización de categorías al cargar la página
+window.onload = initializeCategories;
