@@ -8,13 +8,13 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="game-container">
+    <main class="game-container">
         <h1>¿Qué prefieres?</h1>
 
         <!-- Selector de categorías -->
-        <div id="category-selector">
+        <section id="category-selector">
             <label for="categories">Elige una categoría:</label>
-            <select id="categories" onchange="enableStartButton()">
+            <select id="categories" onchange="enableStartButton()" title="Selecciona una categoría para comenzar">
                 <option value="" disabled selected>Selecciona una categoría</option>
                 <option value="pokemonprimera">Pokémon Primera Generación</option>
                 <option value="comidas">Comidas</option>
@@ -27,34 +27,28 @@
                 <option value="rupaulAll">Todas las Queens de RuPaul</option>
             </select>
             <button id="start-btn" onclick="startGame()" disabled>Comenzar Juego</button>
-        </div>
+        </section>
 
         <!-- Área del juego donde aparecerán las opciones -->
-        <div id="game-area" style="display: none;">
+        <section id="game-area" style="display: none;">
             <div id="option1" class="card" onclick="selectOption('option1')"></div>
             <div id="vs-text">VS</div>
             <div id="option2" class="card" onclick="selectOption('option2')"></div>
-        </div>
+        </section>
 
         <!-- Mensaje de nueva ronda -->
         <div id="round-message" class="round-message">¡Comienza la nueva ronda de ganadores!</div>
 
         <!-- Pantalla de ganador -->
-        <div id="winner-screen" style="display: none;">
+        <section id="winner-screen" style="display: none;">
             <h2 id="winner-text">¡El ganador es!</h2>
             <div id="winner-name"></div>
             <button onclick="resetGame()">Jugar de nuevo</button>
-        </div>
-
-        <!-- Top 3 -->
-        <div id="top3" style="display: none;">
-            <h2>Top 3 Finalistas</h2>
-            <ul id="finalists-list"></ul>
-        </div>
+        </section>
 
         <!-- Top 10 -->
-        <div id="top10" style="display: none;">
-            <h2>Top 10 Jugadores</h2>
+        <section id="top10" style="display: none;">
+            <h2>Top 10 Opciones</h2>
             <div class="top10-container">
                 <div class="top10-column" id="rankings">
                     <!-- Rankings -->
@@ -63,137 +57,9 @@
                     <!-- Player names -->
                 </div>
             </div>
-        </div>
-    </div>
+        </section>
+    </main>
 
-    <script>
-        const categories = {
-            pokemonprimera: ['Pikachu', 'Charizard', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew'],
-            comidas: ['Pizza', 'Hamburguesa', 'Pasta', 'Tacos', 'Sushi', 'Pollo asado', 'Sopa'],
-            rupaulDownUnder: ['Anita Wigl\'it', 'Art Simone', 'Coco Jumbo', 'Electra Shock', 'Etcetera Etcetera', 'Jojo Zaho', 'Karen From Finance', 'Kita Mean', 'Maxi Shield', 'Scarlet Adams', 'Yvonne Lamay', 'Aubrey Haive', 'Beverly Kills', 'Hannah Conda', 'Kween Kong', 'Minnie Cooper', 'Molly Poppinz', 'Pomara Fifth', 'Spankie Jackzon'],
-            // Más categorías...
-        };
-
-        let currentRound = [];
-        let nextRound = [];
-        let eliminated = [];
-        let top3 = [];
-        let isGameOver = false;
-        let voteCounts = {}; // Para contar las veces que una opción ha sido seleccionada
-        let selectedCategory = null;
-
-        // Función para habilitar el botón cuando se seleccione una categoría
-        function enableStartButton() {
-            const category = document.getElementById('categories').value;
-            const startBtn = document.getElementById('start-btn');
-            if (category) {
-                startBtn.disabled = false;
-                selectedCategory = category; // Almacenar la categoría seleccionada
-            }
-        }
-
-        // Función para iniciar el juego
-        function startGame() {
-            if (selectedCategory && categories[selectedCategory]) {
-                currentRound = [...categories[selectedCategory]];
-                document.getElementById('game-area').style.display = 'flex';
-                document.getElementById('category-selector').style.display = 'none';
-                startNextMatch(); // Arranca el primer match
-            }
-        }
-
-        // Selección de una opción
-        function selectOption(selectedOption) {
-            const selectedText = document.getElementById(selectedOption).innerHTML;
-            const otherOption = selectedOption === 'option1' ? document.getElementById('option2').innerHTML : document.getElementById('option1').innerHTML;
-
-            nextRound.push(selectedText);
-            eliminated.push(otherOption);
-
-            // Contabilizar votos
-            voteCounts[selectedText] = (voteCounts[selectedText] || 0) + 1;
-
-            startNextMatch();
-        }
-
-        // Iniciar el siguiente enfrentamiento
-        function startNextMatch() {
-            if (currentRound.length === 0) {
-                if (nextRound.length === 1) {
-                    showWinner(nextRound[0]); // Mostrar el ganador
-                    return;
-                }
-
-                // Pasar a la siguiente ronda
-                currentRound = [...nextRound];
-                nextRound = [];
-                document.getElementById('round-message').style.display = 'block';
-                setTimeout(() => {
-                    document.getElementById('round-message').style.display = 'none';
-                    startNextMatch();
-                }, 1000);
-                return;
-            }
-
-            // Mostrar las siguientes dos opciones
-            const option1 = currentRound.pop();
-            const option2 = currentRound.pop();
-
-            document.getElementById('option1').innerHTML = option1 || "";
-            document.getElementById('option2').innerHTML = option2 || "";
-        }
-
-        // Mostrar el ganador
-        function showWinner(winner) {
-            document.getElementById('game-area').style.display = 'none';
-            document.getElementById('winner-screen').style.display = 'block';
-            document.getElementById('winner-name').innerHTML = winner;
-            showTop10(); // Mostrar el Top 10 al final
-        }
-
-        // Mostrar el Top 10 al final del juego
-        function showTop10() {
-            document.getElementById('top10').style.display = 'block';
-            const rankingsElement = document.getElementById('rankings');
-            const playersElement = document.getElementById('players');
-
-            // Obtener las opciones más votadas
-            const sortedOptions = Object.entries(voteCounts).sort((a, b) => b[1] - a[1]);
-            const top10 = sortedOptions.slice(0, 10);
-
-            rankingsElement.innerHTML = '';
-            playersElement.innerHTML = '';
-
-            top10.forEach((option, index) => {
-                const ranking = document.createElement('div');
-                ranking.textContent = `${index + 1}°`;
-                rankingsElement.appendChild(ranking);
-
-                const playerName = document.createElement('div');
-                playerName.textContent = option[0]; // Nombre de la opción
-                playersElement.appendChild(playerName);
-            });
-        }
-
-        // Resetear el juego
-        function resetGame() {
-            currentRound = [];
-            nextRound = [];
-            eliminated = [];
-            top3 = [];
-            isGameOver = false;
-            voteCounts = {};
-            selectedCategory = null;
-
-            document.getElementById('category-selector').style.display = 'block';
-            document.getElementById('game-area').style.display = 'none';
-            document.getElementById('winner-screen').style.display = 'none';
-            document.getElementById('top10').style.display = 'none';
-
-            document.getElementById('categories').value = '';
-            document.getElementById('start-btn').disabled = true;
-        }
-    </script>
+    <script src="script.js"></script>
 </body>
 </html>
-
