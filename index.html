@@ -13,7 +13,10 @@
         
         <div id="category-selector">
             <label for="search-bar">Buscar categoría:</label>
-            <input type="text" id="search-bar" placeholder="Escribe para buscar..." oninput="filterCategories()" autocomplete="off">
+            <div class="search-container">
+                <input type="text" id="search-bar" placeholder="Escribe para buscar..." oninput="filterCategories()" autocomplete="off">
+                <button id="toggle-btn" onclick="toggleAllCategories()">▼</button>
+            </div>
             <div id="search-results" class="results-container"></div>
             <button id="start-btn" onclick="startGame()" disabled>Comenzar</button>
         </div>
