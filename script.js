@@ -97,7 +97,7 @@ function selectOption(optionId) {
 function declareWinner(winner) {
     document.getElementById("game-area").style.display = "none";
     document.getElementById("top10").style.display = "block";
-    document.getElementById("winner-text").textContent = `¡Tu Top N°1: ${winner}!`;
+    document.getElementById("top-winner").innerHTML = `¡Tu Top N°1: <span class="highlight">${winner}</span>!`;
 
     const rankings = Object.entries(voteCounts).sort((a, b) => b[1] - a[1]);
     const rankingsContainer = document.getElementById("rankings");
