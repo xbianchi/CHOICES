@@ -14,7 +14,7 @@
         <!-- Selector de categorías -->
         <div id="category-selector">
             <label for="categories">Elige una categoría:</label>
-            <select id="categories">
+            <select id="categories" onchange="enableStartButton()">
                 <option value="" disabled selected>Selecciona una categoría</option>
                 <option value="pokemonprimera">Pokémon Primera Generación</option>
                 <option value="comidas">Comidas</option>
@@ -68,7 +68,6 @@
 
     <script>
         const categories = {
-            // Categorías y opciones
             pokemonprimera: ['Pikachu', 'Charizard', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew'],
             comidas: ['Pizza', 'Hamburguesa', 'Pasta', 'Tacos', 'Sushi', 'Pollo asado', 'Sopa'],
             rupaulDownUnder: ['Anita Wigl\'it', 'Art Simone', 'Coco Jumbo', 'Electra Shock', 'Etcetera Etcetera', 'Jojo Zaho', 'Karen From Finance', 'Kita Mean', 'Maxi Shield', 'Scarlet Adams', 'Yvonne Lamay', 'Aubrey Haive', 'Beverly Kills', 'Hannah Conda', 'Kween Kong', 'Minnie Cooper', 'Molly Poppinz', 'Pomara Fifth', 'Spankie Jackzon'],
@@ -81,8 +80,29 @@
         let top3 = [];
         let isGameOver = false;
         let voteCounts = {}; // Para contar las veces que una opción ha sido seleccionada
+        let selectedCategory = null;
 
-        // Actualización al seleccionar una opción
+        // Función para habilitar el botón cuando se seleccione una categoría
+        function enableStartButton() {
+            const category = document.getElementById('categories').value;
+            const startBtn = document.getElementById('start-btn');
+            if (category) {
+                startBtn.disabled = false;
+                selectedCategory = category; // Almacenar la categoría seleccionada
+            }
+        }
+
+        // Función para iniciar el juego
+        function startGame() {
+            if (selectedCategory && categories[selectedCategory]) {
+                currentRound = [...categories[selectedCategory]];
+                document.getElementById('game-area').style.display = 'flex';
+                document.getElementById('category-selector').style.display = 'none';
+                startNextMatch(); // Arranca el primer match
+            }
+        }
+
+        // Selección de una opción
         function selectOption(selectedOption) {
             const selectedText = document.getElementById(selectedOption).innerHTML;
             const otherOption = selectedOption === 'option1' ? document.getElementById('option2').innerHTML : document.getElementById('option1').innerHTML;
@@ -94,6 +114,41 @@
             voteCounts[selectedText] = (voteCounts[selectedText] || 0) + 1;
 
             startNextMatch();
+        }
+
+        // Iniciar el siguiente enfrentamiento
+        function startNextMatch() {
+            if (currentRound.length === 0) {
+                if (nextRound.length === 1) {
+                    showWinner(nextRound[0]); // Mostrar el ganador
+                    return;
+                }
+
+                // Pasar a la siguiente ronda
+                currentRound = [...nextRound];
+                nextRound = [];
+                document.getElementById('round-message').style.display = 'block';
+                setTimeout(() => {
+                    document.getElementById('round-message').style.display = 'none';
+                    startNextMatch();
+                }, 1000);
+                return;
+            }
+
+            // Mostrar las siguientes dos opciones
+            const option1 = currentRound.pop();
+            const option2 = currentRound.pop();
+
+            document.getElementById('option1').innerHTML = option1 || "";
+            document.getElementById('option2').innerHTML = option2 || "";
+        }
+
+        // Mostrar el ganador
+        function showWinner(winner) {
+            document.getElementById('game-area').style.display = 'none';
+            document.getElementById('winner-screen').style.display = 'block';
+            document.getElementById('winner-name').innerHTML = winner;
+            showTop10(); // Mostrar el Top 10 al final
         }
 
         // Mostrar el Top 10 al final del juego
@@ -120,14 +175,24 @@
             });
         }
 
-        // Finalizar el juego
-        function showWinner(winner) {
+        // Resetear el juego
+        function resetGame() {
+            currentRound = [];
+            nextRound = [];
+            eliminated = [];
+            top3 = [];
+            isGameOver = false;
+            voteCounts = {};
+            selectedCategory = null;
+
+            document.getElementById('category-selector').style.display = 'block';
             document.getElementById('game-area').style.display = 'none';
-            document.getElementById('winner-screen').style.display = 'block';
-            document.getElementById('winner-name').innerHTML = winner;
-            showTop10(); // Mostrar el Top 10 al final
+            document.getElementById('winner-screen').style.display = 'none';
+            document.getElementById('top10').style.display = 'none';
+
+            document.getElementById('categories').value = '';
+            document.getElementById('start-btn').disabled = true;
         }
     </script>
 </body>
 </html>
-
