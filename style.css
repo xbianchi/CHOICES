@@ -113,36 +113,29 @@ h2 {
 
 #game-area {
     display: flex;
-    flex-direction: column;
+    justify-content: center;
     align-items: center;
     gap: 1.5em;
     margin-top: 1em;
 }
 
-.card-container {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    width: 100%;
-}
-
 .card {
-    padding: 0.5em;
+    padding: 1em;
     background-color: #ffd6a5;
     border: 2px solid #ff758f;
     border-radius: 0.5em;
     cursor: pointer;
-    min-width: 40%;
-    max-width: 90%;
+    width: 150px; /* Se aumentó el ancho de las tarjetas */
+    min-height: 100px; /* Se aumentó la altura mínima para más espacio */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.3s;
     font-weight: bold;
-    font-size: 1.2em;
+    font-size: 1.1em;
     color: #4a4e69;
     text-align: center;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    line-height: 1.2;
-    word-wrap: break-word;
+    word-wrap: break-word; /* Permite que el texto se ajuste */
 }
 
 .card:hover {
@@ -157,7 +150,6 @@ h2 {
 #vs-text {
     font-size: 1.5em;
     color: #333;
-    margin: 0.5em 0;
 }
 
 #round-message {
