@@ -24,38 +24,14 @@ h1 {
     text-align: center;
 }
 
-#category-selector {
+p {
+    color: #555;
+    font-size: 16px;
     margin-bottom: 20px;
 }
 
-#category-input {
-    width: 100%;
-    padding: 8px;
-    border: 2px solid #FF6F91;
-    border-radius: 5px;
-    margin-top: 5px;
-}
-
-#category-list {
-    border: 1px solid #ddd;
-    max-height: 150px;
-    overflow-y: auto;
-    margin-top: 5px;
-    border-radius: 5px;
-    background-color: white;
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-    display: none;
-}
-
-#category-list div {
-    padding: 8px;
-    cursor: pointer;
-    color: #333;
-}
-
-#category-list div:hover {
-    background-color: #FFB5C2;
-    color: white;
+#category-selector {
+    margin-bottom: 20px;
 }
 
 .card {
@@ -71,6 +47,7 @@ h1 {
     align-items: center;
     cursor: pointer;
     transition: transform 0.3s, background-color 0.3s;
+    animation: fadeIn 0.5s ease-in-out;
 }
 
 .card:hover {
@@ -109,6 +86,7 @@ button {
     cursor: pointer;
     font-size: 16px;
     margin-top: 20px;
+    transition: background-color 0.3s;
 }
 
 button:hover {
@@ -126,23 +104,28 @@ button:hover {
     text-align: left;
 }
 
-/* Estilos de los tres primeros puestos */
 #rankings div:nth-child(1) {
-    color: #333; /* Color oscuro para mejor contraste */
+    color: #333;
     font-weight: bold;
     border: 2px solid #FFD700;
     padding: 5px;
     border-radius: 10px;
     background: linear-gradient(to right, #FFD700, #FFEC8B);
     box-shadow: 0px 0px 10px rgba(255, 215, 0, 0.5);
+    transition: transform 0.2s;
 }
 
 #rankings div:nth-child(2) {
-    color: #C0C0C0; /* Plata */
+    color: #C0C0C0;
     font-weight: bold;
 }
 
 #rankings div:nth-child(3) {
-    color: #CD7F32; /* Bronce */
+    color: #CD7F32;
     font-weight: bold;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
