@@ -10,30 +10,35 @@
 <body>
     <div class="game-container">
         <h1>¿Qué prefieres?</h1>
-        <div id="category-selector">
+        
+        <!-- Párrafo de introducción -->
+        <p>Selecciona una categoría y enfrenta opciones para elegir tus favoritas. Al final, conocerás tu top 10 de la categoría elegida.</p>
+        
+        <div id="category-selector" aria-live="polite">
             <label for="categories">Elige una categoría:</label>
-            <select id="categories" onchange="enableStartButton()">
-                <option value="" disabled selected>Selecciona una categoría</option>
-                <option value="pokemonprimera">Pokémon Primera Generación</option>
-                <option value="comidas">Comidas</option>
-                <option value="equipos">Equipos de fútbol</option>
-                <option value="rupaulUSA">Queens de RuPaul USA</option>
-                <option value="rupaulUK">Queens de RuPaul UK</option>
-                <option value="rupaulDownUnder">Queens de RuPaul Down Under</option>
-                <option value="rupaulHolland">Queens de RuPaul Holanda</option>
-                <option value="rupaulEspana">Queens de RuPaul España</option>
-                <option value="rupaulAll">Todas las Queens de RuPaul</option>
-            </select>
+            <input list="category-list" id="categories" oninput="filterCategories()" placeholder="Escribe o selecciona una categoría...">
+            <datalist id="category-list">
+                <option value="Pokémon Primera Generación"></option>
+                <option value="Comidas"></option>
+                <option value="Equipos de fútbol"></option>
+                <option value="Queens de RuPaul USA"></option>
+                <option value="Queens de RuPaul UK"></option>
+                <option value="Queens de RuPaul Down Under"></option>
+                <option value="Queens de RuPaul Holanda"></option>
+                <option value="Queens de RuPaul España"></option>
+                <option value="Todas las Queens de RuPaul"></option>
+            </datalist>
             <button id="start-btn" onclick="startGame()" disabled>Comenzar</button>
         </div>
 
         <div id="game-area" style="display: none;">
-            <div id="option1" class="card" onclick="selectOption('option1')"></div>
+            <div id="option1" class="card" onclick="selectOption('option1')" aria-label="Opción 1"></div>
             <div id="vs-text">VS</div>
-            <div id="option2" class="card" onclick="selectOption('option2')"></div>
+            <div id="option2" class="card" onclick="selectOption('option2')" aria-label="Opción 2"></div>
+            <div id="round-counter" aria-live="polite"></div>
         </div>
 
-        <div id="round-message" class="round-message">¡Comienza la nueva ronda de ganadores!</div>
+        <div id="round-message" class="round-message" aria-live="polite">¡Comienza la nueva ronda de ganadores!</div>
         <div id="winner-screen" style="display: none;">
             <h2 id="winner-text">¡Tu Top N°1!</h2>
             <div id="winner-name"></div>
