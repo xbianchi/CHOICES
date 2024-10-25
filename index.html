@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>¿Qué prefieres?</title>
-    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -21,7 +21,7 @@
                 <input type="text" id="search-bar" placeholder="Escribe para buscar..." oninput="filterCategories()" autocomplete="off">
                 <button id="toggle-btn" onclick="toggleAllCategories()">▼</button>
             </div>
-            <div id="search-results" class="results-container"></div>
+            <div id="search-results" class="results-container" style="display: none;"></div>
             <button id="start-btn" onclick="startGame()" disabled>Comenzar</button>
         </div>
 
@@ -37,7 +37,6 @@
 
         <div id="top10" style="display: none;">
             <h2 id="winner-text">¡Tu Top N°1!</h2>
-            <div id="winner-name"></div>
             <h2>Tu Top 10:</h2>
             <div id="rankings"></div>
             <button onclick="resetGame()">Jugar de nuevo</button>
