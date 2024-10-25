@@ -28,20 +28,30 @@ function enableStartButton() {
 }
 
 function startGame() {
-    if (selectedCategory && categories[selectedCategory]) {
-        currentRound = [...categories[selectedCategory]];
-        document.getElementById('game-area').style.display = 'flex';
-        document.getElementById('category-selector').style.display = 'none';
-        setTimeout(startNextMatch, 500);
-    }
+    document.getElementById('category-selector').style.display = 'none';
+    document.getElementById('game-area').style.display = 'flex';
+    currentRound = categories[selectedCategory].slice();
+    voteCounts = {};
+    nextRound = [];
+    eliminated = [];
+    shuffleArray(currentRound);
+    startNextMatch();
 }
 
-function selectOption(selectedOption) {
-    const selectedText = document.getElementById(selectedOption).innerHTML;
-    const otherOption = selectedOption === 'option1' ? document.getElementById('option2').innerHTML : document.getElementById('option1').innerHTML;
+function shuffleArray(array) {
+    array.sort(() => Math.random() - 0.5);
+}
+
+function selectOption(selected) {
+    const selectedText = document.getElementById(selected).innerHTML;
+    const otherOption = selected === 'option1' ? 'option2' : 'option1';
+    const otherText = document.getElementById(otherOption).innerHTML;
+
+    if (!voteCounts[selectedText]) voteCounts[selectedText] = 0;
+    voteCounts[selectedText]++;
     nextRound.push(selectedText);
-    eliminated.push(otherOption);
-    startNextMatch();
+    eliminated.push(otherText);
+    setTimeout(() => startNextMatch(), 500);
 }
 
 function startNextMatch() {
@@ -66,11 +76,25 @@ function showWinner() {
     document.getElementById('game-area').style.display = 'none';
     document.getElementById('winner-screen').style.display = 'block';
     document.getElementById('winner-name').innerText = winner;
-    nextRound = [];
-    currentRound = [];
+
+    showTop10();
+}
+
+function showTop10() {
+    const sortedVotes = Object.keys(voteCounts).sort((a, b) => voteCounts[b] - voteCounts[a]);
+    const rankings = sortedVotes.slice(0, 10);
+    const rankingsContainer = document.getElementById('rankings');
+    rankingsContainer.innerHTML = '';
+    rankings.forEach((name, i) => {
+        const rankDiv = document.createElement('div');
+        rankDiv.innerText = `${i + 1}. ${name}`;
+        rankingsContainer.appendChild(rankDiv);
+    });
+    document.getElementById('top10').style.display = 'block';
 }
 
 function resetGame() {
     document.getElementById('winner-screen').style.display = 'none';
     document.getElementById('category-selector').style.display = 'block';
+    document.getElementById('top10').style.display = 'none';
 }
