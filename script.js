@@ -10,21 +10,32 @@ let eliminated = [];
 let voteCounts = {};
 let selectedCategory = null;
 
-document.getElementById('search-bar').addEventListener('input', filterCategories);
+const searchResultsContainer = document.getElementById('search-results');
+const startBtn = document.getElementById('start-btn');
+const searchBar = document.getElementById('search-bar');
 
 function filterCategories() {
-    const searchValue = document.getElementById('search-bar').value.toLowerCase();
-    const categoriesDropdown = document.getElementById('categories');
-    Array.from(categoriesDropdown.options).forEach(option => {
-        option.style.display = option.value && option.textContent.toLowerCase().includes(searchValue) ? 'block' : 'none';
-    });
+    const searchValue = searchBar.value.toLowerCase();
+    searchResultsContainer.innerHTML = '';
+    searchResultsContainer.style.display = 'none';
+
+    for (let key in categories) {
+        const categoryName = key.toLowerCase();
+        if (categoryName.includes(searchValue)) {
+            const categoryDiv = document.createElement('div');
+            categoryDiv.innerText = key;
+            categoryDiv.onclick = () => selectCategory(key);
+            searchResultsContainer.appendChild(categoryDiv);
+            searchResultsContainer.style.display = 'block';
+        }
+    }
 }
 
-function enableStartButton() {
-    const category = document.getElementById('categories').value;
-    const startBtn = document.getElementById('start-btn');
-    startBtn.disabled = !category;
+function selectCategory(category) {
     selectedCategory = category;
+    searchBar.value = category;
+    startBtn.disabled = false;
+    searchResultsContainer.style.display = 'none';
 }
 
 function startGame() {
