@@ -120,16 +120,24 @@ h2 {
 }
 
 .card {
-    padding: 1em;
+    padding: 0.5em;
     background-color: #ffd6a5;
     border: 2px solid #ff758f;
     border-radius: 0.5em;
     cursor: pointer;
     width: 100px;
+    height: 6em;
     transition: background-color 0.3s;
     font-weight: bold;
     font-size: 1.1em;
     color: #4a4e69;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .card:hover {
@@ -139,6 +147,10 @@ h2 {
 .card.selected {
     background-color: #ff758f;
     color: white;
+}
+
+.card span {
+    font-size: calc(0.8em + 0.5vw);
 }
 
 #vs-text {
