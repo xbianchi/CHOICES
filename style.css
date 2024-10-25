@@ -98,7 +98,7 @@ button:hover {
 
 /* Estilos de los tres primeros puestos */
 #rankings div:nth-child(1) {
-    color: #FFD700; /* Oro */
+    color: #333; /* Color oscuro para mejor contraste */
     font-weight: bold;
     border: 2px solid #FFD700;
     padding: 5px;
