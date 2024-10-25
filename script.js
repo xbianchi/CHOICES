@@ -16,7 +16,6 @@ let voteCounts = {};
 let selectedCategory = null;
 let roundNumber = 1;
 
-// Inicializa el juego mostrando las categorías en la lista
 function initializeCategories() {
     const searchResults = document.getElementById("search-results");
     searchResults.innerHTML = "";
@@ -43,13 +42,11 @@ function filterCategories() {
     searchResults.style.display = query ? "block" : "none";
 }
 
-// Alterna la visibilidad de todas las categorías
 function toggleAllCategories() {
     const searchResults = document.getElementById("search-results");
     searchResults.style.display = searchResults.style.display === "block" ? "none" : "block";
 }
 
-// Selecciona una categoría y permite comenzar el juego
 function selectCategory(category) {
     selectedCategory = category;
     document.getElementById("search-bar").value = categoryNames[category];
@@ -57,11 +54,9 @@ function selectCategory(category) {
     document.getElementById("start-btn").disabled = false;
 }
 
-// Comienza el juego con la categoría seleccionada
 function startGame() {
     if (!selectedCategory) return;
 
-    // Asigna opciones para la ronda inicial
     currentRound = [...categories[selectedCategory]];
     voteCounts = {};
     currentRound.forEach(option => {
@@ -71,13 +66,14 @@ function startGame() {
     document.getElementById("category-selector").style.display = "none";
     document.getElementById("game-area").style.display = "flex";
     document.getElementById("top10").style.display = "none";
+    document.getElementById("intro").style.display = "none";
     roundNumber = 1;
     startRound();
 }
 
-// Muestra el indicador de ronda actual y asigna opciones
 function startRound() {
     document.getElementById("round-indicator").innerText = `Ronda ${roundNumber}`;
+    document.getElementById("round-indicator").style.display = "block";
 
     if (currentRound.length >= 2) {
         const [option1, option2] = currentRound.splice(0, 2);
@@ -97,7 +93,6 @@ function startRound() {
     }
 }
 
-// Registra la opción seleccionada y continúa la ronda
 function selectOption(option) {
     const chosenElement = document.getElementById(option);
     chosenElement.classList.add('selected');
@@ -110,7 +105,6 @@ function selectOption(option) {
     startRound();
 }
 
-// Muestra el ganador al final del juego
 function showWinner() {
     const sortedOptions = Object.entries(voteCounts).sort((a, b) => b[1] - a[1]);
     const top10Container = document.getElementById("rankings");
@@ -121,20 +115,20 @@ function showWinner() {
         div.textContent = `${index + 1}. ${option} (${votes} votos)`;
         if (index === 0) {
             div.style.fontWeight = "bold";
-            div.style.color = "#FFD700"; // Oro
+            div.style.color = "#FFD700"; 
         } else if (index === 1) {
-            div.style.backgroundColor = "silver"; // Plata
+            div.style.backgroundColor = "silver";
         } else if (index === 2) {
-            div.style.backgroundColor = "#cd7f32"; // Bronce
+            div.style.backgroundColor = "#cd7f32"; 
         }
         top10Container.appendChild(div);
     });
 
+    document.getElementById("winner-text").style.display = "block";
     document.getElementById("game-area").style.display = "none";
     document.getElementById("top10").style.display = "block";
 }
 
-// Reinicia el juego para volver a la selección de categoría
 function resetGame() {
     selectedCategory = null;
     document.getElementById("search-bar").value = "";
@@ -142,8 +136,8 @@ function resetGame() {
     document.getElementById("start-btn").disabled = true;
     document.getElementById("game-area").style.display = "none";
     document.getElementById("top10").style.display = "none";
+    document.getElementById("intro").style.display = "block";
     initializeCategories();
 }
 
-// Llama a la inicialización de categorías al cargar la página
 window.onload = initializeCategories;
