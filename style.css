@@ -28,27 +28,34 @@ h1 {
     margin-bottom: 1.25em;
 }
 
-.input-group {
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
-    margin-bottom: 1em;
-}
-
 #search-bar {
-    width: 60%;
+    width: 100%;
     padding: 0.6em;
     font-size: 1em;
     border-radius: 0.5em;
     border: 2px solid #FF6F91;
+    margin-bottom: 0.5em;
 }
 
-#categories {
-    width: 40%;
-    padding: 0.6em;
-    font-size: 1em;
+.results-container {
+    background: #FFF5F8;
+    border: 1px solid #FF6F91;
     border-radius: 0.5em;
-    border: 2px solid #FF6F91;
+    margin-top: -0.2em;
+    padding: 0.5em;
+    max-height: 150px;
+    overflow-y: auto;
+    display: none;
+}
+
+.results-container div {
+    padding: 0.5em;
+    cursor: pointer;
+    border-radius: 0.5em;
+}
+
+.results-container div:hover {
+    background-color: #FFB5C2;
 }
 
 .card {
@@ -127,14 +134,4 @@ button:hover {
     border-radius: 0.625em;
     background: linear-gradient(to right, #FFD700, #FFEC8B);
     box-shadow: 0em 0em 0.625em rgba(255, 215, 0, 0.5);
-}
-
-#rankings div:nth-child(2) {
-    color: #C0C0C0;
-    font-weight: bold;
-}
-
-#rankings div:nth-child(3) {
-    color: #CD7F32;
-    font-weight: bold;
 }
