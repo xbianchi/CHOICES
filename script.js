@@ -1,120 +1,129 @@
-let selectedCategory = [];
-let currentRound = [];
-let winners = [];
-let roundCount = 0;
-let categoryChosen = false;
+const categories = {
+    pokemonprimera: ['Pikachu', 'Charizard', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew', 'Pidgey'],
+    comidas: ['Pizza', 'Hamburguesa', 'Pasta', 'Tacos', 'Sushi', 'Pollo asado', 'Sopa'],
+    equipos: ['Barcelona', 'Real Madrid', 'Manchester United', 'Liverpool', 'Bayern'],
+    rupaulUSA: ['Akashia', 'BeBe Zahara Benet', 'Jade Sotomayor', 'Nina Flowers'],
+    rupaulUK: ['Baga Chipz', 'Blu Hydrangea', 'Cheryl Hole', 'Crystal', 'Divina De Campo'],
+    rupaulDownUnder: ['Anita Wigl\'it', 'Art Simone', 'Coco Jumbo', 'Electra Shock'],
+    rupaulHolland: ['ChelseaBoy', 'Envy Peru', 'Janey Jacké', 'Madame Madness']
+};
 
-function filterCategories() {
-    const searchInput = document.getElementById("search-bar").value.toLowerCase();
+const categoryNames = {
+    pokemonprimera: 'Pokemon Primera Generación',
+    comidas: 'Comidas',
+    rupaulDownUnder: 'RuPaul\'s Drag Race Down Under',
+    equipos: 'Equipos',
+    rupaulUSA: 'RuPaul\'s Drag Race: USA', 
+    rupaulUK: 'RuPaul\'s Drag Race: UK', 
+    rupaulHolland: 'RuPaul\'s Drag Race: Holland', 
+};
+
+let currentRound = [];
+let nextRound = [];
+let voteCounts = {};
+let selectedCategory = null;
+let roundNumber = 1;
+
+function initializeCategories() {
     const searchResults = document.getElementById("search-results");
     searchResults.innerHTML = "";
-
-    for (const category in categories) {
-        if (category.toLowerCase().includes(searchInput)) {
-            const resultItem = document.createElement("div");
-            resultItem.textContent = category;
-            resultItem.onclick = () => {
-                selectCategory(category);
-            };
-            searchResults.appendChild(resultItem);
-        }
+    for (let key in categoryNames) {
+        const div = document.createElement("div");
+        div.textContent = categoryNames[key];
+        div.onclick = () => selectCategory(key);
+        searchResults.appendChild(div);
     }
-
-    searchResults.style.display = searchInput ? "block" : "none";
 }
 
-function selectCategory(category) {
-    selectedCategory = [...categories[category]];
-    document.getElementById("start-btn").disabled = false;
-    document.getElementById("search-bar").value = category;
-    document.getElementById("search-results").style.display = "none";
+function filterCategories() {
+    const query = document.getElementById("search-bar").value.toLowerCase();
+    const searchResults = document.getElementById("search-results");
+    searchResults.innerHTML = "";
+    for (let key in categoryNames) {
+        if (categoryNames[key].toLowerCase().includes(query)) {
+            const div = document.createElement("div");
+            div.textContent = categoryNames[key];
+            div.onclick = () => selectCategory(key);
+            searchResults.appendChild(div);
+        }
+    }
+    searchResults.style.display = query ? "block" : "none";
 }
 
 function toggleAllCategories() {
     const searchResults = document.getElementById("search-results");
-    searchResults.innerHTML = "";
+    searchResults.style.display = searchResults.style.display === "block" ? "none" : "block";
+}
 
-    for (const category in categories) {
-        const resultItem = document.createElement("div");
-        resultItem.textContent = category;
-        resultItem.onclick = () => {
-            selectCategory(category);
-        };
-        searchResults.appendChild(resultItem);
-    }
-
-    searchResults.style.display = searchResults.style.display === "none" ? "block" : "none";
+function selectCategory(key) {
+    selectedCategory = key;
+    currentRound = shuffleArray([...categories[key]]); // Mezcla inicial para orden aleatorio
+    nextRound = [];
+    document.getElementById("start-btn").disabled = false;
+    document.getElementById("search-bar").value = categoryNames[key];
+    document.getElementById("search-results").style.display = "none";
 }
 
 function startGame() {
-    winners = [];
-    currentRound = [...selectedCategory];
-    roundCount = 0;
     document.getElementById("category-selector").style.display = "none";
-    document.getElementById("game-area").style.display = "flex";
     document.getElementById("round-indicator").style.display = "block";
-    nextRound();
+    document.getElementById("game-area").style.display = "flex";
+    voteCounts = {};
+    roundNumber = 1;
+    document.getElementById("round-indicator").textContent = `Ronda ${roundNumber}`;
+    displayNextPair();
 }
 
-function nextRound() {
-    roundCount++;
-    document.getElementById("round-indicator").textContent = `Ronda ${roundCount}`;
-
-    if (currentRound.length === 1) {
-        winners.push(currentRound[0]);
-        if (winners.length === 1) {
-            showTop10();
-        } else {
-            currentRound = [...winners];
-            winners = [];
-            shuffleArray(currentRound);
-            document.getElementById("round-message").style.display = "block";
-            setTimeout(() => {
-                document.getElementById("round-message").style.display = "none";
-                nextRound();
-            }, 1000);
+function displayNextPair() {
+    if (currentRound.length < 2) {
+        if (nextRound.length === 1) {
+            declareWinner(nextRound[0]);
+            return;
         }
-    } else {
-        displayOptions();
+        currentRound = shuffleArray(nextRound);  // Se mezclan las opciones para orden aleatorio en cada ronda
+        nextRound = [];
+        roundNumber++;
+        document.getElementById("round-indicator").textContent = `Ronda ${roundNumber}`;
     }
-}
 
-function displayOptions() {
-    shuffleArray(currentRound);
-    const [option1, option2] = currentRound.splice(0, 2);
+    const [option1, option2] = [currentRound.pop(), currentRound.pop()];
     document.getElementById("option1").textContent = option1;
     document.getElementById("option2").textContent = option2;
-    document.getElementById("option1").dataset.value = option1;
-    document.getElementById("option2").dataset.value = option2;
+    document.getElementById("option1").classList.remove("selected");
+    document.getElementById("option2").classList.remove("selected");
+    document.getElementById("round-message").style.display = "none";
 }
 
 function selectOption(optionId) {
-    const selectedOption = document.getElementById(optionId).dataset.value;
-    winners.push(selectedOption);
-    nextRound();
+    const selectedOption = document.getElementById(optionId).textContent;
+    voteCounts[selectedOption] = (voteCounts[selectedOption] || 0) + 1;
+    nextRound.push(selectedOption);
+    document.getElementById(optionId).classList.add("selected");
+    setTimeout(displayNextPair, 500);
 }
 
-function showTop10() {
-    winners.sort();
+function declareWinner(winner) {
     document.getElementById("game-area").style.display = "none";
     document.getElementById("top10").style.display = "block";
-    document.getElementById("top-winner").textContent = `Tu favorito es: ${winners[0]}`;
-    const rankings = document.getElementById("rankings");
-    rankings.innerHTML = "";
-    winners.slice(0, 10).forEach((item, index) => {
-        const rankingItem = document.createElement("div");
-        rankingItem.textContent = `${index + 1}. ${item}`;
-        rankings.appendChild(rankingItem);
+    document.getElementById("top-winner").innerHTML = `¡Tu Top N°1: <span class="highlight">${winner}</span>!`;
+
+    const rankings = Object.entries(voteCounts).sort((a, b) => b[1] - a[1]);
+    const rankingsContainer = document.getElementById("rankings");
+    rankingsContainer.innerHTML = "";
+    rankings.slice(0, 10).forEach(([option], index) => {
+        const div = document.createElement("div");
+        div.textContent = `${index + 1}. ${option}`;
+        rankingsContainer.appendChild(div);
     });
 }
 
 function resetGame() {
-    document.getElementById("category-selector").style.display = "block";
-    document.getElementById("game-area").style.display = "none";
     document.getElementById("top10").style.display = "none";
+    document.getElementById("category-selector").style.display = "block";
     document.getElementById("round-indicator").style.display = "none";
-    document.getElementById("search-bar").value = "";
     document.getElementById("start-btn").disabled = true;
+    document.getElementById("search-bar").value = "";
+    initializeCategories();
 }
 
 function shuffleArray(array) {
@@ -122,4 +131,7 @@ function shuffleArray(array) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
     }
+    return array;
 }
+
+initializeCategories();
