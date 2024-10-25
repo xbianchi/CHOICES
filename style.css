@@ -69,15 +69,6 @@ h1 {
     margin-top: 20px;
 }
 
-.fade-in {
-    animation: fadeIn 1.5s ease-in-out;
-}
-
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
 /* Pantalla de ganador */
 #winner-screen {
     text-align: center;
@@ -103,3 +94,21 @@ button {
 button:hover {
     background-color: #FFB5C2;
 }
+
+/* Estilo del Top 10 */
+#top10 {
+    margin-top: 30px;
+}
+
+.top10-container {
+    display: flex;
+    justify-content: center;
+}
+
+.top10-column {
+    width: 50%;
+    font-size: 20px;
+    color: #FF6F91;
+    text-align: left;
+}
+
