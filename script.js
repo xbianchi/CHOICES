@@ -1,34 +1,45 @@
-let categories = ["Películas", "Series", "Libros", "Música", "Videojuegos"];
+const categories = {
+    pokemonprimera: ['Pikachu', 'Charizard', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew'],
+    comidas: ['Pizza', 'Hamburguesa', 'Pasta', 'Tacos', 'Sushi', 'Pollo asado', 'Sopa'],
+    rupaulDownUnder: ['Anita Wigl\'it', 'Art Simone', 'Coco Jumbo', 'Electra Shock', 'Etcetera Etcetera', 'Jojo Zaho', 'Karen From Finance', 'Kita Mean', 'Maxi Shield', 'Scarlet Adams', 'Yvonne Lamay', 'Aubrey Haive', 'Beverly Kills', 'Hannah Conda', 'Kween Kong', 'Minnie Cooper', 'Molly Poppinz', 'Pomara Fifth', 'Spankie Jackzon']
+};
+
+const categoryNames = {
+    pokemonprimera: 'Pokemon Primera Generación',
+    comidas: 'Comidas',
+    rupaulDownUnder: 'RuPaul Drag Race Down Under'
+};
+
 let currentRound = [];
 let nextRound = [];
 let voteCounts = {};
 let selectedCategory = null;
 let roundNumber = 1;
 
-// Inicializa el juego con las categorías disponibles
+// Inicializa el juego mostrando las categorías en la lista
 function initializeCategories() {
     const searchResults = document.getElementById("search-results");
     searchResults.innerHTML = "";
-    categories.forEach(category => {
+    for (let key in categoryNames) {
         const div = document.createElement("div");
-        div.textContent = category;
-        div.onclick = () => selectCategory(category);
+        div.textContent = categoryNames[key];
+        div.onclick = () => selectCategory(key);
         searchResults.appendChild(div);
-    });
+    }
 }
 
 function filterCategories() {
     const query = document.getElementById("search-bar").value.toLowerCase();
     const searchResults = document.getElementById("search-results");
     searchResults.innerHTML = "";
-    categories
-        .filter(category => category.toLowerCase().includes(query))
-        .forEach(category => {
+    for (let key in categoryNames) {
+        if (categoryNames[key].toLowerCase().includes(query)) {
             const div = document.createElement("div");
-            div.textContent = category;
-            div.onclick = () => selectCategory(category);
+            div.textContent = categoryNames[key];
+            div.onclick = () => selectCategory(key);
             searchResults.appendChild(div);
-        });
+        }
+    }
     searchResults.style.display = query ? "block" : "none";
 }
 
@@ -41,7 +52,7 @@ function toggleAllCategories() {
 // Selecciona una categoría y permite comenzar el juego
 function selectCategory(category) {
     selectedCategory = category;
-    document.getElementById("search-bar").value = category;
+    document.getElementById("search-bar").value = categoryNames[category];
     document.getElementById("search-results").style.display = "none";
     document.getElementById("start-btn").disabled = false;
 }
@@ -50,8 +61,8 @@ function selectCategory(category) {
 function startGame() {
     if (!selectedCategory) return;
 
-    // Genera ejemplos para la ronda (esto se puede cambiar por datos reales)
-    currentRound = ["Opción 1", "Opción 2", "Opción 3", "Opción 4"];
+    // Asigna opciones para la ronda inicial
+    currentRound = [...categories[selectedCategory]];
     voteCounts = {};
     currentRound.forEach(option => {
         voteCounts[option] = 0;
