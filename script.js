@@ -1,120 +1,127 @@
 const categories = {
-    pokemonprimera: { displayName: 'Pokémon Primera Generación', items: ['Pikachu', 'Charizard', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew', 'Pidgey'] },
-    comidas: { displayName: 'Comidas', items: ['Pizza', 'Hamburguesa', 'Pasta', 'Tacos', 'Sushi', 'Pollo asado', 'Sopa'] },
-    peliculas: { displayName: 'Películas', items: ['Titanic', 'Avatar', 'Matrix', 'Inception', 'Jurassic Park', 'El Padrino'] },
-    canciones: { displayName: 'Canciones', items: ['Imagine', 'Bohemian Rhapsody', 'Smells Like Teen Spirit', 'Billie Jean', 'Hey Jude'] },
-    colores: { displayName: 'Colores', items: ['Rojo', 'Azul', 'Verde', 'Amarillo', 'Rosa', 'Negro'] }
+   pokemonprimera: ['Ditto', 'Ivysaur', 'Venusaur', 'Charmander', 'Charmeleon', 'Wartortle', 'Blastoise', 'Caterpie', 'Metapod', 'Butterfree', 'Weedle', 'Kakuna', 'Beedrill', 'Pidgeotto', 'Pidgeot', 'Rattata','Pikachu', 'Charizard', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew', 'Pidgey',],
+            comidas: ['Pizza', 'Hamburguesa', 'Pasta', 'Tacos', 'Sushi', 'Pollo asado', 'Sopa',],
+            equipos: ['Barcelona', 'Real Madrid', 'Manchester United', 'Liverpool', 'Bayern]
 };
 
+const categoryNames = {
+    pokemonprimera: 'Pokemon Primera Generación',
+    comidas: 'Comidas',
+    rupaulDownUnder: 'RuPaul\'s Drag Race Down Under',
+    equipos: 'Equipos',
+    rupaulUSA: 'RuPaul\'s Drag Race: USA', 
+    rupaulUK: 'RuPaul\'s Drag Race: UK', 
+    rupaulHolland: 'RuPaul\'s Drag Race: Holland', 
+  };
+
+let currentRound = [];
+let nextRound = [];
+let voteCounts = {};
 let selectedCategory = null;
-let round = 1;
-let currentOptions = [];
-let selectedOptions = [];
-let topSelections = [];
+let roundNumber = 1;
+
+function initializeCategories() {
+    const searchResults = document.getElementById("search-results");
+    searchResults.innerHTML = "";
+    for (let key in categoryNames) {
+        const div = document.createElement("div");
+        div.textContent = categoryNames[key];
+        div.onclick = () => selectCategory(key);
+        searchResults.appendChild(div);
+    }
+}
 
 function filterCategories() {
-    const searchValue = document.getElementById('search-bar').value.toLowerCase();
-    const resultsContainer = document.getElementById('search-results');
-    resultsContainer.innerHTML = '';
-    
-    const filteredCategories = Object.keys(categories).filter(category => 
-        categories[category].displayName.toLowerCase().includes(searchValue)
-    );
-
-    if (filteredCategories.length > 0) {
-        resultsContainer.style.display = 'block';
-        filteredCategories.forEach(category => {
-            const div = document.createElement('div');
-            div.textContent = categories[category].displayName;
-            div.onclick = () => selectCategory(category);
-            resultsContainer.appendChild(div);
-        });
-    } else {
-        resultsContainer.style.display = 'none';
+    const query = document.getElementById("search-bar").value.toLowerCase();
+    const searchResults = document.getElementById("search-results");
+    searchResults.innerHTML = "";
+    for (let key in categoryNames) {
+        if (categoryNames[key].toLowerCase().includes(query)) {
+            const div = document.createElement("div");
+            div.textContent = categoryNames[key];
+            div.onclick = () => selectCategory(key);
+            searchResults.appendChild(div);
+        }
     }
+    searchResults.style.display = query ? "block" : "none";
 }
 
 function toggleAllCategories() {
-    const resultsContainer = document.getElementById('search-results');
-    resultsContainer.style.display = resultsContainer.style.display === 'none' ? 'block' : 'none';
+    const searchResults = document.getElementById("search-results");
+    searchResults.style.display = searchResults.style.display === "block" ? "none" : "block";
 }
 
-function selectCategory(category) {
-    selectedCategory = category;
-    document.getElementById('search-bar').value = categories[category].displayName;
-    document.getElementById('start-btn').disabled = false;
-    document.getElementById('search-results').style.display = 'none';
+function selectCategory(key) {
+    selectedCategory = key;
+    currentRound = [...categories[key]];
+    nextRound = [];
+    document.getElementById("start-btn").disabled = false;
+    document.getElementById("search-bar").value = categoryNames[key];
+    document.getElementById("search-results").style.display = "none";
 }
 
 function startGame() {
-    document.getElementById('round-indicator').style.display = 'block';
-    document.getElementById('game-area').style.display = 'flex';
-    document.getElementById('intro').style.display = 'none';
-    document.getElementById('category-selector').style.display = 'none';
-    updateRoundIndicator();
-    showOptions();
+    document.getElementById("category-selector").style.display = "none";
+    document.getElementById("round-indicator").style.display = "block";
+    document.getElementById("game-area").style.display = "flex";
+    voteCounts = {};
+    roundNumber = 1;
+    document.getElementById("round-indicator").textContent = `Ronda ${roundNumber}`;
+    displayNextPair();
 }
 
-function updateRoundIndicator() {
-    document.getElementById('round-indicator').textContent = `Ronda ${round}`;
-}
-
-function showOptions() {
-    const items = categories[selectedCategory].items;
-    currentOptions = getRandomOptions(items);
-    
-    document.getElementById('option1').textContent = currentOptions[0];
-    document.getElementById('option2').textContent = currentOptions[1];
-}
-
-function getRandomOptions(items) {
-    let options = [];
-    while (options.length < 2) {
-        const option = items[Math.floor(Math.random() * items.length)];
-        if (!options.includes(option)) options.push(option);
+function displayNextPair() {
+    if (currentRound.length < 2) {
+        if (nextRound.length === 1) {
+            declareWinner(nextRound[0]);
+            return;
+        }
+        currentRound = nextRound;
+        nextRound = [];
+        roundNumber++;
+        document.getElementById("round-indicator").textContent = `Ronda ${roundNumber}`;
     }
-    return options;
+
+    const [option1, option2] = [currentRound.pop(), currentRound.pop()];
+    document.getElementById("option1").textContent = option1;
+    document.getElementById("option2").textContent = option2;
+    document.getElementById("option1").classList.remove("selected");
+    document.getElementById("option2").classList.remove("selected");
+    document.getElementById("round-message").style.display = "none";
 }
 
 function selectOption(optionId) {
     const selectedOption = document.getElementById(optionId).textContent;
-    selectedOptions.push(selectedOption);
-    
-    if (round < 5) {
-        round++;
-        updateRoundIndicator();
-        showOptions();
-    } else {
-        displayTopSelections();
-    }
+    voteCounts[selectedOption] = (voteCounts[selectedOption] || 0) + 1;
+    nextRound.push(selectedOption);
+    document.getElementById(optionId).classList.add("selected");
+    setTimeout(displayNextPair, 500);
 }
 
-function displayTopSelections() {
-    document.getElementById('game-area').style.display = 'none';
-    document.getElementById('round-indicator').style.display = 'none';
-    
-    const top10Container = document.getElementById('top10');
-    top10Container.style.display = 'block';
+function declareWinner(winner) {
+    document.getElementById("game-area").style.display = "none";
+    document.getElementById("top10").style.display = "block";
+    document.getElementById("top-winner").innerHTML = `¡Tu Top N°1: <span class="highlight">${winner}</span>!`;
 
-    selectedOptions.forEach((option, index) => {
-        const div = document.createElement('div');
+    const rankings = Object.entries(voteCounts).sort((a, b) => b[1] - a[1]);
+    const rankingsContainer = document.getElementById("rankings");
+    rankingsContainer.innerHTML = "";
+    rankings.slice(0, 10).forEach(([option], index) => {
+        const div = document.createElement("div");
         div.textContent = `${index + 1}. ${option}`;
-        document.getElementById('rankings').appendChild(div);
+        rankingsContainer.appendChild(div);
     });
-
-    document.getElementById('top-winner').textContent = `Tu ganador: ${selectedOptions[0]}`;
 }
 
 function resetGame() {
-    document.getElementById('top10').style.display = 'none';
-    document.getElementById('intro').style.display = 'block';
-    document.getElementById('category-selector').style.display = 'flex';
-    document.getElementById('round-indicator').style.display = 'none';
-    
-    selectedCategory = null;
-    round = 1;
-    selectedOptions = [];
-    document.getElementById('search-bar').value = '';
-    document.getElementById('start-btn').disabled = true;
-    document.getElementById('rankings').innerHTML = '';
+    document.getElementById("top10").style.display = "none";
+    document.getElementById("category-selector").style.display = "block";
+    document.getElementById("round-indicator").style.display = "none";
+    document.getElementById("start-btn").disabled = true;
+    document.getElementById("search-bar").value = "";
+    initializeCategories();
 }
+
+initializeCategories();
+
+
