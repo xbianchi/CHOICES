@@ -1,218 +1,59 @@
-/* Restablecer el estilo */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
+:root {
+    --main-color: #3498db;
+    --secondary-color: #2ecc71;
+    --font-color: #333;
+    --border-radius: 5px;
 }
 
 body {
-    background: linear-gradient(to right, #a8edea, #fed6e3);
-    font-family: 'Quicksand', sans-serif;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
+    font-family: Arial, sans-serif;
+    color: var(--font-color);
 }
 
-h1 {
-    color: #5e548e;
-    text-align: center;
-    font-weight: 600;
-    margin-bottom: 0.5em;
+.container {
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
 }
 
-h2 {
-    color: #333;
-    text-align: center;
-}
-
-#intro p {
-    font-size: 1em;
-    color: #4a4e69;
-    text-align: center;
-    margin-bottom: 1em;
-    font-weight: 600;
-}
-
-.game-container {
-    background-color: #f8edeb;
-    border-radius: 1em;
-    box-shadow: 0 0.5em 2em rgba(0, 0, 0, 0.2);
-    padding: 1.5em;
-    max-width: 500px;
-    width: 90%;
-    text-align: center;
-}
-
-#search-bar {
-    padding: 0.6em;
-    width: 100%;
-    font-size: 1em;
-    border: 1px solid #b8c1ec;
-    border-radius: 0.5em;
-}
-
-.search-container {
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
-    margin-bottom: 1em;
-}
-
-#toggle-btn {
-    background-color: #9d8189;
+#option1, #option2 {
+    background-color: var(--secondary-color);
     color: #fff;
-    border: none;
-    border-radius: 0.5em;
+    padding: 15px;
+    margin: 5px;
+    border-radius: var(--border-radius);
     cursor: pointer;
-    font-size: 1em;
-    padding: 0.5em;
+    transition: transform 0.2s, background-color 0.3s;
 }
 
-.results-container {
-    display: none;
-    margin-top: 0.5em;
-    max-height: 150px;
-    overflow-y: auto;
-    border: 1px solid #ccc;
-    border-radius: 0.5em;
-    background-color: #ffffff;
+#option1:hover, #option2:hover {
+    background-color: var(--main-color);
+    transform: scale(1.05);
 }
 
-.results-container div {
-    padding: 0.5em;
-    cursor: pointer;
-    transition: background-color 0.2s ease;
+.progress-bar {
+    width: 100%;
+    height: 10px;
+    background-color: #ddd;
+    margin-top: 10px;
 }
 
-.results-container div:hover {
-    background-color: #ffb4a2;
+.progress-bar div {
+    height: 100%;
+    background-color: var(--main-color);
+    transition: width 0.3s ease;
 }
 
-#start-btn {
-    background-color: #ff758f;
-    color: #ffffff;
-    border: none;
-    border-radius: 0.5em;
-    padding: 0.7em 1em;
-    cursor: pointer;
-    font-size: 1.1em;
+.selected {
+    animation: bounce 0.3s ease;
 }
 
-#start-btn:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
+@keyframes bounce {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
 }
 
-#round-indicator {
-    color: #ff758f;
-    font-weight: 600;
-    margin-top: 1em;
+.quick-mode #option1, .quick-mode #option2 {
+    transition: none;
 }
-
-#game-area {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1.5em;
-    margin-top: 1em;
-}
-
-.card {
-    padding: 1em;
-    background-color: #ffd6a5;
-    border: 2px solid #ff758f;
-    border-radius: 0.5em;
-    cursor: pointer;
-    width: 150px;
-    min-height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.3s;
-    font-weight: bold;
-    font-size: 1.1em;
-    color: #4a4e69;
-    text-align: center;
-    word-wrap: break-word;
-}
-
-.card:hover {
-    background-color: #ffadad;
-}
-
-.card.selected {
-    background-color: #ff758f;
-    color: white;
-}
-
-#vs-text {
-    font-size: 1.5em;
-    color: #333;
-}
-
-#round-message {
-    font-size: 1.2em;
-    color: #ff758f;
-    margin-top: 1em;
-    display: none;
-}
-
-#top10 {
-    margin-top: 2em;
-}
-
-#rankings div {
-    margin: 0.5em 0;
-    font-weight: 600;
-}
-
-#rankings div:first-child {
-    font-size: 1.2em;
-    color: #ff758f;
-}
-
-/* Estilo destacado para el Top N°1 */
-.highlighted-winner {
-    background-color: #ffb6b9;
-    color: #ffffff;
-    font-weight: 700;
-    font-size: 1.4em;
-    padding: 1em;
-    margin-bottom: 1em;
-    border-radius: 1em;
-    border: 3px solid #ff758f;
-    position: relative;
-    animation: shimmer 1.5s infinite;
-    text-align: center;
-}
-
-@keyframes shimmer {
-    0% {
-        box-shadow: 0 0 10px #ff758f, 0 0 20px #ff758f, 0 0 30px #ff758f;
-    }
-    50% {
-        box-shadow: 0 0 20px #ff758f, 0 0 30px #ff758f, 0 0 40px #ff758f;
-    }
-    100% {
-        box-shadow: 0 0 10px #ff758f, 0 0 20px #ff758f, 0 0 30px #ff758f;
-    }
-}
-
-button {
-    background-color: #ff758f;
-    color: #ffffff;
-    border: none;
-    border-radius: 0.5em;
-    padding: 0.7em 1em;
-    cursor: pointer;
-    font-size: 1em;
-    margin-top: 1em;
-}
-
-button:hover {
-    background-color: #e65b52;
-}
-
-
