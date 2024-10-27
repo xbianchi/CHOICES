@@ -1,3 +1,4 @@
+/* Restablecer el estilo */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -14,18 +15,16 @@ body {
     margin: 0;
 }
 
-h1, h2 {
-    text-align: center;
-}
-
 h1 {
     color: #5e548e;
+    text-align: center;
     font-weight: 600;
     margin-bottom: 0.5em;
 }
 
 h2 {
     color: #333;
+    text-align: center;
 }
 
 #intro p {
@@ -99,16 +98,11 @@ h2 {
     padding: 0.7em 1em;
     cursor: pointer;
     font-size: 1.1em;
-    transition: transform 0.2s;
 }
 
 #start-btn:disabled {
     background-color: #ccc;
     cursor: not-allowed;
-}
-
-#start-btn:not(:disabled):hover {
-    transform: scale(1.05);
 }
 
 #round-indicator {
@@ -136,7 +130,7 @@ h2 {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.3s, transform 0.2s;
+    transition: background-color 0.3s;
     font-weight: bold;
     font-size: 1.1em;
     color: #4a4e69;
@@ -146,7 +140,6 @@ h2 {
 
 .card:hover {
     background-color: #ffadad;
-    transform: scale(1.05);
 }
 
 .card.selected {
@@ -180,6 +173,7 @@ h2 {
     color: #ff758f;
 }
 
+/* Estilo destacado para el Top N°1 */
 .highlighted-winner {
     background-color: #ffb6b9;
     color: #ffffff;
@@ -195,9 +189,15 @@ h2 {
 }
 
 @keyframes shimmer {
-    0% { box-shadow: 0 0 10px #ff758f, 0 0 20px #ff758f, 0 0 30px #ff758f; }
-    50% { box-shadow: 0 0 20px #ff758f, 0 0 30px #ff758f, 0 0 40px #ff758f; }
-    100% { box-shadow: 0 0 10px #ff758f, 0 0 20px #ff758f, 0 0 30px #ff758f; }
+    0% {
+        box-shadow: 0 0 10px #ff758f, 0 0 20px #ff758f, 0 0 30px #ff758f;
+    }
+    50% {
+        box-shadow: 0 0 20px #ff758f, 0 0 30px #ff758f, 0 0 40px #ff758f;
+    }
+    100% {
+        box-shadow: 0 0 10px #ff758f, 0 0 20px #ff758f, 0 0 30px #ff758f;
+    }
 }
 
 button {
@@ -209,10 +209,10 @@ button {
     cursor: pointer;
     font-size: 1em;
     margin-top: 1em;
-    transition: transform 0.2s;
 }
 
 button:hover {
     background-color: #e65b52;
-    transform: scale(1.05);
 }
+
+
