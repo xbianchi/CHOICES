@@ -3,51 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Juego de Elección de Categorías</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>¿Qué prefieres?</title>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-
-<div class="container">
-    <h1>Juego de Elección de Categorías</h1>
-    
-    <!-- Selección de categorías -->
-    <div id="categorySelection">
-        <h2>Selecciona una Categoría</h2>
-        <button id="toggleAllCategories" onclick="toggleAllCategories()">▼</button>
-        <div id="categories">
-            <!-- Generar botones para cada categoría desde JavaScript -->
-            <button onclick="selectCategory('Categoría 1')">Categoría 1</button>
-            <button onclick="selectCategory('Categoría 2')">Categoría 2</button>
-            <button onclick="selectCategory('Categoría 3')">Categoría 3</button>
-        </div>
-    </div>
-
-    <!-- Zona de juego -->
-    <div id="gameArea">
-        <h2 id="roundTitle">Ronda <span id="roundNumber">1</span></h2>
+    <div class="game-container">
+        <h1>¿Qué prefieres?</h1>
         
-        <!-- Opciones de elección -->
-        <div id="options">
-            <button id="option1" onclick="vote(document.getElementById('option1').textContent)">Opción 1</button>
-            <button id="option2" onclick="vote(document.getElementById('option2').textContent)">Opción 2</button>
+        <div id="intro">
+            <p>Selecciona una categoría y elige entre dos alternativas. ¡Vamos a descubrir tus favoritos!</p>
         </div>
+
+        <div id="category-selector">
+            <label for="search-bar">Buscar categoría:</label>
+            <div class="search-container">
+                <input type="text" id="search-bar" placeholder="Escribe para buscar..." oninput="filterCategories()" autocomplete="off">
+                <button id="toggle-btn" onclick="toggleAllCategories()">▼</button>
+            </div>
+            <div id="search-results" class="results-container" style="display: none;"></div>
+            <button id="start-btn" onclick="startGame()" disabled>Comenzar</button>
+        </div>
+
+        <h2 id="round-indicator" style="display:none;"></h2>
         
-        <!-- Barra de progreso -->
-        <div class="progress-bar">
-            <div id="progressBar" style="width: 0%;">Ronda 1</div>
+        <div id="game-area" style="display: none;">
+            <div id="option1" class="card" onclick="selectOption('option1')"></div>
+            <div id="vs-text">VS</div>
+            <div id="option2" class="card" onclick="selectOption('option2')"></div>
+        </div>
+
+        <div id="round-message" class="round-message">¡Comienza la nueva ronda de ganadores!</div>
+
+        <div id="top10" style="display: none;">
+            <div id="top-winner" class="highlighted-winner"></div>
+            <h2>Tu Top 10:</h2>
+            <div id="rankings"></div>
+            <button onclick="resetGame()">Jugar de nuevo</button>
         </div>
     </div>
 
-    <!-- Botones de configuración -->
-    <div id="settings">
-        <button onclick="enableQuickMode()">Modo Rápido</button>
-        <button onclick="resetGame()">Reiniciar Juego</button>
-    </div>
-
-</div>
-
-<script src="script.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
-
