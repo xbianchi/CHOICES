@@ -1,13 +1,13 @@
 const categories = {
-   pokemonprimera: ['Pikachu', 'Charizard', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew', 'Pidgey', 'Ditto', 'Ivysaur', 'Venusaur', 'Charmander', 'Charmeleon', 'Wartortle', 'Blastoise', 'Caterpie', 'Metapod', 'Butterfree', 'Weedle', 'Kakuna', 'Beedrill', 'Pidgeotto', 'Pidgeot', 'Rattata'],
-   comidas: ['Pizza', 'Hamburguesa', 'Pasta', 'Tacos', 'Sushi', 'Pollo asado', 'Sopa', 'Burrito', 'Hot dog', 'Ramen', 'Falafel', 'Goulash', 'Fish and chips', 'Pad Thai', 'Chili', 'Ceviche', 'Steak', 'Paella', 'Macarrones con queso', 'Nachos', 'Lasagna', 'Crepes', 'Fajitas', 'Carne asada', 'Donas', 'Pollo al curry', 'Espagueti', 'Tortilla', 'Costillas', 'Muffins', 'Cazuela', 'Croissant', 'Galletas', 'Panqueques', 'Tarta de manzana', 'Cheesecake', 'Mousse de chocolate', 'Sándwich', 'Arroz frito', 'Cereal', 'Batido', 'Pudding', 'Churros', 'Waffles', 'Aros de cebolla'],
-   equipos: ['Barcelona', 'Real Madrid', 'Manchester United', 'Liverpool', 'Bayern Múnich', 'Chelsea', 'Juventus', 'Paris Saint-Germain', 'Manchester City', 'Inter de Milán', 'AC Milan', 'Atlético de Madrid', 'Borussia Dortmund', 'Ajax', 'FC Porto', 'Benfica', 'Tottenham Hotspur', 'Arsenal', 'Lyon', 'Sevilla', 'Valencia', 'Boca Juniors', 'River Plate', 'San Lorenzo', 'Estudiantes', 'Gimnasia', 'Racing Club', 'Bayer Leverkusen', 'Roma', 'Napoli', 'West Ham United', 'Villarreal', 'Olympique de Marsella', 'Flamengo', 'Palmeiras', 'Santos', 'Tigres UANL', 'Club América', 'Chivas Guadalajara', 'Atlético Nacional', 'Peñarol', 'Nacional', 'Al Ahly', 'Zamalek', 'Sydney FC', 'Melbourne Victory', 'Los Angeles Galaxy', 'New York City FC', 'Seattle Sounders', 'Toronto FC', 'Shanghai SIPG', 'Guangzhou Evergrande']
+    pokemonprimera: ['Pikachu', 'Charizard', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew', 'Pidgey', 'Ditto', 'Ivysaur', 'Venusaur', 'Charmander', 'Charmeleon', 'Wartortle', 'Blastoise', 'Caterpie', 'Metapod', 'Butterfree', 'Weedle', 'Kakuna', 'Beedrill', 'Pidgeotto', 'Pidgeot', 'Rattata'],
+    comidas: ['Pizza', 'Hamburguesa', 'Pasta', 'Tacos', 'Sushi', 'Pollo asado', 'Sopa', 'Burrito', 'Hot dog', 'Ramen', 'Falafel', 'Goulash', 'Fish and chips', 'Pad Thai', 'Chili', 'Ceviche', 'Steak', 'Paella', 'Macarrones con queso', 'Nachos', 'Lasagna', 'Crepes', 'Fajitas', 'Carne asada', 'Donas', 'Pollo al curry', 'Espagueti', 'Tortilla', 'Costillas', 'Muffins', 'Cazuela', 'Croissant', 'Galletas', 'Panqueques', 'Tarta de manzana', 'Cheesecake', 'Mousse de chocolate', 'Sándwich', 'Arroz frito', 'Cereal', 'Batido', 'Pudding', 'Churros', 'Waffles', 'Aros de cebolla'],
+    equipos: ['Barcelona', 'Real Madrid', 'Manchester United', 'Liverpool', 'Bayern Múnich', 'Chelsea', 'Juventus', 'Paris Saint-Germain', 'Manchester City', 'Inter de Milán', 'AC Milan', 'Atlético de Madrid', 'Borussia Dortmund', 'Ajax', 'FC Porto', 'Benfica', 'Tottenham Hotspur', 'Arsenal', 'Lyon', 'Sevilla', 'Valencia', 'Boca Juniors', 'River Plate', 'San Lorenzo', 'Estudiantes', 'Gimnasia', 'Racing Club', 'Bayer Leverkusen', 'Roma', 'Napoli', 'West Ham United', 'Villarreal', 'Olympique de Marsella', 'Flamengo', 'Palmeiras', 'Santos', 'Tigres UANL', 'Club América', 'Chivas Guadalajara', 'Atlético Nacional', 'Peñarol', 'Nacional', 'Al Ahly', 'Zamalek', 'Sydney FC', 'Melbourne Victory', 'Los Angeles Galaxy', 'New York City FC', 'Seattle Sounders', 'Toronto FC', 'Shanghai SIPG', 'Guangzhou Evergrande']
 };
 
 const categoryNames = {
-   pokemonprimera: 'Pokemon Primera Generación',
-   comidas: 'Comidas',
-   equipos: 'Equipos'
+    pokemonprimera: 'Pokemon Primera Generación',
+    comidas: 'Comidas',
+    equipos: 'Equipos'
 };
 
 let currentRound = [];
@@ -50,7 +50,7 @@ function toggleAllCategories() {
 
 function selectCategory(key) {
     selectedCategory = key;
-    currentRound = [...categories[key]];
+    currentRound = shuffleArray([...categories[key]]);  // Mezclar al iniciar
     nextRound = [];
     document.getElementById("start-btn").disabled = false;
     document.getElementById("search-bar").value = categoryNames[key];
@@ -123,13 +123,10 @@ function declareTop10() {
 function conductFinalRound(top10) {
     // Ronda especial para definir puestos entre las 10 mejores opciones
     let finalRankings = [...top10];
-    // Simulación de comparación justa para el ranking
-    // Este ejemplo es simplificado y puede personalizarse aún más según criterios de juego
     for (let i = 0; i < top10.length; i++) {
         for (let j = i + 1; j < top10.length; j++) {
             const optionA = top10[i];
             const optionB = top10[j];
-            // Determinar el ganador de la comparación
             if ((voteCounts[optionA] || 0) < (voteCounts[optionB] || 0)) {
                 [finalRankings[i], finalRankings[j]] = [finalRankings[j], finalRankings[i]];
             }
@@ -145,6 +142,14 @@ function resetGame() {
     document.getElementById("start-btn").disabled = true;
     document.getElementById("search-bar").value = "";
     initializeCategories();
+}
+
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
 }
 
 // Inicializar las categorías al cargar la página
