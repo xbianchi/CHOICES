@@ -135,10 +135,20 @@ function declareWinner(winner) {
 
 function startFinalRound() {
     document.getElementById("round-indicator").textContent = "Ronda Final: Top 10";
-    currentRound = [...top10Finalists];
+    currentRound = generateAllPairs([...top10Finalists]);
     nextRound = [];
     voteCounts = {};
     displayNextPair();
+}
+
+function generateAllPairs(options) {
+    const pairs = [];
+    for (let i = 0; i < options.length; i++) {
+        for (let j = i + 1; j < options.length; j++) {
+            pairs.push([options[i], options[j]]);
+        }
+    }
+    return pairs.flat();
 }
 
 function handleFinalRound() {
