@@ -6,39 +6,40 @@
 }
 
 body {
-    background: linear-gradient(to right, #f3c5c5, #f7f6f2);
+    background: linear-gradient(to right, #a8edea, #fed6e3);
     font-family: 'Quicksand', sans-serif;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    margin: 0;
 }
 
 h1 {
-    color: #6c5ce7;
+    color: #5e548e;
     text-align: center;
     font-weight: 600;
-    margin-bottom: 1em;
+    margin-bottom: 0.5em;
 }
 
 h2 {
-    color: #2d3436;
+    color: #333;
     text-align: center;
 }
 
 #intro p {
     font-size: 1em;
-    color: #2c3e50;
+    color: #4a4e69;
     text-align: center;
     margin-bottom: 1em;
     font-weight: 600;
 }
 
 .game-container {
-    background-color: #ffffff;
-    border-radius: 15px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
-    padding: 2em;
+    background-color: #f8edeb;
+    border-radius: 1em;
+    box-shadow: 0 0.5em 2em rgba(0, 0, 0, 0.2);
+    padding: 1.5em;
     max-width: 500px;
     width: 90%;
     text-align: center;
@@ -60,7 +61,7 @@ h2 {
 }
 
 #toggle-btn {
-    background-color: #6c5ce7;
+    background-color: #9d8189;
     color: #fff;
     border: none;
     border-radius: 0.5em;
@@ -86,11 +87,11 @@ h2 {
 }
 
 .results-container div:hover {
-    background-color: #dfe6e9;
+    background-color: #ffb4a2;
 }
 
 #start-btn {
-    background-color: #00b894;
+    background-color: #ff758f;
     color: #ffffff;
     border: none;
     border-radius: 0.5em;
@@ -100,12 +101,12 @@ h2 {
 }
 
 #start-btn:disabled {
-    background-color: #b2bec3;
+    background-color: #ccc;
     cursor: not-allowed;
 }
 
 #round-indicator {
-    color: #00b894;
+    color: #ff758f;
     font-weight: 600;
     margin-top: 1em;
 }
@@ -120,8 +121,8 @@ h2 {
 
 .card {
     padding: 1em;
-    background-color: #ffeaa7;
-    border: 2px solid #fdcb6e;
+    background-color: #ffd6a5;
+    border: 2px solid #ff758f;
     border-radius: 0.5em;
     cursor: pointer;
     width: 150px;
@@ -132,28 +133,28 @@ h2 {
     transition: background-color 0.3s;
     font-weight: bold;
     font-size: 1.1em;
-    color: #2d3436;
+    color: #4a4e69;
     text-align: center;
     word-wrap: break-word;
 }
 
 .card:hover {
-    background-color: #fab1a0;
+    background-color: #ffadad;
 }
 
 .card.selected {
-    background-color: #ff7675;
+    background-color: #ff758f;
     color: white;
 }
 
 #vs-text {
     font-size: 1.5em;
-    color: #636e72;
+    color: #333;
 }
 
 #round-message {
     font-size: 1.2em;
-    color: #00b894;
+    color: #ff758f;
     margin-top: 1em;
     display: none;
 }
@@ -169,18 +170,19 @@ h2 {
 
 #rankings div:first-child {
     font-size: 1.2em;
-    color: #6c5ce7;
+    color: #ff758f;
 }
 
+/* Estilo destacado para el Top N°1 */
 .highlighted-winner {
-    background-color: #ffeaa7;
-    color: #2d3436;
+    background-color: #ffb6b9;
+    color: #ffffff;
     font-weight: 700;
     font-size: 1.4em;
     padding: 1em;
     margin-bottom: 1em;
     border-radius: 1em;
-    border: 3px solid #fdcb6e;
+    border: 3px solid #ff758f;
     position: relative;
     animation: shimmer 1.5s infinite;
     text-align: center;
@@ -188,18 +190,18 @@ h2 {
 
 @keyframes shimmer {
     0% {
-        box-shadow: 0 0 10px #fdcb6e, 0 0 20px #fdcb6e, 0 0 30px #fdcb6e;
+        box-shadow: 0 0 10px #ff758f, 0 0 20px #ff758f, 0 0 30px #ff758f;
     }
     50% {
-        box-shadow: 0 0 20px #fdcb6e, 0 0 30px #fdcb6e, 0 0 40px #fdcb6e;
+        box-shadow: 0 0 20px #ff758f, 0 0 30px #ff758f, 0 0 40px #ff758f;
     }
     100% {
-        box-shadow: 0 0 10px #fdcb6e, 0 0 20px #fdcb6e, 0 0 30px #fdcb6e;
+        box-shadow: 0 0 10px #ff758f, 0 0 20px #ff758f, 0 0 30px #ff758f;
     }
 }
 
 button {
-    background-color: #6c5ce7;
+    background-color: #ff758f;
     color: #ffffff;
     border: none;
     border-radius: 0.5em;
@@ -210,5 +212,5 @@ button {
 }
 
 button:hover {
-    background-color: #4b4ac8;
+    background-color: #e65b52;
 }
