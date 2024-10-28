@@ -85,17 +85,14 @@ function displayNextPair() {
 
     if (currentRound.length < 2) {
         if (nextRound.length === 1) {
-            // Aquí evaluamos si ya tenemos exactamente 10 opciones para activar la ronda final
             if (nextRound.length + Object.keys(voteCounts).length === 10) {
-                top10Finalists = [...new Set([...nextRound, ...Object.keys(voteCounts)])]; // Asegura que no haya duplicados
-                finalRound = true;
+                top10Finalists = [...new Set([...nextRound, ...Object.keys(voteCounts)])];
                 startFinalRound();
                 return;
             }
             declareWinner(nextRound[0]);
             return;
         }
-
         currentRound = nextRound;
         nextRound = [];
         roundNumber++;
@@ -134,6 +131,7 @@ function declareWinner(winner) {
 }
 
 function startFinalRound() {
+    finalRound = true;
     document.getElementById("round-indicator").textContent = "Ronda Final: Top 10";
     currentRound = generateAllPairs([...top10Finalists]);
     nextRound = [];
@@ -153,7 +151,6 @@ function generateAllPairs(options) {
 
 function handleFinalRound() {
     if (currentRound.length < 2) {
-        // Si terminamos de enfrentar todas las opciones del top 10
         declareWinnerInTop10();
         return;
     }
@@ -173,7 +170,6 @@ function declareWinnerInTop10() {
     const rankingsContainer = document.getElementById("rankings");
     rankingsContainer.innerHTML = "";
 
-    // Mostrar el Top 10 en el cuadro final
     rankings.slice(0, 10).forEach(([option], index) => {
         const div = document.createElement("div");
         div.textContent = `${index + 1}. ${option}`;
