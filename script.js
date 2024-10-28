@@ -85,8 +85,9 @@ function displayNextPair() {
 
     if (currentRound.length < 2) {
         if (nextRound.length === 1) {
+            // Aquí evaluamos si ya tenemos exactamente 10 opciones para activar la ronda final
             if (nextRound.length + Object.keys(voteCounts).length === 10) {
-                top10Finalists = [...nextRound, ...Object.keys(voteCounts)];
+                top10Finalists = [...new Set([...nextRound, ...Object.keys(voteCounts)])]; // Asegura que no haya duplicados
                 finalRound = true;
                 startFinalRound();
                 return;
@@ -94,6 +95,7 @@ function displayNextPair() {
             declareWinner(nextRound[0]);
             return;
         }
+
         currentRound = nextRound;
         nextRound = [];
         roundNumber++;
@@ -160,7 +162,7 @@ function declareWinnerInTop10() {
     const rankings = Object.entries(voteCounts).sort((a, b) => b[1] - a[1]);
     const rankingsContainer = document.getElementById("rankings");
     rankingsContainer.innerHTML = "";
-    
+
     // Mostrar el Top 10 en el cuadro final
     rankings.slice(0, 10).forEach(([option], index) => {
         const div = document.createElement("div");
@@ -182,4 +184,3 @@ function resetGame() {
 
 // Inicialización del selector de categorías
 initializeCategories();
-
