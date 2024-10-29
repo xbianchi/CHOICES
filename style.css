@@ -13,6 +13,7 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
+    overflow: hidden;
 }
 
 h1 {
@@ -111,21 +112,6 @@ h2 {
     margin-top: 1em;
 }
 
-#progress-bar-container {
-    width: 100%;
-    background-color: #dcdcdc;
-    border-radius: 1em;
-    overflow: hidden;
-    margin: 1em 0;
-}
-
-#progress-bar {
-    height: 10px;
-    background-color: #ff758f;
-    width: 0%;
-    transition: width 0.3s;
-}
-
 #game-area {
     display: flex;
     justify-content: center;
@@ -160,7 +146,6 @@ h2 {
 .card.selected {
     background-color: #ff758f;
     color: white;
-    transition: background-color 0.3s ease-in-out;
 }
 
 #vs-text {
@@ -229,4 +214,30 @@ button {
 
 button:hover {
     background-color: #e65b52;
+}
+
+/* Barra de progreso */
+#progress-bar-container {
+    width: 100%;
+    background-color: #ddd;
+    border-radius: 0.5em;
+    margin: 1em 0;
+}
+
+#progress-bar {
+    height: 1em;
+    background-color: #ff758f;
+    border-radius: 0.5em;
+    width: 0%;
+    transition: width 0.5s;
+}
+
+/* Transiciones suaves */
+.hidden {
+    opacity: 0;
+    transition: opacity 0.5s;
+}
+
+.visible {
+    opacity: 1;
 }
