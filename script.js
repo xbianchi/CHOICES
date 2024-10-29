@@ -1,106 +1,144 @@
 const categories = {
-    pokemonprimera: ['Pikachu', 'Charizard', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew', 'Pidgey', 'Ditto', 'Ivysaur', 'Venusaur', 'Charmander', 'Charmeleon', 'Wartortle', 'Blastoise', 'Caterpie'],
-    colores: ['Rojo', 'Azul', 'Verde', 'Amarillo', 'Naranja', 'Violeta', 'Rosa', 'Negro', 'Blanco', 'Gris', 'Turquesa', 'Beige', 'Fucsia', 'Marrón', 'Cian', 'Ocre'],
-    animales: ['Perro', 'Gato', 'Caballo', 'Elefante', 'Tigre', 'Oso', 'Conejo', 'Delfín', 'Zorro', 'Águila', 'Panda', 'Jirafa', 'León', 'Cebra', 'Camello'],
+    pokemonprimera: ['Pikachu', 'Charizard', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew', 'Pidgey', 'Ditto', 'Ivysaur', 'Venusaur', 'Charmander', 'Gengar'],
+    comida: ['Pizza', 'Hamburguesa', 'Tacos', 'Pasta', 'Sushi', 'Helado', 'Chocolate', 'Ensalada'],
 };
 
-let selectedCategory = [];
+let selectedCategory = '';
+let currentRound = 0;
 let remainingOptions = [];
-let top10Mode = false;
-let round = 0;
-let totalRounds;
-let selectedCount = 0;
-
-function filterCategories() {
-    const searchTerm = document.getElementById('search-bar').value.toLowerCase();
-    const searchResults = document.getElementById('search-results');
-    searchResults.innerHTML = '';
-
-    Object.keys(categories).forEach((category) => {
-        if (category.includes(searchTerm)) {
-            const option = document.createElement('div');
-            option.textContent = category;
-            option.onclick = () => selectCategory(category);
-            searchResults.appendChild(option);
-        }
-    });
-
-    searchResults.style.display = searchTerm ? 'block' : 'none';
-}
-
-function selectCategory(category) {
-    selectedCategory = categories[category];
-    remainingOptions = [...selectedCategory];
-    localStorage.setItem('selectedCategory', JSON.stringify(selectedCategory));
-    document.getElementById('start-btn').disabled = false;
-}
+let selectedOptions = [];
+let inTop10Mode = false;
 
 function startGame() {
-    if (remainingOptions.length === 0) return;
-    document.getElementById('category-selector').style.display = 'none';
-    document.getElementById('game-area').style.display = 'flex';
-    totalRounds = remainingOptions.length - 1;
-    document.getElementById('round-indicator').style.display = 'block';
-    updateProgressBar();
-    displayOptions();
-}
-
-function displayOptions() {
-    const randomOptions = remainingOptions.sort(() => 0.5 - Math.random()).slice(0, 2);
-    document.getElementById('option1').textContent = randomOptions[0];
-    document.getElementById('option2').textContent = randomOptions[1];
-}
-
-function selectOption(selectedId) {
-    const selectedOption = document.getElementById(selectedId).textContent;
-    remainingOptions = remainingOptions.filter(option => option !== selectedOption);
-    localStorage.setItem('remainingOptions', JSON.stringify(remainingOptions));
-    
-    if (remainingOptions.length <= 10) {
-        top10Mode = true;
-        showTop10();
-    } else {
-        round++;
-        selectedCount++;
-        updateProgressBar();
-        displayOptions();
+    const category = document.querySelector("#search-results div.selected");
+    if (category) {
+        selectedCategory = category.textContent.toLowerCase();
+        remainingOptions = categories[selectedCategory].slice(); // Clonamos el array
+        currentRound = 0;
+        selectedOptions = [];
+        inTop10Mode = false;
+        localStorage.setItem("gameState", JSON.stringify({ remainingOptions, currentRound, inTop10Mode }));
+        showNextRound();
     }
 }
 
-function showTop10() {
-    document.getElementById('game-area').style.display = 'none';
-    document.getElementById('top10').style.display = 'block';
-    const rankings = document.getElementById('rankings');
-    rankings.innerHTML = '';
+function showNextRound() {
+    currentRound++;
+    if (remainingOptions.length <= 10) {
+        startTop10Mode();
+        return;
+    }
+    const options = selectTwoRandomOptions();
+    document.getElementById("option1").textContent = options[0];
+    document.getElementById("option2").textContent = options[1];
+    document.getElementById("game-area").classList.remove("hidden");
+    document.getElementById("game-area").classList.add("visible");
+    updateProgressBar();
+    localStorage.setItem("gameState", JSON.stringify({ remainingOptions, currentRound, inTop10Mode }));
+}
 
+function selectTwoRandomOptions() {
+    const option1Index = Math.floor(Math.random() * remainingOptions.length);
+    const option1 = remainingOptions[option1Index];
+    remainingOptions.splice(option1Index, 1); // Quitamos la opción seleccionada
+
+    const option2Index = Math.floor(Math.random() * remainingOptions.length);
+    const option2 = remainingOptions[option2Index];
+    remainingOptions.splice(option2Index, 1); // Quitamos la opción seleccionada
+
+    return [option1, option2];
+}
+
+function selectOption(optionId) {
+    const selectedOption = document.getElementById(optionId).textContent;
+    selectedOptions.push(selectedOption);
+    remainingOptions.push(selectedOption); // La opción ganadora sigue en juego
+    document.getElementById(optionId).classList.add("selected");
+    setTimeout(() => {
+        document.getElementById(optionId).classList.remove("selected");
+        showNextRound();
+    }, 500);
+}
+
+function startTop10Mode() {
+    inTop10Mode = true;
+    document.getElementById("round-message").style.display = 'block';
+    document.getElementById("top10").classList.remove("hidden");
+    document.getElementById("top10").classList.add("visible");
+    localStorage.setItem("gameState", JSON.stringify({ remainingOptions, currentRound, inTop10Mode }));
+    showTop10();
+}
+
+function showTop10() {
+    const rankings = document.getElementById("rankings");
+    rankings.innerHTML = '';
     remainingOptions.forEach((option, index) => {
-        const rankDiv = document.createElement('div');
-        rankDiv.textContent = `${index + 1}. ${option}`;
-        rankings.appendChild(rankDiv);
+        const rankingDiv = document.createElement("div");
+        rankingDiv.textContent = `${index + 1}. ${option}`;
+        rankings.appendChild(rankingDiv);
     });
+    document.getElementById("top-winner").textContent = remainingOptions[0]; // Ganador destacado
 }
 
 function updateProgressBar() {
-    const progress = (selectedCount / totalRounds) * 100;
-    document.getElementById('progress-bar').style.width = `${progress}%`;
-    document.getElementById('round-indicator').textContent = `Ronda ${round} de ${totalRounds}`;
+    const progress = (selectedOptions.length / (selectedOptions.length + remainingOptions.length)) * 100;
+    document.getElementById("progress-bar").style.width = `${progress}%`;
 }
 
+// Filtrar categorías en tiempo real
+function filterCategories() {
+    const searchTerm = document.getElementById("search-bar").value.toLowerCase();
+    const resultsContainer = document.getElementById("search-results");
+    resultsContainer.innerHTML = ''; // Limpiar resultados anteriores
+    for (const category in categories) {
+        if (category.includes(searchTerm)) {
+            const resultDiv = document.createElement("div");
+            resultDiv.textContent = category;
+            resultDiv.onclick = () => selectCategory(resultDiv);
+            resultsContainer.appendChild(resultDiv);
+        }
+    }
+    resultsContainer.style.display = searchTerm ? 'block' : 'none';
+}
+
+function selectCategory(div) {
+    const allResults = document.querySelectorAll("#search-results div");
+    allResults.forEach(div => div.classList.remove("selected"));
+    div.classList.add("selected");
+    document.getElementById("start-btn").disabled = false;
+}
+
+// Alternar vista de categorías
+function toggleAllCategories() {
+    const resultsContainer = document.getElementById("search-results");
+    resultsContainer.style.display = resultsContainer.style.display === 'block' ? 'none' : 'block';
+}
+
+// Resetear el juego
 function resetGame() {
-    localStorage.clear();
-    location.reload();
+    selectedCategory = '';
+    currentRound = 0;
+    remainingOptions = [];
+    selectedOptions = [];
+    inTop10Mode = false;
+    document.getElementById("game-area").classList.add("hidden");
+    document.getElementById("round-message").style.display = 'none';
+    document.getElementById("top10").classList.add("hidden");
+    document.getElementById("progress-bar").style.width = '0%';
+    localStorage.removeItem("gameState");
 }
 
-window.addEventListener('load', () => {
-    if (localStorage.getItem('remainingOptions')) {
-        remainingOptions = JSON.parse(localStorage.getItem('remainingOptions'));
-        selectedCategory = JSON.parse(localStorage.getItem('selectedCategory'));
-        totalRounds = selectedCategory.length - 1;
-        round = totalRounds - remainingOptions.length + 1;
-        selectedCount = totalRounds - remainingOptions.length;
-        document.getElementById('category-selector').style.display = 'none';
-        document.getElementById('game-area').style.display = 'flex';
-        updateProgressBar();
-        displayOptions();
+// Recuperar estado desde localStorage
+document.addEventListener("DOMContentLoaded", () => {
+    const savedState = JSON.parse(localStorage.getItem("gameState"));
+    if (savedState) {
+        remainingOptions = savedState.remainingOptions;
+        currentRound = savedState.currentRound;
+        inTop10Mode = savedState.inTop10Mode;
+        if (inTop10Mode) {
+            startTop10Mode();
+        } else {
+            showNextRound();
+        }
     }
 });
