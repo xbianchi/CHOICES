@@ -13,7 +13,6 @@ body {
     align-items: center;
     height: 100vh;
     margin: 0;
-    overflow: hidden;
 }
 
 h1 {
@@ -217,27 +216,21 @@ button:hover {
 }
 
 /* Barra de progreso */
-#progress-bar-container {
+#progress-container {
     width: 100%;
     background-color: #ddd;
     border-radius: 0.5em;
-    margin: 1em 0;
+    margin-top: 1em;
+    overflow: hidden;
+    height: 1em;
 }
 
 #progress-bar {
-    height: 1em;
+    height: 100%;
+    width: 0;
     background-color: #ff758f;
     border-radius: 0.5em;
-    width: 0%;
-    transition: width 0.5s;
-}
-
-/* Transiciones suaves */
-.hidden {
-    opacity: 0;
-    transition: opacity 0.5s;
-}
-
-.visible {
-    opacity: 1;
+    text-align: center;
+    color: white;
+    font-size: 0.8em;
 }
