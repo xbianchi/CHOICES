@@ -1,183 +1,179 @@
 const categories = {
-    pokemonprimera: ['Pikachu', 'Charizard', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew', 'Pidgey', 'Ditto', 'Ivysaur', 'Venusaur', 'Charmander', 'Charmeleon', 'Wartortle', 'Blastoise', 'Caterpie', 'Metapod', 'Butterfree', 'Weedle', 'Kakuna', 'Beedrill', 'Pidgeotto', 'Pidgeot', 'Rattata'],
-    comidas: ['Pizza', 'Hamburguesa', 'Pasta', 'Tacos', 'Sushi', 'Pollo asado', 'Sopa', 'Burrito', 'Hot dog', 'Ramen', 'Falafel', 'Goulash', 'Fish and chips', 'Pad Thai', 'Chili', 'Ceviche'],
-    equipos: ['Barcelona', 'Real Madrid', 'Manchester United', 'Liverpool', 'Bayern Múnich', 'Chelsea', 'Juventus', 'Paris Saint-Germain', 'Manchester City', 'Inter de Milán', 'AC']
+    "Pokemon Primera Generación": ['Pikachu', 'Charizard', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew', 'Pidgey', 'Ditto', 'Ivysaur', 'Venusaur', 'Charmander', 'Gengar'],
+    "Comida": ['Pizza', 'Hamburguesa', 'Tacos', 'Pasta', 'Sushi', 'Helado', 'Chocolate', 'Ensalada'],
 };
 
-const categoryNames = {
-    pokemonprimera: 'Pokemon Primera Generación',
-    comidas: 'Comidas',
-    equipos: 'Equipos'
-};
+let selectedCategory = '';
+let currentRound = 0;
+let remainingOptions = [];
+let selectedOptions = [];
+let inTop10Mode = false;
 
-let currentRound = [];
-let nextRound = [];
-let voteCounts = {};
-let selectedCategory = null;
-let roundNumber = 1;
-let finalRound = false;
-let top10Finalists = [];
+document.addEventListener("DOMContentLoaded", () => {
+    loadGameState(); // Recuperar el estado al cargar la página
+});
 
-function initializeCategories() {
-    const searchResults = document.getElementById("search-results");
-    searchResults.innerHTML = "";
-    for (let key in categoryNames) {
-        const div = document.createElement("div");
-        div.textContent = categoryNames[key];
-        div.onclick = () => selectCategory(key);
-        searchResults.appendChild(div);
-    }
-}
-
-function filterCategories() {
-    const query = document.getElementById("search-bar").value.toLowerCase();
-    const searchResults = document.getElementById("search-results");
-    searchResults.innerHTML = "";
-    for (let key in categoryNames) {
-        if (categoryNames[key].toLowerCase().includes(query)) {
-            const div = document.createElement("div");
-            div.textContent = categoryNames[key];
-            div.onclick = () => selectCategory(key);
-            searchResults.appendChild(div);
-        }
-    }
-    searchResults.style.display = query ? "block" : "none";
-}
-
-function toggleAllCategories() {
-    const searchResults = document.getElementById("search-results");
-    searchResults.style.display = searchResults.style.display === "block" ? "none" : "block";
-}
-
-function selectCategory(key) {
-    selectedCategory = key;
-    currentRound = shuffleArray([...categories[key]]); // Selección aleatoria
-    nextRound = [];
-    document.getElementById("start-btn").disabled = false;
-    document.getElementById("search-bar").value = categoryNames[key];
-    document.getElementById("search-results").style.display = "none";
-}
-
-function shuffleArray(array) {
-    for (let i = array.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [array[i], array[j]] = [array[j], array[i]];
-    }
-    return array;
-}
-
+// Función para empezar el juego
 function startGame() {
-    document.getElementById("category-selector").style.display = "none";
-    document.getElementById("round-indicator").style.display = "block";
-    document.getElementById("game-area").style.display = "flex";
-    voteCounts = {};
-    roundNumber = 1;
-    finalRound = false;
-    document.getElementById("round-indicator").textContent = `Ronda ${roundNumber}`;
-    displayNextPair();
+    const category = document.querySelector("#search-results div.selected");
+    if (category) {
+        selectedCategory = category.textContent;
+        remainingOptions = [...categories[selectedCategory]]; // Clonar el array
+        currentRound = 0;
+        selectedOptions = [];
+        inTop10Mode = false;
+        saveGameState();
+        showNextRound();
+    }
 }
 
-function displayNextPair() {
-    if (finalRound) {
-        handleFinalRound();
+// Mostrar la siguiente ronda
+function showNextRound() {
+    if (remainingOptions.length <= 10 && !inTop10Mode) {
+        startTop10Mode();
         return;
     }
 
-    if (currentRound.length < 2) {
-        if (nextRound.length === 1) {
-            if (nextRound.length + Object.keys(voteCounts).length === 10) {
-                top10Finalists = [...nextRound, ...Object.keys(voteCounts)];
-                finalRound = true;
-                startFinalRound();
-                return;
-            }
-            declareWinner(nextRound[0]);
-            return;
-        }
-        currentRound = nextRound;
-        nextRound = [];
-        roundNumber++;
-        document.getElementById("round-indicator").textContent = `Ronda ${roundNumber}`;
-    }
+    currentRound++;
+    const options = selectTwoRandomOptions();
+    document.getElementById("option1").textContent = options[0];
+    document.getElementById("option2").textContent = options[1];
 
-    const [option1, option2] = [currentRound.pop(), currentRound.pop()];
-    document.getElementById("option1").textContent = option1;
-    document.getElementById("option2").textContent = option2;
-    document.getElementById("option1").classList.remove("selected");
-    document.getElementById("option2").classList.remove("selected");
-    document.getElementById("round-message").style.display = "none";
+    document.getElementById("game-area").classList.remove("hidden");
+    document.getElementById("game-area").classList.add("visible");
+
+    updateProgressBar();
+    saveGameState();
 }
 
+// Seleccionar dos opciones al azar
+function selectTwoRandomOptions() {
+    const option1Index = Math.floor(Math.random() * remainingOptions.length);
+    const option1 = remainingOptions.splice(option1Index, 1)[0];
+
+    const option2Index = Math.floor(Math.random() * remainingOptions.length);
+    const option2 = remainingOptions.splice(option2Index, 1)[0];
+
+    return [option1, option2];
+}
+
+// Función al seleccionar una opción
 function selectOption(optionId) {
     const selectedOption = document.getElementById(optionId).textContent;
-    voteCounts[selectedOption] = (voteCounts[selectedOption] || 0) + 1;
-    nextRound.push(selectedOption);
+    selectedOptions.push(selectedOption);
+    remainingOptions.push(selectedOption); // La opción ganadora sigue en juego
+
     document.getElementById(optionId).classList.add("selected");
-    setTimeout(displayNextPair, 500);
+    setTimeout(() => {
+        document.getElementById(optionId).classList.remove("selected");
+        showNextRound();
+    }, 500);
 }
 
-function declareWinner(winner) {
-    document.getElementById("game-area").style.display = "none";
-    document.getElementById("top10").style.display = "block";
-    document.getElementById("top-winner").innerHTML = `¡Tu Top N°1: <span class="highlight">${winner}</span>!`;
+// Comienza el modo Top 10
+function startTop10Mode() {
+    inTop10Mode = true;
+    document.getElementById("game-area").classList.add("hidden");
+    document.getElementById("round-message").classList.remove("hidden");
+    setTimeout(() => {
+        document.getElementById("round-message").classList.add("hidden");
+        document.getElementById("top10").classList.remove("hidden");
+        showTop10();
+    }, 2000);  // Delay para mostrar el mensaje de ronda antes del top 10
 
-    const rankings = Object.entries(voteCounts).sort((a, b) => b[1] - a[1]);
-    const rankingsContainer = document.getElementById("rankings");
-    rankingsContainer.innerHTML = "";
-    rankings.slice(0, 10).forEach(([option], index) => {
-        const div = document.createElement("div");
-        div.textContent = `${index + 1}. ${option}`;
-        rankingsContainer.appendChild(div);
+    saveGameState();
+}
+
+// Mostrar el Top 10
+function showTop10() {
+    const rankings = document.getElementById("rankings");
+    rankings.innerHTML = '';
+
+    remainingOptions.forEach((option, index) => {
+        const rankingDiv = document.createElement("div");
+        rankingDiv.textContent = `${index + 1}. ${option}`;
+        rankings.appendChild(rankingDiv);
     });
+
+    document.getElementById("top-winner").textContent = remainingOptions[0]; // Ganador destacado
 }
 
-function startFinalRound() {
-    document.getElementById("round-indicator").textContent = "Ronda Final: Top 10";
-    currentRound = [...top10Finalists];
-    nextRound = [];
-    voteCounts = {};
-    displayNextPair();
+// Actualizar barra de progreso
+function updateProgressBar() {
+    const progress = (selectedOptions.length / (selectedOptions.length + remainingOptions.length)) * 100;
+    document.getElementById("progress-bar").style.width = `${progress}%`;
 }
 
-function handleFinalRound() {
-    if (currentRound.length < 2) {
-        declareWinnerInTop10();
-        return;
+// Filtrar categorías en tiempo real
+function filterCategories() {
+    const searchTerm = document.getElementById("search-bar").value.toLowerCase();
+    const resultsContainer = document.getElementById("search-results");
+    resultsContainer.innerHTML = ''; // Limpiar resultados anteriores
+    for (const category in categories) {
+        if (category.toLowerCase().includes(searchTerm)) {
+            const resultDiv = document.createElement("div");
+            resultDiv.textContent = category;
+            resultDiv.onclick = () => selectCategory(resultDiv);
+            resultsContainer.appendChild(resultDiv);
+        }
     }
-
-    const [option1, option2] = [currentRound.pop(), currentRound.pop()];
-    document.getElementById("option1").textContent = option1;
-    document.getElementById("option2").textContent = option2;
-    document.getElementById("option1").classList.remove("selected");
-    document.getElementById("option2").classList.remove("selected");
+    resultsContainer.style.display = searchTerm ? 'block' : 'none';
 }
 
-function declareWinnerInTop10() {
-    document.getElementById("game-area").style.display = "none";
-    document.getElementById("top10").style.display = "block";
-
-    const rankings = Object.entries(voteCounts).sort((a, b) => b[1] - a[1]);
-    const rankingsContainer = document.getElementById("rankings");
-    rankingsContainer.innerHTML = "";
-    
-    rankings.slice(0, 10).forEach(([option], index) => {
-        const div = document.createElement("div");
-        div.textContent = `${index + 1}. ${option}`;
-        rankingsContainer.appendChild(div);
-    });
+// Seleccionar una categoría
+function selectCategory(div) {
+    const allResults = document.querySelectorAll("#search-results div");
+    allResults.forEach(div => div.classList.remove("selected"));
+    div.classList.add("selected");
+    document.getElementById("start-btn").disabled = false;
 }
 
+// Alternar vista de categorías
+function toggleAllCategories() {
+    const resultsContainer = document.getElementById("search-results");
+    resultsContainer.style.display = resultsContainer.style.display === 'block' ? 'none' : 'block';
+}
+
+// Resetear el juego
 function resetGame() {
-    document.getElementById("top10").style.display = "none";
-    document.getElementById("category-selector").style.display = "block";
-    document.getElementById("start-btn").disabled = true;
-    document.getElementById("round-indicator").style.display = "none";
-    document.getElementById("game-area").style.display = "none";
-    document.getElementById("rankings").innerHTML = "";
-    document.getElementById("search-bar").value = "";
-    initializeCategories();
+    selectedCategory = '';
+    currentRound = 0;
+    remainingOptions = [];
+    selectedOptions = [];
+    inTop10Mode = false;
+
+    document.getElementById("game-area").classList.add("hidden");
+    document.getElementById("round-message").style.display = 'none';
+    document.getElementById("top10").classList.add("hidden");
+    document.getElementById("progress-bar").style.width = '0%';
+
+    localStorage.removeItem("gameState");
 }
 
-// Inicialización del selector de categorías
-initializeCategories();
+// Guardar estado en localStorage
+function saveGameState() {
+    const gameState = {
+        remainingOptions,
+        currentRound,
+        selectedOptions,
+        inTop10Mode
+    };
+    localStorage.setItem("gameState", JSON.stringify(gameState));
+}
 
+// Cargar estado desde localStorage
+function loadGameState() {
+    const savedState = JSON.parse(localStorage.getItem("gameState"));
+    if (savedState) {
+        remainingOptions = savedState.remainingOptions;
+        currentRound = savedState.currentRound;
+        selectedOptions = savedState.selectedOptions;
+        inTop10Mode = savedState.inTop10Mode;
+        
+        if (inTop10Mode) {
+            startTop10Mode();
+        } else {
+            showNextRound();
+        }
+    }
+}
