@@ -51,7 +51,7 @@ function toggleAllCategories() {
 
 function selectCategory(key) {
     selectedCategory = key;
-    currentRound = shuffleArray([...categories[key]]); // Selección aleatoria
+    currentRound = shuffleArray([...categories[key]]);
     nextRound = [];
     document.getElementById("start-btn").disabled = false;
     document.getElementById("search-bar").value = categoryNames[key];
@@ -86,7 +86,8 @@ function displayNextPair() {
     if (currentRound.length < 2) {
         if (nextRound.length === 1) {
             if (nextRound.length + Object.keys(voteCounts).length === 10) {
-                top10Finalists = [...new Set([...nextRound, ...Object.keys(voteCounts)])];
+                top10Finalists = [...nextRound, ...Object.keys(voteCounts)];
+                finalRound = true;
                 startFinalRound();
                 return;
             }
@@ -131,22 +132,11 @@ function declareWinner(winner) {
 }
 
 function startFinalRound() {
-    finalRound = true;
     document.getElementById("round-indicator").textContent = "Ronda Final: Top 10";
-    currentRound = generateAllPairs([...top10Finalists]);
+    currentRound = [...top10Finalists];
     nextRound = [];
     voteCounts = {};
     displayNextPair();
-}
-
-function generateAllPairs(options) {
-    const pairs = [];
-    for (let i = 0; i < options.length; i++) {
-        for (let j = i + 1; j < options.length; j++) {
-            pairs.push([options[i], options[j]]);
-        }
-    }
-    return pairs.flat();
 }
 
 function handleFinalRound() {
@@ -169,7 +159,6 @@ function declareWinnerInTop10() {
     const rankings = Object.entries(voteCounts).sort((a, b) => b[1] - a[1]);
     const rankingsContainer = document.getElementById("rankings");
     rankingsContainer.innerHTML = "";
-
     rankings.slice(0, 10).forEach(([option], index) => {
         const div = document.createElement("div");
         div.textContent = `${index + 1}. ${option}`;
@@ -178,15 +167,11 @@ function declareWinnerInTop10() {
 }
 
 function resetGame() {
-    document.getElementById("top10").style.display = "none";
     document.getElementById("category-selector").style.display = "block";
-    document.getElementById("start-btn").disabled = true;
     document.getElementById("round-indicator").style.display = "none";
     document.getElementById("game-area").style.display = "none";
-    document.getElementById("rankings").innerHTML = "";
+    document.getElementById("top10").style.display = "none";
     document.getElementById("search-bar").value = "";
-    initializeCategories();
+    document.getElementById("start-btn").disabled = true;
 }
-
-// Inicialización del selector de categorías
 initializeCategories();
