@@ -26,24 +26,25 @@
         </div>
 
         <h2 id="round-indicator" style="display:none;"></h2>
-        
-        <div id="progress-bar-container">
-            <div id="progress-bar"></div>
-        </div>
 
-        <div id="game-area" class="hidden">
+        <div id="game-area" style="display: none;">
             <div id="option1" class="card" onclick="selectOption('option1')"></div>
             <div id="vs-text">VS</div>
             <div id="option2" class="card" onclick="selectOption('option2')"></div>
         </div>
 
-        <div id="round-message" class="round-message hidden">¡Comienza la nueva ronda de ganadores!</div>
+        <div id="round-message" class="round-message">¡Comienza la nueva ronda de ganadores!</div>
 
-        <div id="top10" class="hidden">
+        <div id="top10" style="display: none;">
             <div id="top-winner" class="highlighted-winner"></div>
             <h2>Tu Top 10:</h2>
             <div id="rankings"></div>
             <button onclick="resetGame()">Jugar de nuevo</button>
+        </div>
+
+        <!-- Barra de progreso -->
+        <div id="progress-container">
+            <div id="progress-bar"></div>
         </div>
     </div>
 
