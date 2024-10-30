@@ -161,6 +161,12 @@ h2 {
     transition: width 0.4s ease;
 }
 
+#progress-text {
+    text-align: center;
+    color: #5e548e;
+    margin-top: 0.5em;
+}
+
 /* Buttons */
 button {
     background-color: #9a8c98;
@@ -183,21 +189,4 @@ button:hover {
     color: #5e548e;
     font-weight: bold;
     text-align: center;
-}
-
-/* Sound and visual effects */
-@keyframes confetti {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(-20px); }
-}
-
-.confetti {
-    background-color: #ffd166;
-    width: 5px;
-    height: 15px;
-    position: absolute;
-    top: -20px;
-    left: 50%;
-    animation: confetti 0.5s ease-in-out forwards;
-    transform-origin: center bottom;
 }
