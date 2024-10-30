@@ -10,7 +10,7 @@
 <body>
     <div class="game-container">
         <h1>¿Qué prefieres?</h1>
-        
+
         <div id="intro">
             <p>Selecciona una categoría y elige entre dos alternativas. ¡Vamos a descubrir tus favoritos!</p>
         </div>
@@ -26,6 +26,11 @@
         </div>
 
         <h2 id="round-indicator" style="display:none;"></h2>
+        
+        <div id="progress-container">
+            <div id="progress-bar"></div>
+            <span id="progress-text">0%</span>
+        </div>
 
         <div id="game-area" style="display: none;">
             <div id="option1" class="card" onclick="selectOption('option1')"></div>
@@ -40,11 +45,6 @@
             <h2>Tu Top 10:</h2>
             <div id="rankings"></div>
             <button onclick="resetGame()">Jugar de nuevo</button>
-        </div>
-
-        <!-- Barra de progreso -->
-        <div id="progress-container">
-            <div id="progress-bar"></div>
         </div>
     </div>
 
