@@ -1,4 +1,4 @@
-/* Restablecer el estilo */
+/* Reset */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -39,198 +39,165 @@ h2 {
     background-color: #f8edeb;
     border-radius: 1em;
     box-shadow: 0 0.5em 2em rgba(0, 0, 0, 0.2);
-    padding: 1.5em;
-    max-width: 500px;
+    padding: 2em;
     width: 90%;
-    text-align: center;
+    max-width: 500px;
+}
+
+/* Transition animations */
+.transition {
+    transition: opacity 0.5s ease, transform 0.5s ease;
+}
+.hidden {
+    opacity: 0;
+    transform: scale(0.9);
+}
+.visible {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Category selection */
+.search-container {
+    display: flex;
+    gap: 0.5em;
 }
 
 #search-bar {
-    padding: 0.6em;
-    width: 100%;
-    font-size: 1em;
-    border: 1px solid #b8c1ec;
+    padding: 0.5em;
+    border: 2px solid #9a8c98;
     border-radius: 0.5em;
-}
-
-.search-container {
-    display: flex;
-    align-items: center;
-    gap: 0.5em;
-    margin-bottom: 1em;
+    width: 100%;
 }
 
 #toggle-btn {
-    background-color: #9d8189;
+    background-color: #9a8c98;
     color: #fff;
     border: none;
-    border-radius: 0.5em;
-    cursor: pointer;
-    font-size: 1em;
     padding: 0.5em;
+    cursor: pointer;
+    border-radius: 0.5em;
 }
 
 .results-container {
-    display: none;
     margin-top: 0.5em;
+    border: 1px solid #9a8c98;
+    border-radius: 0.5em;
     max-height: 150px;
     overflow-y: auto;
-    border: 1px solid #ccc;
-    border-radius: 0.5em;
-    background-color: #ffffff;
 }
 
 .results-container div {
     padding: 0.5em;
     cursor: pointer;
-    transition: background-color 0.2s ease;
+    color: #4a4e69;
 }
-
 .results-container div:hover {
-    background-color: #ffb4a2;
+    background-color: #9a8c98;
+    color: white;
 }
 
-#start-btn {
-    background-color: #ff758f;
-    color: #ffffff;
-    border: none;
-    border-radius: 0.5em;
-    padding: 0.7em 1em;
-    cursor: pointer;
-    font-size: 1.1em;
-}
-
-#start-btn:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
-
-#round-indicator {
-    color: #ff758f;
-    font-weight: 600;
-    margin-top: 1em;
-}
-
+/* Game Area */
 #game-area {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 1.5em;
+    justify-content: space-around;
     margin-top: 1em;
 }
 
 .card {
+    background-color: #f1faee;
+    border: 2px solid #9a8c98;
     padding: 1em;
-    background-color: #ffd6a5;
-    border: 2px solid #ff758f;
+    text-align: center;
+    font-weight: 600;
     border-radius: 0.5em;
     cursor: pointer;
-    width: 150px;
-    min-height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: background-color 0.3s;
-    font-weight: bold;
-    font-size: 1.1em;
-    color: #4a4e69;
-    text-align: center;
-    word-wrap: break-word;
-}
-
-.card:hover {
-    background-color: #ffadad;
+    width: 45%;
+    transition: background-color 0.3s, transform 0.3s;
 }
 
 .card.selected {
-    background-color: #ff758f;
-    color: white;
+    background-color: #9a8c98;
+    color: #fff;
+    transform: scale(1.1);
 }
 
-#vs-text {
+/* Top 10 Styles */
+#top10 .highlighted-winner {
+    color: #5e548e;
     font-size: 1.5em;
-    color: #333;
+    font-weight: bold;
 }
 
-#round-message {
-    font-size: 1.2em;
-    color: #ff758f;
-    margin-top: 1em;
+.round-message {
+    color: #9a8c98;
+    font-weight: bold;
+    text-align: center;
+    margin: 1em 0;
     display: none;
 }
 
-#top10 {
-    margin-top: 2em;
-}
-
-#rankings div {
-    margin: 0.5em 0;
-    font-weight: 600;
-}
-
-#rankings div:first-child {
+#top10 h2 {
+    color: #9a8c98;
     font-size: 1.2em;
-    color: #ff758f;
+    font-weight: bold;
 }
 
-/* Estilo destacado para el Top N°1 */
-.highlighted-winner {
-    background-color: #ffb6b9;
-    color: #ffffff;
-    font-weight: 700;
-    font-size: 1.4em;
-    padding: 1em;
-    margin-bottom: 1em;
-    border-radius: 1em;
-    border: 3px solid #ff758f;
+/* Progress bar */
+.progress-container {
     position: relative;
-    animation: shimmer 1.5s infinite;
-    text-align: center;
+    width: 100%;
+    height: 10px;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    margin: 1em 0;
 }
 
-@keyframes shimmer {
-    0% {
-        box-shadow: 0 0 10px #ff758f, 0 0 20px #ff758f, 0 0 30px #ff758f;
-    }
-    50% {
-        box-shadow: 0 0 20px #ff758f, 0 0 30px #ff758f, 0 0 40px #ff758f;
-    }
-    100% {
-        box-shadow: 0 0 10px #ff758f, 0 0 20px #ff758f, 0 0 30px #ff758f;
-    }
+.progress-bar {
+    height: 100%;
+    background-color: #5e548e;
+    border-radius: 5px;
+    width: 0%;
+    transition: width 0.4s ease;
 }
 
+/* Buttons */
 button {
-    background-color: #ff758f;
-    color: #ffffff;
+    background-color: #9a8c98;
+    color: #fff;
     border: none;
-    border-radius: 0.5em;
-    padding: 0.7em 1em;
+    padding: 0.75em 1.5em;
     cursor: pointer;
-    font-size: 1em;
-    margin-top: 1em;
+    border-radius: 0.5em;
+    transition: background-color 0.3s ease;
 }
 
 button:hover {
-    background-color: #e65b52;
+    background-color: #5e548e;
 }
 
-/* Barra de progreso */
-#progress-container {
-    width: 100%;
-    background-color: #ddd;
-    border-radius: 0.5em;
-    margin-top: 1em;
-    overflow: hidden;
-    height: 1em;
-}
-
-#progress-bar {
-    height: 100%;
-    width: 0;
-    background-color: #ff758f;
-    border-radius: 0.5em;
+/* Top winner */
+#top-winner {
+    margin: 1em 0;
+    font-size: 1.5em;
+    color: #5e548e;
+    font-weight: bold;
     text-align: center;
-    color: white;
-    font-size: 0.8em;
+}
+
+/* Sound and visual effects */
+@keyframes confetti {
+    0% { transform: translateY(0); }
+    100% { transform: translateY(-20px); }
+}
+
+.confetti {
+    background-color: #ffd166;
+    width: 5px;
+    height: 15px;
+    position: absolute;
+    top: -20px;
+    left: 50%;
+    animation: confetti 0.5s ease-in-out forwards;
+    transform-origin: center bottom;
 }
