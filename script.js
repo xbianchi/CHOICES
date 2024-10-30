@@ -1,140 +1,194 @@
-// Variables de juego
-let opciones = []; // Asume que esta variable se llena con opciones
-let seleccionadas = [];
-let top10Mode = false;
-let progreso = 0;
+const categories = {
+    pokemonprimera: ['Pikachu', 'Charizard', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew', 'Pidgey', 'Ditto', 'Ivysaur', 'Venusaur', 'Charmander', 'Charmeleon', 'Wartortle', 'Blastoise', 'Caterpie', 'Metapod', 'Butterfree', 'Weedle', 'Kakuna', 'Beedrill', 'Pidgeotto', 'Pidgeot', 'Rattata'],
+    comidas: ['Pizza', 'Hamburguesa', 'Pasta', 'Tacos', 'Sushi', 'Pollo asado', 'Sopa', 'Burrito', 'Hot dog', 'Ramen', 'Falafel', 'Goulash', 'Fish and chips', 'Pad Thai', 'Chili', 'Ceviche'],
+    equipos: ['Barcelona', 'Real Madrid', 'Manchester United', 'Liverpool', 'Bayern Múnich', 'Chelsea', 'Juventus', 'Paris Saint-Germain', 'Manchester City', 'Inter de Milán', 'AC']
+};
 
-// Inicializar el juego
+const categoryNames = {
+    pokemonprimera: 'Pokemon Primera Generación',
+    comidas: 'Comidas',
+    equipos: 'Equipos'
+};
+
+let currentRound = [];
+let nextRound = [];
+let voteCounts = {};
+let selectedCategory = null;
+let roundNumber = 1;
+let finalRound = false;
+let top10Finalists = [];
+
+// Inicialización del selector de categorías
+function initializeCategories() {
+    const searchResults = document.getElementById("search-results");
+    searchResults.innerHTML = "";
+    for (let key in categoryNames) {
+        const div = document.createElement("div");
+        div.textContent = categoryNames[key];
+        div.onclick = () => selectCategory(key);
+        searchResults.appendChild(div);
+    }
+}
+
+// Filtro de categorías en base a búsqueda
+function filterCategories() {
+    const query = document.getElementById("search-bar").value.toLowerCase();
+    const searchResults = document.getElementById("search-results");
+    searchResults.innerHTML = "";
+    for (let key in categoryNames) {
+        if (categoryNames[key].toLowerCase().includes(query)) {
+            const div = document.createElement("div");
+            div.textContent = categoryNames[key];
+            div.onclick = () => selectCategory(key);
+            searchResults.appendChild(div);
+        }
+    }
+    searchResults.style.display = query ? "block" : "none";
+}
+
+// Muestra u oculta las categorías
+function toggleAllCategories() {
+    const searchResults = document.getElementById("search-results");
+    searchResults.style.display = searchResults.style.display === "block" ? "none" : "block";
+}
+
+// Selección de categoría
+function selectCategory(key) {
+    selectedCategory = key;
+    currentRound = shuffleArray([...categories[key]]);
+    nextRound = [];
+    document.getElementById("start-btn").disabled = false;
+    document.getElementById("search-bar").value = categoryNames[key];
+    document.getElementById("search-results").style.display = "none";
+}
+
+// Función para mezclar el array aleatoriamente
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+    return array;
+}
+
+// Inicio del juego
 function startGame() {
-    seleccionadas = [];
-    progreso = 0;
-    top10Mode = false;
+    document.getElementById("category-selector").style.display = "none";
     document.getElementById("round-indicator").style.display = "block";
     document.getElementById("game-area").style.display = "flex";
-    document.getElementById("intro").style.display = "none";
-    document.getElementById("category-selector").style.display = "none";
-    actualizarBarraProgreso();
-    mostrarOpciones();
+    voteCounts = {};
+    roundNumber = 1;
+    finalRound = false;
+    document.getElementById("round-indicator").textContent = `Ronda ${roundNumber}`;
+    displayNextPair();
 }
 
-// Función para mostrar el progreso
-function actualizarBarraProgreso() {
-    const progressBar = document.getElementById("progress-bar");
-    let porcentaje = Math.min((seleccionadas.length / opciones.length) * 100, 100);
-    progressBar.style.width = `${porcentaje}%`;
-    progressBar.textContent = `${Math.round(porcentaje)}%`;
-}
-
-// Despliega opciones y muestra la ronda de Top 10 cuando queden 10 opciones
-function mostrarOpciones() {
-    if (opciones.length <= 10 && !top10Mode) {
-        activarRondaTop10();
-    } else {
-        let [opcion1, opcion2] = opciones.slice(0, 2);
-        document.getElementById("option1").textContent = opcion1;
-        document.getElementById("option2").textContent = opcion2;
+// Muestra el siguiente par de opciones
+function displayNextPair() {
+    if (finalRound) {
+        handleFinalRound();
+        return;
     }
-}
 
-// Activa la ronda especial Top 10
-function activarRondaTop10() {
-    top10Mode = true;
-    document.getElementById("round-message").style.display = "block";
-    document.getElementById("round-message").textContent = "¡Comienza la ronda del Top 10!";
-    // Agregar efecto visual de entrada para el Top 10
-    document.getElementById("round-message").classList.add("visible");
-    setTimeout(() => {
-        document.getElementById("round-message").classList.remove("visible");
-    }, 2000);
-    mostrarTop10();
-}
-
-// Filtrar categorías
-function filterCategories() {
-    const searchInput = document.getElementById("search-bar").value.toLowerCase();
-    const resultsContainer = document.getElementById("search-results");
-    const resultadosFiltrados = opciones.filter(opcion => opcion.toLowerCase().includes(searchInput));
-    
-    resultsContainer.innerHTML = "";
-    resultadosFiltrados.forEach((opcion) => {
-        const div = document.createElement("div");
-        div.textContent = opcion;
-        div.onclick = () => seleccionarCategoria(opcion);
-        resultsContainer.appendChild(div);
-    });
-    resultsContainer.style.display = "block";
-}
-
-// Mostrar o esconder todas las categorías
-function toggleAllCategories() {
-    const resultsContainer = document.getElementById("search-results");
-    resultsContainer.style.display = resultsContainer.style.display === "none" ? "block" : "none";
-}
-
-// Selecciona una opción y avanza la ronda
-function selectOption(selectedId) {
-    const selectedOption = document.getElementById(selectedId).textContent;
-    seleccionadas.push(selectedOption);
-    opciones = opciones.filter(opcion => opcion !== selectedOption);
-    actualizarBarraProgreso();
-    if (opciones.length > 1) {
-        mostrarOpciones();
-    } else {
-        mostrarResultados();
+    if (currentRound.length < 2) {
+        if (nextRound.length === 1) {
+            if (nextRound.length + Object.keys(voteCounts).length === 10) {
+                top10Finalists = [...nextRound, ...Object.keys(voteCounts)];
+                finalRound = true;
+                startFinalRound();
+                return;
+            }
+            declareWinner(nextRound[0]);
+            return;
+        }
+        currentRound = nextRound;
+        nextRound = [];
+        roundNumber++;
+        document.getElementById("round-indicator").textContent = `Ronda ${roundNumber}`;
     }
+
+    const [option1, option2] = [currentRound.pop(), currentRound.pop()];
+    document.getElementById("option1").textContent = option1;
+    document.getElementById("option2").textContent = option2;
+    document.getElementById("option1").classList.remove("selected");
+    document.getElementById("option2").classList.remove("selected");
+    document.getElementById("round-message").style.display = "none";
 }
 
-// Muestra los resultados del Top 10 al final del juego
-function mostrarResultados() {
+// Selección de opción
+function selectOption(optionId) {
+    const selectedOption = document.getElementById(optionId).textContent;
+    voteCounts[selectedOption] = (voteCounts[selectedOption] || 0) + 1;
+    nextRound.push(selectedOption);
+    document.getElementById(optionId).classList.add("selected");
+    setTimeout(displayNextPair, 500);
+}
+
+// Declaración de ganador
+function declareWinner(winner) {
     document.getElementById("game-area").style.display = "none";
     document.getElementById("top10").style.display = "block";
-    const rankings = document.getElementById("rankings");
-    rankings.innerHTML = "";
-    seleccionadas.slice(0, 10).forEach((opcion, index) => {
+    document.getElementById("top-winner").innerHTML = `¡Tu Top N°1: <span class="highlight">${winner}</span>!`;
+
+    const rankings = Object.entries(voteCounts).sort((a, b) => b[1] - a[1]);
+    const rankingsContainer = document.getElementById("rankings");
+    rankingsContainer.innerHTML = "";
+    rankings.slice(0, 10).forEach(([option], index) => {
         const div = document.createElement("div");
-        div.textContent = `${index + 1}. ${opcion}`;
-        if (index === 0) div.classList.add("highlighted-winner");
-        rankings.appendChild(div);
+        div.textContent = `${index + 1}. ${option}`;
+        rankingsContainer.appendChild(div);
     });
 }
 
-// Almacenar el estado del juego en localStorage
-function guardarEstadoJuego() {
-    const estado = {
-        opciones,
-        seleccionadas,
-        top10Mode,
-        progreso
-    };
-    localStorage.setItem("estadoJuego", JSON.stringify(estado));
+// Inicio de la ronda final
+function startFinalRound() {
+    document.getElementById("round-indicator").textContent = "Ronda Final: Top 10";
+    currentRound = [...top10Finalists];
+    nextRound = [];
+    voteCounts = {};
+    displayNextPair();
 }
 
-// Recuperar el estado del juego de localStorage
-function recuperarEstadoJuego() {
-    const estadoGuardado = JSON.parse(localStorage.getItem("estadoJuego"));
-    if (estadoGuardado) {
-        opciones = estadoGuardado.opciones;
-        seleccionadas = estadoGuardado.seleccionadas;
-        top10Mode = estadoGuardado.top10Mode;
-        progreso = estadoGuardado.progreso;
-        actualizarBarraProgreso();
-        mostrarOpciones();
+// Manejo de la ronda final
+function handleFinalRound() {
+    if (currentRound.length < 2) {
+        declareWinnerInTop10();
+        return;
     }
+
+    const [option1, option2] = [currentRound.pop(), currentRound.pop()];
+    document.getElementById("option1").textContent = option1;
+    document.getElementById("option2").textContent = option2;
+    document.getElementById("option1").classList.remove("selected");
+    document.getElementById("option2").classList.remove("selected");
 }
 
-// Resetea el juego y limpia el estado guardado
+// Declaración del ganador en el Top 10
+function declareWinnerInTop10() {
+    document.getElementById("game-area").style.display = "none";
+    document.getElementById("top10").style.display = "block";
+
+    const rankings = Object.entries(voteCounts).sort((a, b) => b[1] - a[1]);
+    const rankingsContainer = document.getElementById("rankings");
+    rankingsContainer.innerHTML = "";
+    
+    rankings.slice(0, 10).forEach(([option], index) => {
+        const div = document.createElement("div");
+        div.textContent = `${index + 1}. ${option}`;
+        rankingsContainer.appendChild(div);
+    });
+}
+
+// Reinicio del juego
 function resetGame() {
-    localStorage.removeItem("estadoJuego");
-    opciones = []; // Aquí debes cargar de nuevo las opciones iniciales
-    seleccionadas = [];
-    progreso = 0;
-    top10Mode = false;
-    startGame();
+    document.getElementById("top10").style.display = "none";
+    document.getElementById("category-selector").style.display = "block";
+    document.getElementById("start-btn").disabled = true;
+    document.getElementById("round-indicator").style.display = "none";
+    document.getElementById("game-area").style.display = "none";
+    document.getElementById("rankings").innerHTML = "";
+    document.getElementById("search-bar").value = "";
+    initializeCategories();
 }
 
-// Ejecutar al cargar la página
-window.onload = function() {
-    recuperarEstadoJuego();
-    // Configura la barra de progreso inicial
-    actualizarBarraProgreso();
-};
+initializeCategories();
