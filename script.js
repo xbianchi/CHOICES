@@ -1,7 +1,7 @@
 const categories = {
-    pokemonprimera: ['Pikachu', 'Charizard', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew', 'Pidgey', 'Ditto', 'Ivysaur', 'Venusaur', 'Charmander', 'Charmeleon', 'Wartortle', 'Blastoise', 'Caterpie', 'Metapod', 'Butterfree', 'Weedle', 'Kakuna', 'Beedrill'],
-    comidas: ['Pizza', 'Hamburguesa', 'Pasta', 'Tacos', 'Sushi', 'Pollo asado', 'Sopa', 'Burrito', 'Hot dog', 'Ramen', 'Falafel', 'Goulash', 'Fish and chips'],
-    equipos: ['Barcelona', 'Real Madrid', 'Manchester United', 'Liverpool', 'Bayern Múnich', 'Chelsea', 'Juventus', 'Paris Saint-Germain']
+    pokemonprimera: ['Pikachu', 'Charizard', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew', 'Pidgey', 'Ditto', 'Ivysaur', 'Venusaur', 'Charmander', 'Charmeleon', 'Wartortle', 'Blastoise', 'Caterpie', 'Metapod', 'Butterfree', 'Weedle', 'Kakuna', 'Beedrill', 'Pidgeotto', 'Pidgeot', 'Rattata'],
+    comidas: ['Pizza', 'Hamburguesa', 'Pasta', 'Tacos', 'Sushi', 'Pollo asado', 'Sopa', 'Burrito', 'Hot dog', 'Ramen', 'Falafel', 'Goulash', 'Fish and chips', 'Pad Thai', 'Chili', 'Ceviche'],
+    equipos: ['Barcelona', 'Real Madrid', 'Manchester United', 'Liverpool', 'Bayern Múnich', 'Chelsea', 'Juventus', 'Paris Saint-Germain', 'Manchester City', 'Inter de Milán', 'AC']
 };
 
 const categoryNames = {
@@ -17,9 +17,8 @@ let selectedCategory = null;
 let roundNumber = 1;
 let finalRound = false;
 let top10Finalists = [];
-let allPairs = [];
+let pendingCount = 0; // Contador de enfrentamientos pendientes
 
-// Inicializar categorías en el buscador
 function initializeCategories() {
     const searchResults = document.getElementById("search-results");
     searchResults.innerHTML = "";
@@ -53,7 +52,7 @@ function toggleAllCategories() {
 
 function selectCategory(key) {
     selectedCategory = key;
-    currentRound = shuffleArray([...categories[key]]);
+    currentRound = shuffleArray([...categories[key]]); // Selección aleatoria
     nextRound = [];
     document.getElementById("start-btn").disabled = false;
     document.getElementById("search-bar").value = categoryNames[key];
@@ -76,20 +75,22 @@ function startGame() {
     roundNumber = 1;
     finalRound = false;
     document.getElementById("round-indicator").textContent = `Ronda ${roundNumber}`;
+    pendingCount = currentRound.length / 2;
+    document.getElementById("pending-count").textContent = pendingCount;
     displayNextPair();
 }
 
 function displayNextPair() {
     if (finalRound) {
-        handleTop10Round();
+        handleFinalRound();
         return;
     }
 
     if (currentRound.length < 2) {
-        if (nextRound.length === 10) {
-            top10Finalists = [...nextRound];
+        if (nextRound.length === 1 && nextRound.length + Object.keys(voteCounts).length === 10) {
+            top10Finalists = [...nextRound, ...Object.keys(voteCounts)];
             finalRound = true;
-            startTop10Round();
+            startFinalRound();
             return;
         }
         declareWinner(nextRound[0]);
@@ -101,69 +102,62 @@ function displayNextPair() {
     document.getElementById("option2").textContent = option2;
     document.getElementById("option1").classList.remove("selected");
     document.getElementById("option2").classList.remove("selected");
+    document.getElementById("round-message").style.display = "none";
+    pendingCount--;
+    document.getElementById("pending-count").textContent = pendingCount;
 }
 
 function selectOption(optionId) {
     const selectedOption = document.getElementById(optionId).textContent;
     voteCounts[selectedOption] = (voteCounts[selectedOption] || 0) + 1;
-
-    if (finalRound) {
-        document.getElementById(optionId).classList.add("selected");
-        setTimeout(displayNextTop10Pair, 500);
-    } else {
-        nextRound.push(selectedOption);
-        document.getElementById(optionId).classList.add("selected");
-        setTimeout(displayNextPair, 500);
-    }
+    nextRound.push(selectedOption);
+    document.getElementById(optionId).classList.add("selected");
+    setTimeout(displayNextPair, 500);
 }
 
 function declareWinner(winner) {
     document.getElementById("game-area").style.display = "none";
     document.getElementById("top10").style.display = "block";
     document.getElementById("top-winner").innerHTML = `¡Tu Top N°1: <span class="highlight">${winner}</span>!`;
-    displayRankings();
+
+    const rankings = Object.entries(voteCounts).sort((a, b) => b[1] - a[1]);
+    const rankingsContainer = document.getElementById("rankings");
+    rankingsContainer.innerHTML = "";
+    rankings.slice(0, 10).forEach(([option], index) => {
+        const div = document.createElement("div");
+        div.textContent = `${index + 1}. ${option}`;
+        rankingsContainer.appendChild(div);
+    });
 }
 
-function startTop10Round() {
-    document.getElementById("round-indicator").textContent = "¡Ronda del Top 10!";
-    document.getElementById("round-indicator").classList.add("top10");
+function startFinalRound() {
+    document.getElementById("round-indicator").textContent = "Ronda Final: Top 10";
     currentRound = [...top10Finalists];
     nextRound = [];
     voteCounts = {};
-    generateAllPairs();
-    displayNextTop10Pair();
+    pendingCount = 45; // Enfrentamientos en la ronda Top 10
+    document.getElementById("pending-count").textContent = pendingCount;
+    displayNextPair();
 }
 
-function generateAllPairs() {
-    allPairs = [];
-    for (let i = 0; i < top10Finalists.length; i++) {
-        for (let j = i + 1; j < top10Finalists.length; j++) {
-            allPairs.push([top10Finalists[i], top10Finalists[j]]);
-        }
-    }
-    shuffleArray(allPairs);
-}
-
-function displayNextTop10Pair() {
-    if (allPairs.length === 0) {
+function handleFinalRound() {
+    if (currentRound.length < 2) {
         declareWinnerInTop10();
         return;
     }
 
-    const [option1, option2] = allPairs.pop();
+    const [option1, option2] = [currentRound.pop(), currentRound.pop()];
     document.getElementById("option1").textContent = option1;
     document.getElementById("option2").textContent = option2;
     document.getElementById("option1").classList.remove("selected");
     document.getElementById("option2").classList.remove("selected");
+    pendingCount--;
+    document.getElementById("pending-count").textContent = pendingCount;
 }
 
 function declareWinnerInTop10() {
     document.getElementById("game-area").style.display = "none";
-    displayRankings();
-}
-
-function displayRankings() {
-    // Ordena los elementos según la cantidad de votos y muestra el Top 10
+    document.getElementById("top10").style.display = "block";
     const rankings = Object.entries(voteCounts).sort((a, b) => b[1] - a[1]);
     const rankingsContainer = document.getElementById("rankings");
     rankingsContainer.innerHTML = "";
@@ -184,3 +178,6 @@ function resetGame() {
     document.getElementById("search-bar").value = "";
     initializeCategories();
 }
+
+// Inicialización del selector de categorías
+initializeCategories();
