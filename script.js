@@ -17,8 +17,8 @@ let selectedCategory = null;
 let roundNumber = 1;
 let finalRound = false;
 let top10Finalists = [];
-let allPairs = [];
-let remainingMatches = 0; // Contador de enfrentamientos pendientes
+let top10Ranking = [];
+let remainingMatches = 0;
 
 function initializeCategories() {
     const searchResults = document.getElementById("search-results");
@@ -131,38 +131,26 @@ function startTop10Round() {
     currentRound = [...top10Finalists];
     nextRound = [];
     voteCounts = {};
-    generateAllPairs();
-    remainingMatches = allPairs.length;
+    top10Ranking = [];
+    remainingMatches = currentRound.length - 1;
     document.getElementById("match-counter").textContent = remainingMatches;
     displayNextTop10Pair();
 }
 
-function generateAllPairs() {
-    allPairs = [];
-    for (let i = 0; i < top10Finalists.length; i++) {
-        for (let j = i + 1; j < top10Finalists.length; j++) {
-            allPairs.push([top10Finalists[i], top10Finalists[j]]);
-        }
-    }
-    shuffleArray(allPairs);
-}
-
 function displayNextTop10Pair() {
-    if (allPairs.length === 0) {
-        declareWinnerInTop10();
+    if (remainingMatches === 0) {
+        declareTop10Rankings();
         return;
     }
 
-    const [option1, option2] = allPairs.pop();
-    remainingMatches--;
-    document.getElementById("match-counter").textContent = remainingMatches;
+    const [option1, option2] = [currentRound.shift(), currentRound.shift()];
     document.getElementById("option1").textContent = option1;
     document.getElementById("option2").textContent = option2;
     document.getElementById("option1").classList.remove("selected");
     document.getElementById("option2").classList.remove("selected");
 }
 
-function declareWinnerInTop10() {
+function declareTop10Rankings() {
     document.getElementById("game-area").style.display = "none";
     displayRankings();
 }
