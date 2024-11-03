@@ -163,6 +163,7 @@ function declareWinnerInTop10() {
 }
 
 function displayRankings() {
+    // Ordena los elementos según la cantidad de votos y muestra el Top 10
     const rankings = Object.entries(voteCounts).sort((a, b) => b[1] - a[1]);
     const rankingsContainer = document.getElementById("rankings");
     rankingsContainer.innerHTML = "";
