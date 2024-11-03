@@ -1,5 +1,3 @@
-// script.js
-
 const categories = {
     pokemonprimera: ['Pikachu', 'Charizard', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew', 'Pidgey', 'Ditto', 'Ivysaur', 'Venusaur', 'Charmander', 'Charmeleon', 'Wartortle', 'Blastoise', 'Caterpie', 'Metapod', 'Butterfree', 'Weedle', 'Kakuna', 'Beedrill'],
     comidas: ['Pizza', 'Hamburguesa', 'Pasta', 'Tacos', 'Sushi', 'Pollo asado', 'Sopa', 'Burrito', 'Hot dog', 'Ramen', 'Falafel', 'Goulash', 'Fish and chips'],
@@ -21,6 +19,7 @@ let finalRound = false;
 let top10Finalists = [];
 let allPairs = [];
 
+// Inicializar categorías en el buscador
 function initializeCategories() {
     const searchResults = document.getElementById("search-results");
     searchResults.innerHTML = "";
@@ -106,17 +105,12 @@ function displayNextPair() {
 
 function selectOption(optionId) {
     const selectedOption = document.getElementById(optionId).textContent;
-    
-    // Incrementa el contador de votos para la opción seleccionada
     voteCounts[selectedOption] = (voteCounts[selectedOption] || 0) + 1;
-    
-    // Verifica si estamos en la ronda Top 10 para decidir cómo avanzar
+
     if (finalRound) {
-        // Si es la ronda Top 10, pasa al siguiente par en el Top 10
         document.getElementById(optionId).classList.add("selected");
         setTimeout(displayNextTop10Pair, 500);
     } else {
-        // Para las rondas eliminatorias normales
         nextRound.push(selectedOption);
         document.getElementById(optionId).classList.add("selected");
         setTimeout(displayNextPair, 500);
