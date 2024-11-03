@@ -87,14 +87,17 @@ function displayNextPair() {
         return;
     }
 
+    console.log("Opciones restantes:", nextRound.length + Object.keys(voteCounts).length);
+    if (nextRound.length + Object.keys(voteCounts).length <= 10) {
+        console.log("Activando Ronda del Top 10");
+        top10Finalists = [...nextRound, ...Object.keys(voteCounts)];
+        finalRound = true;
+        startTop10Round();
+        return;
+    }
+
     if (currentRound.length < 2) {
         if (nextRound.length === 1) {
-             if (nextRound.length + Object.keys(voteCounts).length <= 10) {
-                top10Finalists = [...nextRound, ...Object.keys(voteCounts)];
-                finalRound = true;
-                startTop10Round();
-                return;
-            }
             declareWinner(nextRound[0]);
             return;
         }
@@ -136,6 +139,7 @@ function declareWinner(winner) {
 }
 
 function startTop10Round() {
+    console.log("Iniciando Ronda del Top 10");
     document.getElementById("round-indicator").textContent = "¡Ronda del Top 10!";
     document.getElementById("round-indicator").classList.add("top10");
     currentRound = [...top10Finalists];
@@ -177,6 +181,7 @@ function resetGame() {
     document.getElementById("category-selector").style.display = "block";
     document.getElementById("start-btn").disabled = true;
     document.getElementById("round-indicator").style.display = "none";
+    document.getElementById("round-indicator").classList.remove("top10");
     document.getElementById("game-area").style.display = "none";
     document.getElementById("rankings").innerHTML = "";
     document.getElementById("search-bar").value = "";
