@@ -89,7 +89,7 @@ function displayNextPair() {
 
     if (currentRound.length < 2) {
         if (nextRound.length === 1) {
-            if (nextRound.length + Object.keys(voteCounts).length === 10) {
+             if (nextRound.length + Object.keys(voteCounts).length <= 10) {
                 top10Finalists = [...nextRound, ...Object.keys(voteCounts)];
                 finalRound = true;
                 startTop10Round();
