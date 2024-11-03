@@ -17,169 +17,166 @@ let selectedCategory = null;
 let roundNumber = 1;
 let finalRound = false;
 let top10Finalists = [];
-let totalRounds = 0;
-let completedRounds = 0;
 
-// Inicialización del selector de categorías
+function initializeCategories() {
+    const searchResults = document.getElementById("search-results");
+    searchResults.innerHTML = "";
+    for (let key in categoryNames) {
+        const div = document.createElement("div");
+        div.textContent = categoryNames[key];
+        div.onclick = () => selectCategory(key);
+        searchResults.appendChild(div);
+    }
+}
+
 function filterCategories() {
-    const searchBar = document.getElementById('search-bar').value.toLowerCase();
-    const resultsContainer = document.getElementById('search-results');
-    resultsContainer.innerHTML = '';
-
-    for (let category in categoryNames) {
-        if (categoryNames[category].toLowerCase().includes(searchBar)) {
-            const categoryDiv = document.createElement('div');
-            categoryDiv.textContent = categoryNames[category];
-            categoryDiv.onclick = () => selectCategory(category);
-            resultsContainer.appendChild(categoryDiv);
+    const query = document.getElementById("search-bar").value.toLowerCase();
+    const searchResults = document.getElementById("search-results");
+    searchResults.innerHTML = "";
+    for (let key in categoryNames) {
+        if (categoryNames[key].toLowerCase().includes(query)) {
+            const div = document.createElement("div");
+            div.textContent = categoryNames[key];
+            div.onclick = () => selectCategory(key);
+            searchResults.appendChild(div);
         }
     }
-
-    resultsContainer.style.display = searchBar ? 'block' : 'none';
+    searchResults.style.display = query ? "block" : "none";
 }
 
-function selectCategory(category) {
-    selectedCategory = category;
-    document.getElementById('start-btn').disabled = false;
+function toggleAllCategories() {
+    const searchResults = document.getElementById("search-results");
+    searchResults.style.display = searchResults.style.display === "block" ? "none" : "block";
 }
 
-function startGame() {
-    if (!selectedCategory) return;
-
-    currentRound = shuffle([...categories[selectedCategory]]);
-    totalRounds = currentRound.length * (currentRound.length - 1) / 2;  // Total de enfrentamientos
-    voteCounts = {};
-    completedRounds = 0;
-
-    document.getElementById('category-selector').style.display = 'none';
-    document.getElementById('game-area').style.display = 'flex';
-    document.getElementById('round-indicator').style.display = 'block';
-    document.getElementById('progress-container').style.display = 'block';
-
-    displayNextPair();
-}
-
-function displayNextPair() {
-    if (currentRound.length < 2) {
-        handleFinalRound();
-        return;
-    }
-
-    const option1 = currentRound.shift();
-    const option2 = currentRound.shift();
-
-    document.getElementById('option1').textContent = option1;
-    document.getElementById('option2').textContent = option2;
-    document.getElementById('option1').classList.remove('selected');
-    document.getElementById('option2').classList.remove('selected');
-
-    document.getElementById('round-indicator').textContent = `Ronda ${roundNumber}`;
-    updateProgress();
-}
-
-function selectOption(optionId) {
-    const selectedOption = document.getElementById(optionId).textContent;
-    document.getElementById(option1).classList.add('selected');
-    document.getElementById(option2).classList.add('selected');
-
-    voteCounts[selectedOption] = (voteCounts[selectedOption] || 0) + 1;
-    nextRound.push(selectedOption);
-
-    completedRounds++;
-    updateProgress();
-
-    setTimeout(() => {
-        if (currentRound.length > 0) {
-            displayNextPair();
-        } else if (nextRound.length > 1) {
-            startNewRound();
-        } else {
-            handleFinalRound();
-        }
-    }, 500);
-}
-
-function startNewRound() {
-    currentRound = shuffle(nextRound);
+function selectCategory(key) {
+    selectedCategory = key;
+    currentRound = shuffleArray([...categories[key]]); // Selección aleatoria
     nextRound = [];
-    roundNumber++;
-    displayNextPair();
+    document.getElementById("start-btn").disabled = false;
+    document.getElementById("search-bar").value = categoryNames[key];
+    document.getElementById("search-results").style.display = "none";
 }
 
-function handleFinalRound() {
-    if (!finalRound) {
-        finalRound = true;
-        currentRound = Object.keys(voteCounts)
-            .sort((a, b) => voteCounts[b] - voteCounts[a])
-            .slice(0, 10);
-        totalRounds = currentRound.length * (currentRound.length - 1) / 2;
-        completedRounds = 0;
-        nextRound = [];
-        document.getElementById('round-message').style.display = 'block';
-    }
-
-    if (currentRound.length < 2) {
-        showTop10();
-        return;
-    }
-
-    const option1 = currentRound.shift();
-    const option2 = currentRound.shift();
-
-    document.getElementById('option1').textContent = option1;
-    document.getElementById('option2').textContent = option2;
-    document.getElementById('option1').classList.remove('selected');
-    document.getElementById('option2').classList.remove('selected');
-    document.getElementById('round-indicator').textContent = `Ronda Final`;
-
-    updateProgress();
-}
-
-function showTop10() {
-    document.getElementById('game-area').style.display = 'none';
-    document.getElementById('round-message').style.display = 'none';
-    document.getElementById('top10').style.display = 'block';
-
-    const sortedOptions = Object.keys(voteCounts).sort((a, b) => voteCounts[b] - voteCounts[a]);
-    document.getElementById('top-winner').textContent = `Ganador: ${sortedOptions[0]}`;
-
-    const rankings = document.getElementById('rankings');
-    rankings.innerHTML = '';
-
-    sortedOptions.slice(0, 10).forEach((option, index) => {
-        const div = document.createElement('div');
-        div.textContent = `${index + 1}. ${option}`;
-        rankings.appendChild(div);
-    });
-}
-
-function updateProgress() {
-    const progressPercentage = Math.floor((completedRounds / totalRounds) * 100);
-    document.getElementById('progress-bar').style.width = `${progressPercentage}%`;
-    document.getElementById('progress-text').textContent = `${progressPercentage}%`;
-}
-
-function resetGame() {
-    selectedCategory = null;
-    currentRound = [];
-    nextRound = [];
-    voteCounts = {};
-    roundNumber = 1;
-    finalRound = false;
-    totalRounds = 0;
-    completedRounds = 0;
-
-    document.getElementById('category-selector').style.display = 'block';
-    document.getElementById('game-area').style.display = 'none';
-    document.getElementById('top10').style.display = 'none';
-    document.getElementById('progress-container').style.display = 'none';
-    document.getElementById('round-indicator').style.display = 'none';
-}
-
-function shuffle(array) {
+function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
     }
     return array;
 }
+
+function startGame() {
+    document.getElementById("category-selector").style.display = "none";
+    document.getElementById("round-indicator").style.display = "block";
+    document.getElementById("game-area").style.display = "flex";
+    voteCounts = {};
+    roundNumber = 1;
+    finalRound = false;
+    document.getElementById("round-indicator").textContent = `Ronda ${roundNumber}`;
+    displayNextPair();
+}
+
+function displayNextPair() {
+    if (finalRound) {
+        handleFinalRound();
+        return;
+    }
+
+    if (currentRound.length < 2) {
+        if (nextRound.length === 1) {
+            if (nextRound.length + Object.keys(voteCounts).length === 10) {
+                top10Finalists = [...nextRound, ...Object.keys(voteCounts)];
+                finalRound = true;
+                startFinalRound();
+                return;
+            }
+            declareWinner(nextRound[0]);
+            return;
+        }
+        currentRound = nextRound;
+        nextRound = [];
+        roundNumber++;
+        document.getElementById("round-indicator").textContent = `Ronda ${roundNumber}`;
+    }
+
+    const [option1, option2] = [currentRound.pop(), currentRound.pop()];
+    document.getElementById("option1").textContent = option1;
+    document.getElementById("option2").textContent = option2;
+    document.getElementById("option1").classList.remove("selected");
+    document.getElementById("option2").classList.remove("selected");
+    document.getElementById("round-message").style.display = "none";
+}
+
+function selectOption(optionId) {
+    const selectedOption = document.getElementById(optionId).textContent;
+    voteCounts[selectedOption] = (voteCounts[selectedOption] || 0) + 1;
+    nextRound.push(selectedOption);
+    document.getElementById(optionId).classList.add("selected");
+    setTimeout(displayNextPair, 500);
+}
+
+function declareWinner(winner) {
+    document.getElementById("game-area").style.display = "none";
+    document.getElementById("top10").style.display = "block";
+    document.getElementById("top-winner").innerHTML = `¡Tu Top N°1: <span class="highlight">${winner}</span>!`;
+
+    const rankings = Object.entries(voteCounts).sort((a, b) => b[1] - a[1]);
+    const rankingsContainer = document.getElementById("rankings");
+    rankingsContainer.innerHTML = "";
+    rankings.slice(0, 10).forEach(([option], index) => {
+        const div = document.createElement("div");
+        div.textContent = `${index + 1}. ${option}`;
+        rankingsContainer.appendChild(div);
+    });
+}
+
+function startFinalRound() {
+    document.getElementById("round-indicator").textContent = "Ronda Final: Top 10";
+    currentRound = [...top10Finalists];
+    nextRound = [];
+    voteCounts = {};
+    displayNextPair();
+}
+
+function handleFinalRound() {
+    if (currentRound.length < 2) {
+        declareWinnerInTop10();
+        return;
+    }
+
+    const [option1, option2] = [currentRound.pop(), currentRound.pop()];
+    document.getElementById("option1").textContent = option1;
+    document.getElementById("option2").textContent = option2;
+    document.getElementById("option1").classList.remove("selected");
+    document.getElementById("option2").classList.remove("selected");
+}
+
+function declareWinnerInTop10() {
+    document.getElementById("game-area").style.display = "none";
+    document.getElementById("top10").style.display = "block";
+
+    const rankings = Object.entries(voteCounts).sort((a, b) => b[1] - a[1]);
+    const rankingsContainer = document.getElementById("rankings");
+    rankingsContainer.innerHTML = "";
+    
+    rankings.slice(0, 10).forEach(([option], index) => {
+        const div = document.createElement("div");
+        div.textContent = `${index + 1}. ${option}`;
+        rankingsContainer.appendChild(div);
+    });
+}
+
+function resetGame() {
+    document.getElementById("top10").style.display = "none";
+    document.getElementById("category-selector").style.display = "block";
+    document.getElementById("start-btn").disabled = true;
+    document.getElementById("round-indicator").style.display = "none";
+    document.getElementById("game-area").style.display = "none";
+    document.getElementById("rankings").innerHTML = "";
+    document.getElementById("search-bar").value = "";
+    initializeCategories();
+}
+
+// Inicialización del selector de categorías
+initializeCategories();
