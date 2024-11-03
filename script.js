@@ -106,10 +106,21 @@ function displayNextPair() {
 
 function selectOption(optionId) {
     const selectedOption = document.getElementById(optionId).textContent;
+    
+    // Incrementa el contador de votos para la opción seleccionada
     voteCounts[selectedOption] = (voteCounts[selectedOption] || 0) + 1;
-    nextRound.push(selectedOption);
-    document.getElementById(optionId).classList.add("selected");
-    setTimeout(displayNextPair, 500);
+    
+    // Verifica si estamos en la ronda Top 10 para decidir cómo avanzar
+    if (finalRound) {
+        // Si es la ronda Top 10, pasa al siguiente par en el Top 10
+        document.getElementById(optionId).classList.add("selected");
+        setTimeout(displayNextTop10Pair, 500);
+    } else {
+        // Para las rondas eliminatorias normales
+        nextRound.push(selectedOption);
+        document.getElementById(optionId).classList.add("selected");
+        setTimeout(displayNextPair, 500);
+    }
 }
 
 function declareWinner(winner) {
