@@ -17,7 +17,7 @@ let selectedCategory = null;
 let roundNumber = 1;
 let finalRound = false;
 let top10Finalists = [];
-let pendingCount = 0; // Contador de enfrentamientos pendientes
+let pendingCount = 0;
 
 function initializeCategories() {
     const searchResults = document.getElementById("search-results");
@@ -52,7 +52,7 @@ function toggleAllCategories() {
 
 function selectCategory(key) {
     selectedCategory = key;
-    currentRound = shuffleArray([...categories[key]]); // Selección aleatoria
+    currentRound = shuffleArray([...categories[key]]);
     nextRound = [];
     document.getElementById("start-btn").disabled = false;
     document.getElementById("search-bar").value = categoryNames[key];
@@ -71,6 +71,7 @@ function startGame() {
     document.getElementById("category-selector").style.display = "none";
     document.getElementById("round-indicator").style.display = "block";
     document.getElementById("game-area").style.display = "flex";
+    document.getElementById("pending-counter").style.display = "block";
     voteCounts = {};
     roundNumber = 1;
     finalRound = false;
@@ -135,7 +136,7 @@ function startFinalRound() {
     currentRound = [...top10Finalists];
     nextRound = [];
     voteCounts = {};
-    pendingCount = 45; // Enfrentamientos en la ronda Top 10
+    pendingCount = 45;
     document.getElementById("pending-count").textContent = pendingCount;
     displayNextPair();
 }
@@ -179,5 +180,4 @@ function resetGame() {
     initializeCategories();
 }
 
-// Inicialización del selector de categorías
 initializeCategories();
