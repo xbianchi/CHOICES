@@ -82,13 +82,13 @@ function startGame() {
 
 function displayNextPair() {
     if (finalRound) {
-        handleFinalRound();
+        handleTop10Round();
         return;
     }
 
     if (currentRound.length < 2) {
-        if (nextRound.length + Object.keys(voteCounts).length === 10) {
-            top10Finalists = [...nextRound, ...Object.keys(voteCounts)];
+        if (nextRound.length === 10) {
+            top10Finalists = [...nextRound];
             finalRound = true;
             startTop10Round();
             return;
@@ -102,7 +102,6 @@ function displayNextPair() {
     document.getElementById("option2").textContent = option2;
     document.getElementById("option1").classList.remove("selected");
     document.getElementById("option2").classList.remove("selected");
-    document.getElementById("round-message").style.display = "none";
 }
 
 function selectOption(optionId) {
@@ -155,7 +154,6 @@ function displayNextTop10Pair() {
 
 function declareWinnerInTop10() {
     document.getElementById("game-area").style.display = "none";
-    document.getElementById("top10").style.display = "block";
     displayRankings();
 }
 
@@ -163,7 +161,6 @@ function displayRankings() {
     const rankings = Object.entries(voteCounts).sort((a, b) => b[1] - a[1]);
     const rankingsContainer = document.getElementById("rankings");
     rankingsContainer.innerHTML = "";
-    
     rankings.slice(0, 10).forEach(([option], index) => {
         const div = document.createElement("div");
         div.textContent = `${index + 1}. ${option}`;
