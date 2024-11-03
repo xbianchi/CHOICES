@@ -134,7 +134,6 @@ h2 {
     font-size: 1.1em;
     color: #4a4e69;
     text-align: center;
-    word-wrap: break-word;
 }
 
 .card:hover {
@@ -149,13 +148,6 @@ h2 {
 #vs-text {
     font-size: 1.5em;
     color: #333;
-}
-
-#round-message {
-    font-size: 1.2em;
-    color: #ff758f;
-    margin-top: 1em;
-    display: none;
 }
 
 #top10 {
@@ -181,7 +173,6 @@ h2 {
     margin-bottom: 1em;
     border-radius: 1em;
     border: 3px solid #ff758f;
-    position: relative;
     animation: shimmer 1.5s infinite;
     text-align: center;
 }
