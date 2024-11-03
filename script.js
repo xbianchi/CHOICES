@@ -17,7 +17,6 @@ let selectedCategory = null;
 let roundNumber = 1;
 let finalRound = false;
 let top10Finalists = [];
-let top10Ranking = [];
 let remainingMatches = 0;
 
 function initializeCategories() {
@@ -36,7 +35,7 @@ function filterCategories() {
     const searchResults = document.getElementById("search-results");
     searchResults.innerHTML = "";
     for (let key in categoryNames) {
-        if (categoryNames[key].toLowerCase().includes(query)) {
+        if (categoryNames[key].toLowerCase().includes(query) || !query) {
             const div = document.createElement("div");
             div.textContent = categoryNames[key];
             div.onclick = () => selectCategory(key);
@@ -49,6 +48,9 @@ function filterCategories() {
 function toggleAllCategories() {
     const searchResults = document.getElementById("search-results");
     searchResults.style.display = searchResults.style.display === "block" ? "none" : "block";
+    if (searchResults.style.display === "block") {
+        filterCategories(); // Mostrar todas las categorías si no hay búsqueda
+    }
 }
 
 function selectCategory(key) {
@@ -72,7 +74,7 @@ function startGame() {
     document.getElementById("category-selector").style.display = "none";
     document.getElementById("round-indicator").style.display = "block";
     document.getElementById("game-area").style.display = "flex";
-    document.getElementById("remaining-matches").style.display = "block";
+    document.getElementById("remaining-matches").style.display = "none";
     voteCounts = {};
     roundNumber = 1;
     finalRound = false;
@@ -131,26 +133,39 @@ function startTop10Round() {
     currentRound = [...top10Finalists];
     nextRound = [];
     voteCounts = {};
-    top10Ranking = [];
-    remainingMatches = currentRound.length - 1;
+    generateAllPairs();
+    remainingMatches = allPairs.length;
+    document.getElementById("remaining-matches").style.display = "block";
     document.getElementById("match-counter").textContent = remainingMatches;
     displayNextTop10Pair();
 }
 
+function generateAllPairs() {
+    allPairs = [];
+    for (let i = 0; i < top10Finalists.length; i++) {
+        for (let j = i + 1; j < top10Finalists.length; j++) {
+            allPairs.push([top10Finalists[i], top10Finalists[j]]);
+        }
+    }
+    shuffleArray(allPairs);
+}
+
 function displayNextTop10Pair() {
-    if (remainingMatches === 0) {
-        declareTop10Rankings();
+    if (allPairs.length === 0) {
+        declareWinnerInTop10();
         return;
     }
 
-    const [option1, option2] = [currentRound.shift(), currentRound.shift()];
+    const [option1, option2] = allPairs.pop();
+    remainingMatches--;
+    document.getElementById("match-counter").textContent = remainingMatches;
     document.getElementById("option1").textContent = option1;
     document.getElementById("option2").textContent = option2;
     document.getElementById("option1").classList.remove("selected");
     document.getElementById("option2").classList.remove("selected");
 }
 
-function declareTop10Rankings() {
+function declareWinnerInTop10() {
     document.getElementById("game-area").style.display = "none";
     displayRankings();
 }
