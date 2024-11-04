@@ -96,6 +96,11 @@ h2 {
     font-weight: 600;
     margin-top: 1em;
 }
+#remaining-matches {
+    color: #ff758f;
+    font-size: 0.9em;
+    margin-top: 0.5em;
+}
 #game-area {
     display: flex;
     justify-content: center;
