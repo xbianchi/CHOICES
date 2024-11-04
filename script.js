@@ -18,7 +18,7 @@ let roundNumber = 1;
 let finalRound = false;
 let top10Finalists = [];
 let allPairs = [];
-let remainingMatches = 0;  // New counter for remaining matches
+let remainingMatches = 0;
 
 function initializeCategories() {
     const searchResults = document.getElementById("search-results");
@@ -75,7 +75,7 @@ function startGame() {
     voteCounts = {};
     roundNumber = 1;
     finalRound = false;
-    remainingMatches = Math.ceil(currentRound.length / 2);  // Set initial match count
+    remainingMatches = Math.ceil(currentRound.length / 2);
     document.getElementById("round-indicator").textContent = `Ronda ${roundNumber} - Enfrentamientos pendientes: ${remainingMatches}`;
     displayNextPair();
 }
@@ -95,9 +95,8 @@ function displayNextPair() {
         declareWinner(nextRound[0]);
         return;
     }
-    remainingMatches--;  // Update remaining matches counter
+    remainingMatches--;
     document.getElementById("round-indicator").textContent = `Ronda ${roundNumber} - Enfrentamientos pendientes: ${remainingMatches}`;
-
     const [option1, option2] = [currentRound.pop(), currentRound.pop()];
     document.getElementById("option1").textContent = option1;
     document.getElementById("option2").textContent = option2;
@@ -152,7 +151,7 @@ function displayNextTop10Pair() {
         return;
     }
     const [option1, option2] = allPairs.pop();
-    remainingMatches--;  // Update remaining matches counter for Top 10
+    remainingMatches--;
     document.getElementById("round-indicator").textContent = `Ronda Top 10 - Enfrentamientos pendientes: ${remainingMatches}`;
     document.getElementById("option1").textContent = option1;
     document.getElementById("option2").textContent = option2;
