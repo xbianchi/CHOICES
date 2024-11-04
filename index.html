@@ -9,10 +9,8 @@
 </head>
 <body>
     <div class="game-container">
-        <h1>¿Qué prefieres?</h1>
-        <div id="intro">
-            <p>Selecciona una categoría y elige entre dos alternativas. ¡Vamos a descubrir tus favoritos!</p>
-        </div>
+        <h1 id="intro">¿Qué prefieres?</h1>
+        <p id="final-message"></p>
         <div id="category-selector">
             <label for="search-bar">Buscar categoría:</label>
             <div class="search-container">
@@ -23,6 +21,7 @@
             <button id="start-btn" onclick="startGame()" disabled>Comenzar</button>
         </div>
         <h2 id="round-indicator" style="display:none;"></h2>
+        <p id="remaining-matches" style="display:none;"></p> <!-- New position for remaining matches -->
         <div id="game-area" style="display: none;">
             <div id="option1" class="card" onclick="selectOption('option1')"></div>
             <div id="vs-text">VS</div>
