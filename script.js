@@ -1,37 +1,7 @@
 const categories = {
-    pokemonprimera: [
-        { name: 'Pikachu', image: 'Imágenes/Pokémon Primera generación/Pikachu.jpg' },
-        { name: 'Charizard', image: 'Imágenes/Pokémon Primera generación/Charizard.jpg' },
-        { name: 'Eevee', image: 'Imágenes/Pokémon Primera generación/Eevee.jpg' },
-        { name: 'Bulbasaur', image: 'Imágenes/Pokémon Primera generación/Bulbasaur.jpg' },
-        { name: 'Squirtle', image: 'Imágenes/Pokémon Primera generación/Squirtle.jpg' },
-        { name: 'Mew', image: 'Imágenes/Pokémon Primera generación/Mew.jpg' },
-        { name: 'Pidgey', image: 'Imágenes/Pokémon Primera generación/Pidgey.jpg' },
-        { name: 'Ditto', image: 'Imágenes/Pokémon Primera generación/Ditto.jpg' },
-        { name: 'Ivysaur', image: 'Imágenes/Pokémon Primera generación/Ivysaur.jpg' },
-        { name: 'Venusaur', image: 'Imágenes/Pokémon Primera generación/Venusaur.jpg' },
-        { name: 'Charmander', image: 'Imágenes/Pokémon Primera generación/Charmander.jpg' },
-        { name: 'Charmeleon', image: 'Imágenes/Pokémon Primera generación/Charmeleon.jpg' },
-        { name: 'Wartortle', image: 'Imágenes/Pokémon Primera generación/Wartortle.jpg' },
-        { name: 'Blastoise', image: 'Imágenes/Pokémon Primera generación/Blastoise.jpg' },
-        { name: 'Caterpie', image: 'Imágenes/Pokémon Primera generación/Caterpie.jpg' },
-        { name: 'Metapod', image: 'Imágenes/Pokémon Primera generación/Metapod.jpg' },
-        { name: 'Butterfree', image: 'Imágenes/Pokémon Primera generación/Butterfree.jpg' },
-        { name: 'Weedle', image: 'Imágenes/Pokémon Primera generación/Weedle.jpg' },
-        { name: 'Kakuna', image: 'Imágenes/Pokémon Primera generación/Kakuna.jpg' },
-        { name: 'Beedrill', image: 'Imágenes/Pokémon Primera generación/Beedrill.jpg' },
-        // Continúa con el resto de las opciones
-    ],
-    comidas: [
-        { name: 'Pizza', image: 'Imágenes/Comidas/pizza.jpg' },
-        { name: 'Hamburguesa', image: 'Imágenes/Comidas/hamburguesa.jpg' },
-        // Añade las demás opciones
-    ],
-    equipos: [
-        { name: 'Barcelona', image: 'Imágenes/Equipos/barcelona.jpg' },
-        { name: 'Real Madrid', image: 'Imágenes/Equipos/realmadrid.jpg' },
-        // Agrega los equipos restantes
-    ]
+    pokemonprimera: ['Pikachu', 'Charizard', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew', 'Pidgey', 'Ditto', 'Ivysaur', 'Venusaur', 'Charmander', 'Charmeleon', 'Wartortle', 'Blastoise', 'Caterpie', 'Metapod', 'Butterfree', 'Weedle', 'Kakuna', 'Beedrill'],
+    comidas: ['Pizza', 'Hamburguesa', 'Pasta', 'Tacos', 'Sushi', 'Pollo asado', 'Sopa', 'Burrito', 'Hot dog', 'Ramen', 'Falafel', 'Goulash', 'Fish and chips'],
+    equipos: ['Barcelona', 'Real Madrid', 'Manchester United', 'Liverpool', 'Bayern Múnich', 'Chelsea', 'Juventus', 'Paris Saint-Germain']
 };
 
 const categoryNames = {
@@ -77,9 +47,22 @@ function filterCategories() {
     searchResults.style.display = "block";
 }
 
+function toggleAllCategories() {
+    const searchResults = document.getElementById("search-results");
+    searchResults.innerHTML = "";
+    for (let key in categoryNames) {
+        const div = document.createElement("div");
+        div.textContent = categoryNames[key];
+        div.onclick = () => selectCategory(key);
+        searchResults.appendChild(div);
+    }
+    searchResults.style.display = searchResults.style.display === "block" ? "none" : "block";
+}
+
 function selectCategory(key) {
     selectedCategory = key;
     currentRound = shuffleArray([...categories[key]]);
+    nextRound = [];
     document.getElementById("start-btn").disabled = false;
     document.getElementById("search-bar").value = categoryNames[key];
     document.getElementById("search-results").style.display = "none";
@@ -95,7 +78,8 @@ function shuffleArray(array) {
 
 function startGame() {
     document.getElementById("category-selector").style.display = "none";
-    document.getElementById("intro-message").style.display = "none";
+    document.getElementById("round-indicator").style.display = "block";
+    document.getElementById("intro-message").style.display = "none"; // Ocultar mensaje introductorio
     document.getElementById("game-area").style.display = "flex";
     voteCounts = {};
     roundNumber = 1;
@@ -106,7 +90,10 @@ function startGame() {
 }
 
 function updateRoundIndicator() {
-    document.getElementById("round-indicator").innerHTML = `<span>Ronda ${roundNumber}</span><br><small>Enfrentamientos pendientes: ${remainingMatches}</small>`;
+    document.getElementById("round-indicator").innerHTML = `
+        <span>Ronda ${roundNumber}</span>
+        <br><small>Enfrentamientos pendientes: ${remainingMatches}</small>
+    `;
 }
 
 function displayNextPair() {
@@ -121,34 +108,35 @@ function displayNextPair() {
             startTop10Round();
             return;
         } else {
-            declareWinner(nextRound[0].name);
+            declareWinner(nextRound[0]);
             return;
         }
     }
-
     remainingMatches--;
     updateRoundIndicator();
-
-    const [option1Data, option2Data] = [currentRound.pop(), currentRound.pop()];
-
-    document.getElementById("option1").innerHTML = `<img src="${option1Data.image}.jpg" alt="${option1Data.name}"><p>${option1Data.name}</p>`;
-    document.getElementById("option2").innerHTML = `<img src="${option2Data.image}.jpg" alt="${option2Data.name}"><p>${option2Data.name}</p>`;
-    
+    const [option1, option2] = [currentRound.pop(), currentRound.pop()];
+    document.getElementById("option1").textContent = option1;
+    document.getElementById("option2").textContent = option2;
     document.getElementById("option1").classList.remove("selected");
     document.getElementById("option2").classList.remove("selected");
 }
 
 function selectOption(optionId) {
-    const selectedOption = document.getElementById(optionId).querySelector("p").textContent;
+    const selectedOption = document.getElementById(optionId).textContent;
     voteCounts[selectedOption] = (voteCounts[selectedOption] || 0) + 1;
-    nextRound.push(currentRound.find(option => option.name === selectedOption));
-    document.getElementById(optionId).classList.add("selected");
-    setTimeout(displayNextPair, 500);
+    if (finalRound) {
+        document.getElementById(optionId).classList.add("selected");
+        setTimeout(displayNextTop10Pair, 500);
+    } else {
+        nextRound.push(selectedOption);
+        document.getElementById(optionId).classList.add("selected");
+        setTimeout(displayNextPair, 500);
+    }
 }
 
 function declareWinner(winner) {
     document.getElementById("game-area").style.display = "none";
-    document.getElementById("round-indicator").style.display = "none";
+    document.getElementById("round-indicator").style.display = "none"; // Ocultar el indicador de ronda
     document.getElementById("top10").style.display = "block";
     document.getElementById("top-winner").innerHTML = `¡Tu Top N°1: <span class="highlight">${winner}</span>!`;
     displayRankings();
