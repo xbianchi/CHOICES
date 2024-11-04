@@ -18,7 +18,7 @@ let roundNumber = 1;
 let finalRound = false;
 let top10Finalists = [];
 let allPairs = [];
-let remainingMatches = 0;
+let remainingMatches = 0; // Contador para enfrentamientos pendientes
 
 function initializeCategories() {
     const searchResults = document.getElementById("search-results");
@@ -29,6 +29,7 @@ function initializeCategories() {
         div.onclick = () => selectCategory(key);
         searchResults.appendChild(div);
     }
+    searchResults.style.display = "block"; // Mostrar la lista sin necesidad de búsqueda
 }
 
 function filterCategories() {
@@ -134,15 +135,24 @@ function startTop10Round() {
     displayNextTop10Pair();
 }
 
+// Ley de transitividad aplicada
 function generateAllPairs() {
     allPairs = [];
     for (let i = 0; i < top10Finalists.length; i++) {
         for (let j = i + 1; j < top10Finalists.length; j++) {
-            allPairs.push([top10Finalists[i], top10Finalists[j]]);
+            if (!voteCounts[top10Finalists[i]] || !voteCounts[top10Finalists[j]] || 
+                !isTransitive(top10Finalists[i], top10Finalists[j])) {
+                allPairs.push([top10Finalists[i], top10Finalists[j]]);
+            }
         }
     }
     shuffleArray(allPairs);
     remainingMatches = allPairs.length;
+}
+
+function isTransitive(option1, option2) {
+    // Si option1 ya le ganó a option2 o viceversa, se aplica transitividad
+    return voteCounts[option1] && voteCounts[option1] > voteCounts[option2];
 }
 
 function displayNextTop10Pair() {
