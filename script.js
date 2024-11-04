@@ -1,7 +1,24 @@
 const categories = {
-    pokemonprimera: [
-        { name: 'Pikachu', image: 'Imágenes/Pokémon Primera generación/pikachu' },
-        { name: 'Charizard', image: 'Imágenes/Pokémon Primera generación/charizard' },
+    { name: 'Pikachu', image: 'Imágenes/Pokémon Primera generación/pikachu' },
+    { name: 'Charizard', image: 'Imágenes/Pokémon Primera generación/charizard' },
+    { name: 'Eevee', image: 'Imágenes/Pokémon Primera generación/eevee' },
+    { name: 'Bulbasaur', image: 'Imágenes/Pokémon Primera generación/bulbasaur' },
+    { name: 'Squirtle', image: 'Imágenes/Pokémon Primera generación/squirtle' },
+    { name: 'Mew', image: 'Imágenes/Pokémon Primera generación/mew' },
+    { name: 'Pidgey', image: 'Imágenes/Pokémon Primera generación/pidgey' },
+    { name: 'Ditto', image: 'Imágenes/Pokémon Primera generación/ditto' },
+    { name: 'Ivysaur', image: 'Imágenes/Pokémon Primera generación/ivysaur' },
+    { name: 'Venusaur', image: 'Imágenes/Pokémon Primera generación/venusaur' },
+    { name: 'Charmander', image: 'Imágenes/Pokémon Primera generación/charmander' },
+    { name: 'Charmeleon', image: 'Imágenes/Pokémon Primera generación/charmeleon' },
+    { name: 'Wartortle', image: 'Imágenes/Pokémon Primera generación/wartortle' },
+    { name: 'Blastoise', image: 'Imágenes/Pokémon Primera generación/blastoise' },
+    { name: 'Caterpie', image: 'Imágenes/Pokémon Primera generación/caterpie' },
+    { name: 'Metapod', image: 'Imágenes/Pokémon Primera generación/metapod' },
+    { name: 'Butterfree', image: 'Imágenes/Pokémon Primera generación/butterfree' },
+    { name: 'Weedle', image: 'Imágenes/Pokémon Primera generación/weedle' },
+    { name: 'Kakuna', image: 'Imágenes/Pokémon Primera generación/kakuna' },
+    { name: 'Beedrill', image: 'Imágenes/Pokémon Primera generación/beedrill' },
         // Continúa con el resto de las opciones
     ],
     comidas: [
