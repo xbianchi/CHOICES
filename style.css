@@ -134,13 +134,10 @@ h2 {
 #top10 {
     margin-top: 2em;
 }
-#rankings div {
+.ranking-list div {
     margin: 0.5em 0;
     font-weight: 600;
-}
-#rankings div:first-child {
-    font-size: 1.2em;
-    color: #ff758f;
+    font-size: 1.1em;
 }
 .highlighted-winner {
     background-color: #ffb6b9;
@@ -151,34 +148,5 @@ h2 {
     margin-bottom: 1em;
     border-radius: 1em;
     border: 3px solid #ff758f;
-    position: relative;
-    animation: shimmer 1.5s infinite;
     text-align: center;
-}
-@keyframes shimmer {
-    0% { box-shadow: 0 0 10px #ff758f, 0 0 20px #ff758f, 0 0 30px #ff758f; }
-    50% { box-shadow: 0 0 20px #ff758f, 0 0 30px #ff758f, 0 0 40px #ff758f; }
-    100% { box-shadow: 0 0 10px #ff758f, 0 0 20px #ff758f, 0 0 30px #ff758f; }
-}
-#round-indicator.top10 {
-    color: #ffb100;
-    font-weight: 700;
-    animation: blink 1s ease-in-out infinite;
-}
-@keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.5; }
-}
-button {
-    background-color: #ff758f;
-    color: #ffffff;
-    border: none;
-    border-radius: 0.5em;
-    padding: 0.7em 1em;
-    cursor: pointer;
-    font-size: 1em;
-    margin-top: 1em;
-}
-button:hover {
-    background-color: #e65b52;
 }
