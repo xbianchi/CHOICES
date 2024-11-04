@@ -4,23 +4,19 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>¿Qué prefieres?</title>
-<link
-href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap"
-rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Quicksand:wght@400;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 <div class="game-container">
 <h1>¿Qué prefieres?</h1>
 <div id="intro">
-<p>Selecciona una categoría y elige entre dos alternativas. ¡Vamos a descubrir tus
-favoritos!</p>
+<p>Selecciona una categoría y elige entre dos alternativas. ¡Vamos a descubrir tus favoritos!</p>
 </div>
 <div id="category-selector">
 <label for="search-bar">Buscar categoría:</label>
 <div class="search-container">
-<input type="text" id="search-bar" placeholder="Escribe para buscar..."
-oninput="filterCategories()" autocomplete="off">
+<input type="text" id="search-bar" placeholder="Escribe para buscar..." oninput="filterCategories()" autocomplete="off">
 <button id="toggle-btn" onclick="toggleAllCategories()">▼</button>
 </div>
 <div id="search-results" class="results-container" style="display: none;"></div>
