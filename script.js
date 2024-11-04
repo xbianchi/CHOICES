@@ -18,7 +18,7 @@ let roundNumber = 1;
 let finalRound = false;
 let top10Finalists = [];
 let allPairs = [];
-let remainingMatches = 0; // Contador para enfrentamientos pendientes
+let remainingMatches = 0;
 
 function initializeCategories() {
     const searchResults = document.getElementById("search-results");
@@ -29,7 +29,7 @@ function initializeCategories() {
         div.onclick = () => selectCategory(key);
         searchResults.appendChild(div);
     }
-    searchResults.style.display = "block"; // Mostrar la lista sin necesidad de búsqueda
+    searchResults.style.display = "block"; // Mostrar lista sin búsqueda
 }
 
 function filterCategories() {
@@ -151,7 +151,6 @@ function generateAllPairs() {
 }
 
 function isTransitive(option1, option2) {
-    // Si option1 ya le ganó a option2 o viceversa, se aplica transitividad
     return voteCounts[option1] && voteCounts[option1] > voteCounts[option2];
 }
 
@@ -171,18 +170,27 @@ function displayNextTop10Pair() {
 
 function declareWinnerInTop10() {
     document.getElementById("game-area").style.display = "none";
+    document.getElementById("top10").style.display = "block";
     displayRankings();
 }
 
 function displayRankings() {
     const rankings = Object.entries(voteCounts).sort((a, b) => b[1] - a[1]);
     const rankingsContainer = document.getElementById("rankings");
-    rankingsContainer.innerHTML = "";
+    rankingsContainer.innerHTML = "";  // Limpiar el contenido anterior
+
+    // Creación de un cuadro visual claro para el Top 10
+    const rankingTable = document.createElement("div");
+    rankingTable.classList.add("ranking-table");
+
     rankings.slice(0, 10).forEach(([option], index) => {
         const div = document.createElement("div");
+        div.classList.add("ranking-entry");
         div.textContent = `${index + 1}. ${option}`;
-        rankingsContainer.appendChild(div);
+        rankingTable.appendChild(div);
     });
+
+    rankingsContainer.appendChild(rankingTable);  // Añadir el cuadro al contenedor
 }
 
 function resetGame() {
