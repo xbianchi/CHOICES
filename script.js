@@ -29,7 +29,7 @@ function initializeCategories() {
         div.onclick = () => selectCategory(key);
         searchResults.appendChild(div);
     }
-    searchResults.style.display = "block"; // Mostrar lista sin búsqueda
+    searchResults.style.display = "block"; // Always show all categories on toggle
 }
 
 function filterCategories() {
@@ -77,7 +77,9 @@ function startGame() {
     roundNumber = 1;
     finalRound = false;
     remainingMatches = Math.ceil(currentRound.length / 2);
-    document.getElementById("round-indicator").textContent = `Ronda ${roundNumber} - Enfrentamientos pendientes: ${remainingMatches}`;
+    document.getElementById("round-indicator").textContent = `Ronda ${roundNumber}`;
+    document.getElementById("remaining-matches").style.display = "block";
+    document.getElementById("remaining-matches").textContent = `Enfrentamientos pendientes: ${remainingMatches}`;
     displayNextPair();
 }
 
@@ -97,7 +99,7 @@ function displayNextPair() {
         return;
     }
     remainingMatches--;
-    document.getElementById("round-indicator").textContent = `Ronda ${roundNumber} - Enfrentamientos pendientes: ${remainingMatches}`;
+    document.getElementById("remaining-matches").textContent = `Enfrentamientos pendientes: ${remainingMatches}`;
     const [option1, option2] = [currentRound.pop(), currentRound.pop()];
     document.getElementById("option1").textContent = option1;
     document.getElementById("option2").textContent = option2;
@@ -135,7 +137,6 @@ function startTop10Round() {
     displayNextTop10Pair();
 }
 
-// Ley de transitividad aplicada
 function generateAllPairs() {
     allPairs = [];
     for (let i = 0; i < top10Finalists.length; i++) {
@@ -161,7 +162,7 @@ function displayNextTop10Pair() {
     }
     const [option1, option2] = allPairs.pop();
     remainingMatches--;
-    document.getElementById("round-indicator").textContent = `Ronda Top 10 - Enfrentamientos pendientes: ${remainingMatches}`;
+    document.getElementById("remaining-matches").textContent = `Enfrentamientos pendientes: ${remainingMatches}`;
     document.getElementById("option1").textContent = option1;
     document.getElementById("option2").textContent = option2;
     document.getElementById("option1").classList.remove("selected");
@@ -170,16 +171,16 @@ function displayNextTop10Pair() {
 
 function declareWinnerInTop10() {
     document.getElementById("game-area").style.display = "none";
-    document.getElementById("top10").style.display = "block";
+    document.getElementById("intro").style.display = "none";  // Hide intro message
+    document.getElementById("final-message").textContent = "¡Gracias por jugar! Aquí está tu Top 10:";
     displayRankings();
 }
 
 function displayRankings() {
     const rankings = Object.entries(voteCounts).sort((a, b) => b[1] - a[1]);
     const rankingsContainer = document.getElementById("rankings");
-    rankingsContainer.innerHTML = "";  // Limpiar el contenido anterior
+    rankingsContainer.innerHTML = "";  // Clear previous content
 
-    // Creación de un cuadro visual claro para el Top 10
     const rankingTable = document.createElement("div");
     rankingTable.classList.add("ranking-table");
 
@@ -190,7 +191,10 @@ function displayRankings() {
         rankingTable.appendChild(div);
     });
 
-    rankingsContainer.appendChild(rankingTable);  // Añadir el cuadro al contenedor
+    rankingsContainer.appendChild(rankingTable);  // Add the table to the container
+
+    // Display the top winner inside the pink box
+    document.getElementById("top-winner").textContent = rankings[0][0];
 }
 
 function resetGame() {
@@ -200,6 +204,7 @@ function resetGame() {
     document.getElementById("round-indicator").style.display = "none";
     document.getElementById("game-area").style.display = "none";
     document.getElementById("rankings").innerHTML = "";
+    document.getElementById("final-message").textContent = "";  // Clear final message
     document.getElementById("search-bar").value = "";
     initializeCategories();
 }
