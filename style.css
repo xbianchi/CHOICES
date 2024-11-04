@@ -61,6 +61,7 @@ h2 {
     font-size: 1em;
     padding: 0.5em;
 }
+
 .results-container {
     display: none;
     margin-top: 0.5em;
@@ -95,11 +96,12 @@ h2 {
     color: #ff758f;
     font-weight: 600;
     margin-top: 1em;
+    font-size: 1.1em;
 }
-#remaining-matches {
-    color: #ff758f;
+#round-indicator small {
+    display: block;
     font-size: 0.9em;
-    margin-top: 0.5em;
+    color: #333;
 }
 #game-area {
     display: flex;
@@ -202,14 +204,12 @@ button:hover {
     border-radius: 10px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
 }
-
 .ranking-entry {
     padding: 10px 0;
     border-bottom: 1px solid #ff758f;
     color: #4a4e69;
     text-align: left;
 }
-
 .ranking-entry:first-child {
     font-size: 20px;
     color: #ff758f;
