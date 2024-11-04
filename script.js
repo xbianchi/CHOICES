@@ -1,13 +1,15 @@
+// script.js
+
 const categories = {
-    pokemonprimera: ['Pikachu', 'Charizard', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew', 'Pidgey', 'Ditto', 'Ivysaur', 'Venusaur', 'Charmander', 'Charmeleon', 'Wartortle', 'Blastoise', 'Caterpie', 'Metapod', 'Butterfree', 'Weedle', 'Kakuna', 'Beedrill'],
-    comidas: ['Pizza', 'Hamburguesa', 'Pasta', 'Tacos', 'Sushi', 'Pollo asado', 'Sopa', 'Burrito', 'Hot dog', 'Ramen', 'Falafel', 'Goulash', 'Fish and chips'],
-    equipos: ['Barcelona', 'Real Madrid', 'Manchester United', 'Liverpool', 'Bayern Múnich', 'Chelsea', 'Juventus', 'Paris Saint-Germain']
+  pokemonprimera: ['Pikachu', 'Charizard', 'Eevee', 'Bulbasaur', 'Squirtle', 'Mew', 'Pidgey', 'Ditto', 'Ivysaur', 'Venusaur', 'Charmander', 'Charmeleon', 'Wartortle', 'Blastoise', 'Caterpie', 'Metapod', 'Butterfree', 'Weedle', 'Kakuna', 'Beedrill'],
+  comidas: ['Pizza', 'Hamburguesa', 'Pasta', 'Tacos', 'Sushi', 'Pollo asado', 'Sopa', 'Burrito', 'Hot dog', 'Ramen', 'Falafel', 'Goulash', 'Fish and chips'],
+  equipos: ['Barcelona', 'Real Madrid', 'Manchester United', 'Liverpool', 'Bayern Múnich', 'Chelsea', 'Juventus', 'Paris Saint-Germain']
 };
 
 const categoryNames = {
-    pokemonprimera: 'Pokemon Primera Generación',
-    comidas: 'Comidas',
-    equipos: 'Equipos'
+  pokemonprimera: 'Pokemon Primera Generación',
+  comidas: 'Comidas',
+  equipos: 'Equipos'
 };
 
 let currentRound = [];
@@ -20,16 +22,53 @@ let top10Finalists = [];
 let allPairs = [];
 let remainingMatches = 0;
 
-function initializeCategories() { /* inicializar categorías */ }
+function initializeCategories() {
+  const searchResults = document.getElementById("search-results");
+  searchResults.innerHTML = "";
+  for (let key in categoryNames) {
+    const div = document.createElement("div");
+    div.textContent = categoryNames[key];
+    div.onclick = () => selectCategory(key);
+    searchResults.appendChild(div);
+  }
+}
 
-function filterCategories() { /* lógica de filtro */ }
+function filterCategories() {
+  const query = document.getElementById("search-bar").value.toLowerCase();
+  const searchResults = document.getElementById("search-results");
+  searchResults.innerHTML = "";
+  for (let key in categoryNames) {
+    if (categoryNames[key].toLowerCase().includes(query)) {
+      const div = document.createElement("div");
+      div.textContent = categoryNames[key];
+      div.onclick = () => selectCategory(key);
+      searchResults.appendChild(div);
+    }
+  }
+  searchResults.style.display = query ? "block" : "none";
+}
 
 function toggleAllCategories() {
   const searchResults = document.getElementById("search-results");
   searchResults.style.display = searchResults.style.display === "block" ? "none" : "block";
 }
 
-function selectCategory(key) { /* seleccionar categoría */ }
+function selectCategory(key) {
+  selectedCategory = key;
+  currentRound = shuffleArray([...categories[key]]);
+  nextRound = [];
+  document.getElementById("start-btn").disabled = false;
+  document.getElementById("search-bar").value = categoryNames[key];
+  document.getElementById("search-results").style.display = "none";
+}
+
+function shuffleArray(array) {
+  for (let i = array.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
 
 function startGame() {
   document.getElementById("category-selector").style.display = "none";
@@ -101,7 +140,15 @@ function startTop10Round() {
   displayNextTop10Pair();
 }
 
-function generateAllPairs() { /* genera todos los pares para el Top 10 */ }
+function generateAllPairs() {
+  allPairs = [];
+  for (let i = 0; i < top10Finalists.length; i++) {
+    for (let j = i + 1; j < top10Finalists.length; j++) {
+      allPairs.push([top10Finalists[i], top10Finalists[j]]);
+    }
+  }
+  shuffleArray(allPairs);
+}
 
 function displayNextTop10Pair() {
   if (allPairs.length === 0) {
@@ -116,8 +163,29 @@ function displayNextTop10Pair() {
   document.getElementById("option2").classList.remove("selected");
 }
 
-function declareWinnerInTop10() { /* declaración del ganador en el Top 10 */ }
+function declareWinnerInTop10() {
+  document.getElementById("game-area").style.display = "none";
+  displayRankings();
+}
 
-function displayRankings() { /* mostrar los rankings finales */ }
+function displayRankings() {
+  const rankings = Object.entries(voteCounts).sort((a, b) => b[1] - a[1]);
+  const rankingsContainer = document.getElementById("rankings");
+  rankingsContainer.innerHTML = "";
+  rankings.slice(0, 10).forEach(([option], index) => {
+    const div = document.createElement("div");
+    div.textContent = `${index + 1}. ${option}`;
+    rankingsContainer.appendChild(div);
+  });
+}
 
-function resetGame() { /* reinicia el juego */ }
+function resetGame() {
+  document.getElementById("top10").style.display = "none";
+  document.getElementById("category-selector").style.display = "block";
+  document.getElementById("start-btn").disabled = true;
+  document.getElementById("round-indicator").style.display = "none";
+  document.getElementById("game-area").style.display = "none";
+  document.getElementById("rankings").innerHTML = "";
+  document.getElementById("search-bar").value = "";
+  initializeCategories();
+}
