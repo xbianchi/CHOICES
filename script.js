@@ -29,7 +29,7 @@ function initializeCategories() {
         div.onclick = () => selectCategory(key);
         searchResults.appendChild(div);
     }
-    searchResults.style.display = "block"; // Always show all categories on toggle
+    searchResults.style.display = "block";
 }
 
 function filterCategories() {
@@ -44,7 +44,7 @@ function filterCategories() {
             searchResults.appendChild(div);
         }
     }
-    searchResults.style.display = query ? "block" : "none";
+    searchResults.style.display = "block";
 }
 
 function toggleAllCategories() {
@@ -77,10 +77,15 @@ function startGame() {
     roundNumber = 1;
     finalRound = false;
     remainingMatches = Math.ceil(currentRound.length / 2);
-    document.getElementById("round-indicator").textContent = `Ronda ${roundNumber}`;
-    document.getElementById("remaining-matches").style.display = "block";
-    document.getElementById("remaining-matches").textContent = `Enfrentamientos pendientes: ${remainingMatches}`;
+    updateRoundIndicator();
     displayNextPair();
+}
+
+function updateRoundIndicator() {
+    document.getElementById("round-indicator").innerHTML = `
+        <span>Ronda ${roundNumber}</span>
+        <br><small>Enfrentamientos pendientes: ${remainingMatches}</small>
+    `;
 }
 
 function displayNextPair() {
@@ -99,7 +104,7 @@ function displayNextPair() {
         return;
     }
     remainingMatches--;
-    document.getElementById("remaining-matches").textContent = `Enfrentamientos pendientes: ${remainingMatches}`;
+    updateRoundIndicator();
     const [option1, option2] = [currentRound.pop(), currentRound.pop()];
     document.getElementById("option1").textContent = option1;
     document.getElementById("option2").textContent = option2;
@@ -141,8 +146,7 @@ function generateAllPairs() {
     allPairs = [];
     for (let i = 0; i < top10Finalists.length; i++) {
         for (let j = i + 1; j < top10Finalists.length; j++) {
-            if (!voteCounts[top10Finalists[i]] || !voteCounts[top10Finalists[j]] || 
-                !isTransitive(top10Finalists[i], top10Finalists[j])) {
+            if (!voteCounts[top10Finalists[i]] || !voteCounts[top10Finalists[j]] || !isTransitive(top10Finalists[i], top10Finalists[j])) {
                 allPairs.push([top10Finalists[i], top10Finalists[j]]);
             }
         }
@@ -162,7 +166,7 @@ function displayNextTop10Pair() {
     }
     const [option1, option2] = allPairs.pop();
     remainingMatches--;
-    document.getElementById("remaining-matches").textContent = `Enfrentamientos pendientes: ${remainingMatches}`;
+    updateRoundIndicator();
     document.getElementById("option1").textContent = option1;
     document.getElementById("option2").textContent = option2;
     document.getElementById("option1").classList.remove("selected");
@@ -171,30 +175,23 @@ function displayNextTop10Pair() {
 
 function declareWinnerInTop10() {
     document.getElementById("game-area").style.display = "none";
-    document.getElementById("intro").style.display = "none";  // Hide intro message
-    document.getElementById("final-message").textContent = "¡Gracias por jugar! Aquí está tu Top 10:";
+    document.getElementById("top10").style.display = "block";
     displayRankings();
 }
 
 function displayRankings() {
     const rankings = Object.entries(voteCounts).sort((a, b) => b[1] - a[1]);
     const rankingsContainer = document.getElementById("rankings");
-    rankingsContainer.innerHTML = "";  // Clear previous content
-
+    rankingsContainer.innerHTML = "";
     const rankingTable = document.createElement("div");
     rankingTable.classList.add("ranking-table");
-
     rankings.slice(0, 10).forEach(([option], index) => {
         const div = document.createElement("div");
         div.classList.add("ranking-entry");
         div.textContent = `${index + 1}. ${option}`;
         rankingTable.appendChild(div);
     });
-
-    rankingsContainer.appendChild(rankingTable);  // Add the table to the container
-
-    // Display the top winner inside the pink box
-    document.getElementById("top-winner").textContent = rankings[0][0];
+    rankingsContainer.appendChild(rankingTable);
 }
 
 function resetGame() {
@@ -204,7 +201,6 @@ function resetGame() {
     document.getElementById("round-indicator").style.display = "none";
     document.getElementById("game-area").style.display = "none";
     document.getElementById("rankings").innerHTML = "";
-    document.getElementById("final-message").textContent = "";  // Clear final message
     document.getElementById("search-bar").value = "";
     initializeCategories();
 }
