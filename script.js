@@ -45,7 +45,7 @@ function filterCategories() {
       searchResults.appendChild(div);
     }
   }
-  searchResults.style.display = query ? "block" : "none";
+  searchResults.style.display = query || searchResults.children.length > 0 ? "block" : "none";
 }
 
 function toggleAllCategories() {
@@ -77,8 +77,7 @@ function startGame() {
   voteCounts = {};
   roundNumber = 1;
   finalRound = false;
-  document.getElementById("round-indicator").textContent = `Ronda ${roundNumber}`;
-  remainingMatches = Math.floor(currentRound.length / 2);
+  document.getElementById("round-indicator").textContent = `Ronda ${roundNumber} - Enfrentamientos restantes: ${Math.floor(currentRound.length / 2)}`;
   displayNextPair();
 }
 
@@ -112,11 +111,13 @@ function selectOption(optionId) {
 
   if (finalRound) {
     document.getElementById(optionId).classList.add("selected");
+    remainingMatches--;
+    document.getElementById("round-indicator").textContent = `Ronda Top 10 - Enfrentamientos restantes: ${remainingMatches}`;
     setTimeout(displayNextTop10Pair, 500);
   } else {
     nextRound.push(selectedOption);
     document.getElementById(optionId).classList.add("selected");
-    remainingMatches--;
+    remainingMatches = Math.floor(currentRound.length / 2);
     document.getElementById("round-indicator").textContent = `Ronda ${roundNumber} - Enfrentamientos restantes: ${remainingMatches}`;
     setTimeout(displayNextPair, 500);
   }
