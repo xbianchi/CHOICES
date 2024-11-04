@@ -49,6 +49,13 @@ function filterCategories() {
 
 function toggleAllCategories() {
     const searchResults = document.getElementById("search-results");
+    searchResults.innerHTML = "";
+    for (let key in categoryNames) {
+        const div = document.createElement("div");
+        div.textContent = categoryNames[key];
+        div.onclick = () => selectCategory(key);
+        searchResults.appendChild(div);
+    }
     searchResults.style.display = searchResults.style.display === "block" ? "none" : "block";
 }
 
@@ -72,6 +79,7 @@ function shuffleArray(array) {
 function startGame() {
     document.getElementById("category-selector").style.display = "none";
     document.getElementById("round-indicator").style.display = "block";
+    document.getElementById("intro-message").style.display = "none"; // Ocultar mensaje introductorio
     document.getElementById("game-area").style.display = "flex";
     voteCounts = {};
     roundNumber = 1;
@@ -94,14 +102,15 @@ function displayNextPair() {
         return;
     }
     if (currentRound.length < 2) {
-        if (nextRound.length === 10) {
-            top10Finalists = [...nextRound];
+        if (nextRound.length >= 10) {
+            top10Finalists = nextRound.slice(0, 10);
             finalRound = true;
             startTop10Round();
             return;
+        } else {
+            declareWinner(nextRound[0]);
+            return;
         }
-        declareWinner(nextRound[0]);
-        return;
     }
     remainingMatches--;
     updateRoundIndicator();
@@ -127,6 +136,7 @@ function selectOption(optionId) {
 
 function declareWinner(winner) {
     document.getElementById("game-area").style.display = "none";
+    document.getElementById("round-indicator").style.display = "none"; // Ocultar el indicador de ronda
     document.getElementById("top10").style.display = "block";
     document.getElementById("top-winner").innerHTML = `¡Tu Top N°1: <span class="highlight">${winner}</span>!`;
     displayRankings();
@@ -175,6 +185,7 @@ function displayNextTop10Pair() {
 
 function declareWinnerInTop10() {
     document.getElementById("game-area").style.display = "none";
+    document.getElementById("round-indicator").style.display = "none"; // Ocultar el indicador de ronda
     document.getElementById("top10").style.display = "block";
     displayRankings();
 }
@@ -183,20 +194,24 @@ function displayRankings() {
     const rankings = Object.entries(voteCounts).sort((a, b) => b[1] - a[1]);
     const rankingsContainer = document.getElementById("rankings");
     rankingsContainer.innerHTML = "";
+
     const rankingTable = document.createElement("div");
     rankingTable.classList.add("ranking-table");
+
     rankings.slice(0, 10).forEach(([option], index) => {
         const div = document.createElement("div");
         div.classList.add("ranking-entry");
         div.textContent = `${index + 1}. ${option}`;
         rankingTable.appendChild(div);
     });
+
     rankingsContainer.appendChild(rankingTable);
 }
 
 function resetGame() {
     document.getElementById("top10").style.display = "none";
     document.getElementById("category-selector").style.display = "block";
+    document.getElementById("intro-message").style.display = "block"; // Volver a mostrar mensaje introductorio
     document.getElementById("start-btn").disabled = true;
     document.getElementById("round-indicator").style.display = "none";
     document.getElementById("game-area").style.display = "none";
